@@ -2,9 +2,9 @@
     function getConnectionDEFAULT(){
         $serverName = "localhost";
         $serverPort = "3306";
-        $serverDb   = "root";
-        $serverUser = "tre3As5ePru_";
-        $serverPass = "mayordomo_default";
+        $serverDb   = "mayordomo_default";
+        $serverUser = "root";
+        $serverPass = "tre3As5ePru_";
         
         try {
             $conn = new PDO("mysql:host=$serverName;port=$serverPort;dbname=$serverDb;charset=utf8", $serverUser, $serverPass,
