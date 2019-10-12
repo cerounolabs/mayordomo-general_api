@@ -367,3 +367,182 @@
         
         return $json;
     });
+
+    $app->get('/v1/default/100', function($request) {
+        require __DIR__.'/../../src/connect.php';
+
+        $sql00  = "SELECT
+        a.LOCPAICOD         AS          pais_codigo,
+		a.LOCPAINOM         AS          pais_nombre,
+		a.LOCPAIIC2         AS          pais_iso3166_char2,
+        a.LOCPAIIC3         AS          pais_iso3166_char3,
+        a.LOCPAIIN3         AS          pais_iso3166_numero,
+        a.LOCPAIOBS         AS          pais_observacion,
+        a.LOCPAIAEM         AS          pais_empresa_codigo,
+        a.LOCPAIAEM         AS          pais_empresa_nombre,
+        a.LOCPAIAUS         AS          pais_usuario,
+        a.LOCPAIAFH         AS          pais_fecha_hora,
+        a.LOCPAIAIP         AS          pais_ip,
+
+        b.DOMFICCOD         AS          tipo_estado_codigo,
+        b.DOMFICNOM         AS          tipo_estado_nombre
+        
+        FROM LOCPAI a
+        INNER JOIN DOMFIC b ON a.LOCPAIEPC = b.DOMFICCOD
+
+        ORDER BY a.LOCPAINOM";
+
+        try {
+            $connDEFAULT  = getConnectionDEFAULT();
+            $stmtDEFAULT  = $connDEFAULT->prepare($sql00);
+            $stmtDEFAULT->execute(); 
+
+            while ($rowDEFAULT = $stmtDEFAULT->fetch()) {
+                $detalle    = array(
+                    'pais_codigo'                   => $rowDEFAULT['pais_codigo'],
+                    'tipo_estado_codigo'            => $rowDEFAULT['tipo_estado_codigo'],
+                    'tipo_estado_nombre'            => $rowDEFAULT['tipo_estado_nombre'],
+                    'pais_nombre'                   => $rowDEFAULT['pais_nombre'],
+                    'pais_iso3166_char2'            => $rowDEFAULT['pais_iso3166_char2'],
+                    'pais_iso3166_char3'            => $rowDEFAULT['pais_iso3166_char3'],
+                    'pais_iso3166_numero'           => $rowDEFAULT['pais_iso3166_numero'],
+                    'pais_observacion'              => $rowDEFAULT['pais_observacion'],
+                    'pais_empresa_codigo'           => $rowDEFAULT['pais_empresa_codigo'],
+                    'pais_empresa_nombre'           => $rowDEFAULT['pais_empresa_nombre'],
+                    'pais_usuario'                  => $rowDEFAULT['pais_usuario'],
+                    'pais_fecha_hora'               => date_format(date_create($rowDEFAULT['pais_fecha_hora']), 'd/m/Y H:i:s'),
+                    'pais_ip'                       => $rowDEFAULT['pais_ip']
+                );
+
+                $result[]   = $detalle;
+            }
+
+            if (isset($result)){
+                header("Content-Type: application/json; charset=utf-8");
+                $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success SELECT', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+            } else {
+                $detalle = array(
+                    'pais_codigo'                   => '',
+                    'tipo_estado_codigo'            => '',
+                    'tipo_estado_nombre'            => '',
+                    'pais_nombre'                   => '',
+                    'pais_iso3166_char2'            => '',
+                    'pais_iso3166_char3'            => '',
+                    'pais_iso3166_numero'           => '',
+                    'pais_observacion'              => '',
+                    'pais_empresa_codigo'           => '',
+                    'pais_empresa_nombre'           => '',
+                    'pais_usuario'                  => '',
+                    'pais_fecha_hora'               => '',
+                    'pais_ip'                       => ''
+                );
+
+                header("Content-Type: application/json; charset=utf-8");
+                $json = json_encode(array('code' => 204, 'status' => 'ok', 'message' => 'No hay registros', 'data' => $detalle), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+            }
+
+            $stmtDEFAULT->closeCursor();
+            $stmtDEFAULT = null;
+        } catch (PDOException $e) {
+            header("Content-Type: application/json; charset=utf-8");
+            $json = json_encode(array('code' => 204, 'status' => 'failure', 'message' => 'Error SELECT: '.$e), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+        }
+
+        $connDEFAULT  = null;
+        
+        return $json;
+    });
+
+    $app->get('/v1/default/100/{codigo}', function($request) {
+        require __DIR__.'/../../src/connect.php';
+
+        $val01      = $request->getAttribute('codigo');
+        
+        if (isset($val01)) {
+            $sql00  = "SELECT
+            a.LOCPAICOD         AS          pais_codigo,
+            a.LOCPAINOM         AS          pais_nombre,
+            a.LOCPAIIC2         AS          pais_iso3166_char2,
+            a.LOCPAIIC3         AS          pais_iso3166_char3,
+            a.LOCPAIIN3         AS          pais_iso3166_numero,
+            a.LOCPAIOBS         AS          pais_observacion,
+            a.LOCPAIAEM         AS          pais_empresa_codigo,
+            a.LOCPAIAEM         AS          pais_empresa_nombre,
+            a.LOCPAIAUS         AS          pais_usuario,
+            a.LOCPAIAFH         AS          pais_fecha_hora,
+            a.LOCPAIAIP         AS          pais_ip,
+
+            b.DOMFICCOD         AS          tipo_estado_codigo,
+            b.DOMFICNOM         AS          tipo_estado_nombre
+            
+            FROM LOCPAI a
+            INNER JOIN DOMFIC b ON a.LOCPAIEPC = b.DOMFICCOD
+
+            WHERE a.LOCPAICOD = ?
+
+            ORDER BY a.LOCPAINOM";
+
+            try {
+                $connDEFAULT  = getConnectionDEFAULT();
+                $stmtDEFAULT  = $connDEFAULT->prepare($sql00);
+                $stmtDEFAULT->execute([$val01]); 
+
+                while ($rowDEFAULT = $stmtDEFAULT->fetch()) {
+                    $detalle    = array(
+                        'pais_codigo'                   => $rowDEFAULT['pais_codigo'],
+                        'tipo_estado_codigo'            => $rowDEFAULT['tipo_estado_codigo'],
+                        'tipo_estado_nombre'            => $rowDEFAULT['tipo_estado_nombre'],
+                        'pais_nombre'                   => $rowDEFAULT['pais_nombre'],
+                        'pais_iso3166_char2'            => $rowDEFAULT['pais_iso3166_char2'],
+                        'pais_iso3166_char3'            => $rowDEFAULT['pais_iso3166_char3'],
+                        'pais_iso3166_numero'           => $rowDEFAULT['pais_iso3166_numero'],
+                        'pais_observacion'              => $rowDEFAULT['pais_observacion'],
+                        'pais_empresa_codigo'           => $rowDEFAULT['pais_empresa_codigo'],
+                        'pais_empresa_nombre'           => $rowDEFAULT['pais_empresa_nombre'],
+                        'pais_usuario'                  => $rowDEFAULT['pais_usuario'],
+                        'pais_fecha_hora'               => date_format(date_create($rowDEFAULT['pais_fecha_hora']), 'd/m/Y H:i:s'),
+                        'pais_ip'                       => $rowDEFAULT['pais_ip']
+                    );
+
+                    $result[]   = $detalle;
+                }
+
+                if (isset($result)){
+                    header("Content-Type: application/json; charset=utf-8");
+                    $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success SELECT', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+                } else {
+                    $detalle = array(
+                        'pais_codigo'                   => '',
+                        'tipo_estado_codigo'            => '',
+                        'tipo_estado_nombre'            => '',
+                        'pais_nombre'                   => '',
+                        'pais_iso3166_char2'            => '',
+                        'pais_iso3166_char3'            => '',
+                        'pais_iso3166_numero'           => '',
+                        'pais_observacion'              => '',
+                        'pais_empresa_codigo'           => '',
+                        'pais_empresa_nombre'           => '',
+                        'pais_usuario'                  => '',
+                        'pais_fecha_hora'               => '',
+                        'pais_ip'                       => ''
+                    );
+
+                    header("Content-Type: application/json; charset=utf-8");
+                    $json = json_encode(array('code' => 204, 'status' => 'ok', 'message' => 'No hay registros', 'data' => $detalle), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+                }
+
+                $stmtDEFAULT->closeCursor();
+                $stmtDEFAULT = null;
+            } catch (PDOException $e) {
+                header("Content-Type: application/json; charset=utf-8");
+                $json = json_encode(array('code' => 204, 'status' => 'failure', 'message' => 'Error SELECT: '.$e), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+            }
+        } else {
+            header("Content-Type: application/json; charset=utf-8");
+            $json = json_encode(array('code' => 400, 'status' => 'error', 'message' => 'Verifique, algún campo esta vacio.'), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+        }
+
+        $connDEFAULT  = null;
+        
+        return $json;
+    });
