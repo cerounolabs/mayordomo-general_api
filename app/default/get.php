@@ -568,21 +568,21 @@
         a.LOCPAIAIN3OLD         AS          auditoria_antes_pais_iso3166_numero,
         a.LOCPAIAOBSOLD         AS          auditoria_antes_pais_observacion,
 
-        a.LOCPAIACODOLD         AS          auditoria_despues_pais_codigo,
+        a.LOCPAIACODNEW         AS          auditoria_despues_pais_codigo,
         c.DOMFICCOD             AS          auditoria_despues_tipo_estado_codigo,
         c.DOMFICNOM             AS          auditoria_despues_tipo_estado_nombre,
-        a.LOCPAIANOMOLD         AS          auditoria_despues_pais_nombre,
-        a.LOCPAIAIC2OLD         AS          auditoria_despues_pais_iso3166_char2,
-        a.LOCPAIAIC3OLD         AS          auditoria_despues_pais_iso3166_char3,
-        a.LOCPAIAIN3OLD         AS          auditoria_despues_pais_iso3166_numero,
-        a.LOCPAIAOBSOLD         AS          auditoria_despues_pais_observacion
+        a.LOCPAIANOMNEW         AS          auditoria_despues_pais_nombre,
+        a.LOCPAIAIC2NEW         AS          auditoria_despues_pais_iso3166_char2,
+        a.LOCPAIAIC3NEW         AS          auditoria_despues_pais_iso3166_char3,
+        a.LOCPAIAIN3NEW         AS          auditoria_despues_pais_iso3166_numero,
+        a.LOCPAIAOBSNEW         AS          auditoria_despues_pais_observacion
         
         FROM LOCPAIA a
         
         LEFT JOIN DOMFIC b ON a.LOCPAIAEPCOLD = b.DOMFICCOD
-        LEFT JOIN DOMFIC c ON a.DOMFICAEDCNEW = c.DOMFICCOD
+        LEFT JOIN DOMFIC c ON a.LOCPAIAEPCNEW = c.DOMFICCOD
         
-        ORDER BY a.DOMFICACOD DESC";
+        ORDER BY a.LOCPAIACOD DESC";
 
         try {
             $connDEFAULT  = getConnectionDEFAULT();
