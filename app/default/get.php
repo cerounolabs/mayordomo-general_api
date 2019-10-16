@@ -547,7 +547,7 @@
         return $json;
     });
 
-    $app->get('/v1/default/100/auditoria', function($request) {
+    $app->get('/v1/default/100/auditoria/', function($request) {
         require __DIR__.'/../../src/connect.php';
 
         $sql00  = "SELECT
@@ -591,27 +591,31 @@
 
             while ($rowDEFAULT = $stmtDEFAULT->fetch()) {
                 $detalle    = array(
-                    'auditoria_codigo'                      => $rowDEFAULT['auditoria_codigo'],
-                    'auditoria_metodo'                      => $rowDEFAULT['auditoria_metodo'],
-                    'auditoria_empresa_codigo'              => $rowDEFAULT['auditoria_empresa_codigo'],
-                    'auditoria_empresa_nombre'              => $rowDEFAULT['auditoria_empresa_nombre'],
-                    'auditoria_usuario'                     => $rowDEFAULT['auditoria_usuario'],
-                    'auditoria_fecha_hora'                  => date_format(date_create($rowDEFAULT['auditoria_fecha_hora']), 'd/m/Y H:i:s'),
-                    'auditoria_ip'                          => $rowDEFAULT['auditoria_ip'],
+                    'auditoria_codigo'                              => $rowDEFAULT['auditoria_codigo'],
+                    'auditoria_metodo'                              => $rowDEFAULT['auditoria_metodo'],
+                    'auditoria_empresa_codigo'                      => $rowDEFAULT['auditoria_empresa_codigo'],
+                    'auditoria_empresa_nombre'                      => $rowDEFAULT['auditoria_empresa_nombre'],
+                    'auditoria_usuario'                             => $rowDEFAULT['auditoria_usuario'],
+                    'auditoria_fecha_hora'                          => date_format(date_create($rowDEFAULT['auditoria_fecha_hora']), 'd/m/Y H:i:s'),
+                    'auditoria_ip'                                  => $rowDEFAULT['auditoria_ip'],
 
-                    'auditoria_antes_pais_codigo'           => $rowDEFAULT['auditoria_antes_pais_codigo'],
-                    'auditoria_antes_tipo_estado_codigo'    => $rowDEFAULT['auditoria_antes_tipo_estado_codigo'],
-                    'auditoria_antes_tipo_estado_nombre'    => $rowDEFAULT['auditoria_antes_tipo_estado_nombre'],
-                    'auditoria_antes_tipo_nombre'           => $rowDEFAULT['auditoria_antes_tipo_nombre'],
-                    'auditoria_antes_tipo_dominio'          => $rowDEFAULT['auditoria_antes_tipo_dominio'],
-                    'auditoria_antes_tipo_observacion'      => $rowDEFAULT['auditoria_antes_tipo_observacion'],
+                    'auditoria_antes_pais_codigo'                   => $rowDEFAULT['auditoria_antes_pais_codigo'],
+                    'auditoria_antes_tipo_estado_codigo'            => $rowDEFAULT['auditoria_antes_tipo_estado_codigo'],
+                    'auditoria_antes_tipo_estado_nombre'            => $rowDEFAULT['auditoria_antes_tipo_estado_nombre'],
+                    'auditoria_antes_pais_nombre'                   => $rowDEFAULT['auditoria_antes_pais_nombre'],
+                    'auditoria_antes_pais_iso3166_char2'            => $rowDEFAULT['auditoria_antes_pais_iso3166_char2'],
+                    'auditoria_antes_pais_iso3166_char3'            => $rowDEFAULT['auditoria_antes_pais_iso3166_char3'],
+                    'auditoria_antes_pais_iso3166_numero'           => $rowDEFAULT['auditoria_antes_pais_iso3166_numero'],
+                    'auditoria_antes_pais_observacion'              => $rowDEFAULT['auditoria_antes_pais_observacion'],
 
-                    'auditoria_despues_tipo_codigo'         => $rowDEFAULT['auditoria_despues_tipo_codigo'],
-                    'auditoria_despues_tipo_estado_codigo'  => $rowDEFAULT['auditoria_despues_tipo_estado_codigo'],
-                    'auditoria_despues_tipo_estado_nombre'  => $rowDEFAULT['auditoria_despues_tipo_estado_nombre'],
-                    'auditoria_despues_tipo_nombre'         => $rowDEFAULT['auditoria_despues_tipo_nombre'],
-                    'auditoria_despues_tipo_dominio'        => $rowDEFAULT['auditoria_despues_tipo_dominio'],
-                    'auditoria_despues_tipo_observacion'    => $rowDEFAULT['auditoria_despues_tipo_observacion']
+                    'auditoria_despues_pais_codigo'                 => $rowDEFAULT['auditoria_despues_pais_codigo'],
+                    'auditoria_despues_tipo_estado_codigo'          => $rowDEFAULT['auditoria_despues_tipo_estado_codigo'],
+                    'auditoria_despues_tipo_estado_nombre'          => $rowDEFAULT['auditoria_despues_tipo_estado_nombre'],
+                    'auditoria_despues_pais_nombre'                 => $rowDEFAULT['auditoria_despues_pais_nombre'],
+                    'auditoria_despues_pais_iso3166_char2'          => $rowDEFAULT['auditoria_despues_pais_iso3166_char2'],
+                    'auditoria_despues_pais_iso3166_char3'          => $rowDEFAULT['auditoria_despues_pais_iso3166_char3'],
+                    'auditoria_despues_pais_iso3166_numero'         => $rowDEFAULT['auditoria_despues_pais_iso3166_numero'],
+                    'auditoria_despues_pais_observacion'            => $rowDEFAULT['auditoria_despues_pais_observacion']
                 );
 
                 $result[]   = $detalle;
@@ -622,25 +626,29 @@
                 $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success SELECT', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
             } else {
                 $detalle = array(
-                    'auditoria_codigo'                      => '',
-                    'auditoria_metodo'                      => '',
-                    'auditoria_empresa_codigo'              => '',
-                    'auditoria_empresa_nombre'              => '',
-                    'auditoria_usuario'                     => '',
-                    'auditoria_fecha_hora'                  => '',
-                    'auditoria_ip'                          => '',
-                    'auditoria_antes_tipo_codigo'           => '',
-                    'auditoria_antes_tipo_estado_codigo'    => '',
-                    'auditoria_antes_tipo_estado_nombre'    => '',
-                    'auditoria_antes_tipo_nombre'           => '',
-                    'auditoria_antes_tipo_dominio'          => '',
-                    'auditoria_antes_tipo_observacion'      => '',
-                    'auditoria_despues_tipo_codigo'         => '',
-                    'auditoria_despues_tipo_estado_codigo'  => '',
-                    'auditoria_despues_tipo_estado_nombre'  => '',
-                    'auditoria_despues_tipo_nombre'         => '',
-                    'auditoria_despues_tipo_dominio'        => '',
-                    'auditoria_despues_tipo_observacion'    => ''
+                    'auditoria_codigo'                              => '',
+                    'auditoria_metodo'                              => '',
+                    'auditoria_empresa_codigo'                      => '',
+                    'auditoria_empresa_nombre'                      => '',
+                    'auditoria_usuario'                             => '',
+                    'auditoria_fecha_hora'                          => '',
+                    'auditoria_ip'                                  => '',
+                    'auditoria_antes_pais_codigo'                   => '',
+                    'auditoria_antes_tipo_estado_codigo'            => '',
+                    'auditoria_antes_tipo_estado_nombre'            => '',
+                    'auditoria_antes_pais_nombre'                   => '',
+                    'auditoria_antes_pais_iso3166_char2'            => '',
+                    'auditoria_antes_pais_iso3166_char3'            => '',
+                    'auditoria_antes_pais_iso3166_numero'           => '',
+                    'auditoria_antes_pais_observacion'              => '',
+                    'auditoria_despues_pais_codigo'                 => '',
+                    'auditoria_despues_tipo_estado_codigo'          => '',
+                    'auditoria_despues_tipo_estado_nombre'          => '',
+                    'auditoria_despues_pais_nombre'                 => '',
+                    'auditoria_despues_pais_iso3166_char2'          => '',
+                    'auditoria_despues_pais_iso3166_char3'          => '',
+                    'auditoria_despues_pais_iso3166_numero'         => '',
+                    'auditoria_despues_pais_observacion'            => ''
                 );
 
                 header("Content-Type: application/json; charset=utf-8");
@@ -838,7 +846,7 @@
         return $json;
     });
 
-    $app->get('/v1/default/200/auditoria', function($request) {
+    $app->get('/v1/default/200/auditoria/', function($request) {
         require __DIR__.'/../../src/connect.php';
 
         $sql00  = "SELECT
