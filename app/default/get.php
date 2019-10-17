@@ -963,3 +963,226 @@
         
         return $json;
     });
+
+    $app->get('/v1/default/300', function($request) {
+        require __DIR__.'/../../src/connect.php';
+
+        $sql00  = "SELECT
+        a.LOCDISCOD         AS          distrito_codigo,
+        a.LOCDISNOM         AS          distrito_nombre,
+        a.LOCDISOBS         AS          distrito_observacion,
+        a.LOCDISAEM         AS          distrito_empresa_codigo,
+        a.LOCDISAEM         AS          distrito_empresa_nombre,
+        a.LOCDISAUS         AS          distrito_usuario,
+        a.LOCDISAFH         AS          distrito_fecha_hora,
+        a.LOCDISAIP         AS          distrito_ip,
+
+        b.DOMFICCOD         AS          tipo_estado_codigo,
+        b.DOMFICNOM         AS          tipo_estado_nombre,
+
+        c.DOMFICCOD         AS          tipo_zona_codigo,
+        c.DOMFICNOM         AS          tipo_zona_nombre,
+
+        d.DOMFICCOD         AS          tipo_riesgo_codigo,
+        d.DOMFICNOM         AS          tipo_riesgo_nombre,
+
+        e.LOCDEPCOD         AS          departamento_codigo,
+        e.LOCDEPNOM         AS          departamento_nombre,
+
+        f.LOCPAICOD         AS          pais_codigo,
+		f.LOCPAINOM         AS          pais_nombre
+        
+        FROM LOCDIS a
+        INNER JOIN DOMFIC b ON a.LOCDISECC = b.DOMFICCOD
+        INNER JOIN DOMFIC c ON a.LOCDISTZC = c.DOMFICCOD
+        INNER JOIN DOMFIC d ON a.LOCDISTRC = d.DOMFICCOD
+        INNER JOIN LOCDEP e ON a.LOCDISDEC = e.LOCDEPCOD
+        INNER JOIN LOCPAI f ON e.LOCDEPPAC = f.LOCPAICOD
+
+        ORDER BY f.LOCPAINOM, e.LOCDEPNOM, a.LOCDISNOM";
+
+        try {
+            $connDEFAULT  = getConnectionDEFAULT();
+            $stmtDEFAULT  = $connDEFAULT->prepare($sql00);
+            $stmtDEFAULT->execute(); 
+
+            while ($rowDEFAULT = $stmtDEFAULT->fetch()) {
+                $detalle    = array(
+                    'distrito_codigo'                   => $rowDEFAULT['distrito_codigo'],
+                    'distrito_nombre'                   => $rowDEFAULT['distrito_nombre'],
+                    'distrito_observacion'              => $rowDEFAULT['distrito_observacion'],
+                    'distrito_empresa_codigo'           => $rowDEFAULT['distrito_empresa_codigo'],
+                    'distrito_empresa_nombre'           => $rowDEFAULT['distrito_empresa_nombre'],
+                    'distrito_usuario'                  => $rowDEFAULT['distrito_usuario'],
+                    'distrito_fecha_hora'               => date_format(date_create($rowDEFAULT['distrito_fecha_hora']), 'd/m/Y H:i:s'),
+                    'distrito_ip'                       => $rowDEFAULT['distrito_ip'],
+                    'tipo_estado_codigo'                => $rowDEFAULT['tipo_estado_codigo'],
+                    'tipo_estado_nombre'                => $rowDEFAULT['tipo_estado_nombre'],
+                    'tipo_zona_codigo'                  => $rowDEFAULT['tipo_zona_codigo'],
+                    'tipo_zona_nombre'                  => $rowDEFAULT['tipo_zona_nombre'],
+                    'tipo_riesgo_codigo'                => $rowDEFAULT['tipo_riesgo_codigo'],
+                    'tipo_riesgo_nombre'                => $rowDEFAULT['tipo_riesgo_nombre'],
+                    'departamento_codigo'               => $rowDEFAULT['departamento_codigo'],
+                    'departamento_nombre'               => $rowDEFAULT['departamento_nombre'],
+                    'pais_codigo'                       => $rowDEFAULT['pais_codigo'],
+                    'pais_nombre'                       => $rowDEFAULT['pais_nombre']
+                );
+
+                $result[]   = $detalle;
+            }
+
+            if (isset($result)){
+                header("Content-Type: application/json; charset=utf-8");
+                $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success SELECT', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+            } else {
+                $detalle = array(
+                    'distrito_codigo'                   => '',
+                    'distrito_nombre'                   => '',
+                    'distrito_observacion'              => '',
+                    'distrito_empresa_codigo'           => '',
+                    'distrito_empresa_nombre'           => '',
+                    'distrito_usuario'                  => '',
+                    'distrito_fecha_hora'               => '',
+                    'distrito_ip'                       => '',
+                    'tipo_estado_codigo'                => '',
+                    'tipo_estado_nombre'                => '',
+                    'tipo_zona_codigo'                  => '',
+                    'tipo_zona_nombre'                  => '',
+                    'tipo_riesgo_codigo'                => '',
+                    'tipo_riesgo_nombre'                => '',
+                    'departamento_codigo'               => '',
+                    'departamento_nombre'               => '',
+                    'pais_codigo'                       => '',
+                    'pais_nombre'                       => ''
+                );
+
+                header("Content-Type: application/json; charset=utf-8");
+                $json = json_encode(array('code' => 204, 'status' => 'ok', 'message' => 'No hay registros', 'data' => $detalle), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+            }
+
+            $stmtDEFAULT->closeCursor();
+            $stmtDEFAULT = null;
+        } catch (PDOException $e) {
+            header("Content-Type: application/json; charset=utf-8");
+            $json = json_encode(array('code' => 204, 'status' => 'failure', 'message' => 'Error SELECT: '.$e), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+        }
+
+        $connDEFAULT  = null;
+        
+        return $json;
+    });
+
+    $app->get('/v1/default/300/{codigo}', function($request) {
+        require __DIR__.'/../../src/connect.php';
+
+        $val01      = $request->getAttribute('codigo');
+        
+        if (isset($val01)) {
+            $sql00  = "SELECT
+            a.LOCDISCOD         AS          distrito_codigo,
+            a.LOCDISNOM         AS          distrito_nombre,
+            a.LOCDISOBS         AS          distrito_observacion,
+            a.LOCDISAEM         AS          distrito_empresa_codigo,
+            a.LOCDISAEM         AS          distrito_empresa_nombre,
+            a.LOCDISAUS         AS          distrito_usuario,
+            a.LOCDISAFH         AS          distrito_fecha_hora,
+            a.LOCDISAIP         AS          distrito_ip,
+
+            b.DOMFICCOD         AS          tipo_estado_codigo,
+            b.DOMFICNOM         AS          tipo_estado_nombre,
+
+            c.DOMFICCOD         AS          tipo_zona_codigo,
+            c.DOMFICNOM         AS          tipo_zona_nombre,
+
+            d.DOMFICCOD         AS          tipo_riesgo_codigo,
+            d.DOMFICNOM         AS          tipo_riesgo_nombre,
+
+            e.LOCDEPCOD         AS          departamento_codigo,
+            e.LOCDEPNOM         AS          departamento_nombre,
+
+            f.LOCPAICOD         AS          pais_codigo,
+            f.LOCPAINOM         AS          pais_nombre
+            
+            FROM LOCDIS a
+            INNER JOIN DOMFIC b ON a.LOCDISECC = b.DOMFICCOD
+            INNER JOIN DOMFIC c ON a.LOCDISTZC = c.DOMFICCOD
+            INNER JOIN DOMFIC d ON a.LOCDISTRC = d.DOMFICCOD
+            INNER JOIN LOCDEP e ON a.LOCDISDEC = e.LOCDEPCOD
+            INNER JOIN LOCPAI f ON e.LOCDEPPAC = f.LOCPAICOD
+
+            ORDER BY f.LOCPAINOM, e.LOCDEPNOM, a.LOCDISNOM";
+
+            try {
+                $connDEFAULT  = getConnectionDEFAULT();
+                $stmtDEFAULT  = $connDEFAULT->prepare($sql00);
+                $stmtDEFAULT->execute(); 
+
+                while ($rowDEFAULT = $stmtDEFAULT->fetch()) {
+                    $detalle    = array(
+                        'distrito_codigo'                   => $rowDEFAULT['distrito_codigo'],
+                        'distrito_nombre'                   => $rowDEFAULT['distrito_nombre'],
+                        'distrito_observacion'              => $rowDEFAULT['distrito_observacion'],
+                        'distrito_empresa_codigo'           => $rowDEFAULT['distrito_empresa_codigo'],
+                        'distrito_empresa_nombre'           => $rowDEFAULT['distrito_empresa_nombre'],
+                        'distrito_usuario'                  => $rowDEFAULT['distrito_usuario'],
+                        'distrito_fecha_hora'               => date_format(date_create($rowDEFAULT['distrito_fecha_hora']), 'd/m/Y H:i:s'),
+                        'distrito_ip'                       => $rowDEFAULT['distrito_ip'],
+                        'tipo_estado_codigo'                => $rowDEFAULT['tipo_estado_codigo'],
+                        'tipo_estado_nombre'                => $rowDEFAULT['tipo_estado_nombre'],
+                        'tipo_zona_codigo'                  => $rowDEFAULT['tipo_zona_codigo'],
+                        'tipo_zona_nombre'                  => $rowDEFAULT['tipo_zona_nombre'],
+                        'tipo_riesgo_codigo'                => $rowDEFAULT['tipo_riesgo_codigo'],
+                        'tipo_riesgo_nombre'                => $rowDEFAULT['tipo_riesgo_nombre'],
+                        'departamento_codigo'               => $rowDEFAULT['departamento_codigo'],
+                        'departamento_nombre'               => $rowDEFAULT['departamento_nombre'],
+                        'pais_codigo'                       => $rowDEFAULT['pais_codigo'],
+                        'pais_nombre'                       => $rowDEFAULT['pais_nombre']
+                    );
+
+                    $result[]   = $detalle;
+                }
+
+                if (isset($result)){
+                    header("Content-Type: application/json; charset=utf-8");
+                    $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success SELECT', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+                } else {
+                    $detalle = array(
+                        'distrito_codigo'                   => '',
+                        'distrito_nombre'                   => '',
+                        'distrito_observacion'              => '',
+                        'distrito_empresa_codigo'           => '',
+                        'distrito_empresa_nombre'           => '',
+                        'distrito_usuario'                  => '',
+                        'distrito_fecha_hora'               => '',
+                        'distrito_ip'                       => '',
+                        'tipo_estado_codigo'                => '',
+                        'tipo_estado_nombre'                => '',
+                        'tipo_zona_codigo'                  => '',
+                        'tipo_zona_nombre'                  => '',
+                        'tipo_riesgo_codigo'                => '',
+                        'tipo_riesgo_nombre'                => '',
+                        'departamento_codigo'               => '',
+                        'departamento_nombre'               => '',
+                        'pais_codigo'                       => '',
+                        'pais_nombre'                       => ''
+                    );
+
+                    header("Content-Type: application/json; charset=utf-8");
+                    $json = json_encode(array('code' => 204, 'status' => 'ok', 'message' => 'No hay registros', 'data' => $detalle), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+                }
+
+                $stmtDEFAULT->closeCursor();
+                $stmtDEFAULT = null;
+            } catch (PDOException $e) {
+                header("Content-Type: application/json; charset=utf-8");
+                $json = json_encode(array('code' => 204, 'status' => 'failure', 'message' => 'Error SELECT: '.$e), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+            }
+        } else {
+            header("Content-Type: application/json; charset=utf-8");
+            $json = json_encode(array('code' => 400, 'status' => 'error', 'message' => 'Verifique, algún campo esta vacio.'), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+        }
+        
+        $connDEFAULT  = null;
+        
+        return $json;
+    });
