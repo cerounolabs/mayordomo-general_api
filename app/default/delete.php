@@ -120,3 +120,45 @@
         
         return $json;
     });
+
+    $app->delete('/v1/default/300/{codigo}', function($request) {
+        require __DIR__.'/../../src/connect.php';
+
+        $val00      = $request->getAttribute('codigo');
+        $val01      = $request->getParsedBody()['tipo_estado_codigo'];
+        $val02      = $request->getParsedBody()['tipo_zona_codigo'];
+        $val03      = $request->getParsedBody()['tipo_riesgo_codigo'];
+        $val04      = $request->getParsedBody()['departamento_codigo'];
+        $val05      = $request->getParsedBody()['distrito_nombre'];
+        $val06      = $request->getParsedBody()['distrito_observacion'];
+        $val07      = $request->getParsedBody()['distrito_empresa_codigo'];
+        $val08      = $request->getParsedBody()['distrito_usuario'];
+        $val09      = $request->getParsedBody()['distrito_fecha_hora'];
+        $val10      = $request->getParsedBody()['distrito_ip'];
+
+        if (isset($val00)) {
+            $sql00  = "DELETE FROM LOCDIS WHERE LOCDISCOD = ?";
+
+            try {
+                $connDEFAULT  = getConnectionDEFAULT();
+                $stmtDEFAULT  = $connDEFAULT->prepare($sql00);
+                $stmtDEFAULT->execute([$val00]); 
+                
+                header("Content-Type: application/json; charset=utf-8");
+                $json       = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success DELETE', 'codigo' => $val00), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+
+                $stmtDEFAULT->closeCursor();
+                $stmtDEFAULT = null;
+            } catch (PDOException $e) {
+                header("Content-Type: application/json; charset=utf-8");
+                $json = json_encode(array('code' => 204, 'status' => 'failure', 'message' => 'Error DELETE: '.$e), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+            }
+        } else {
+            header("Content-Type: application/json; charset=utf-8");
+            $json = json_encode(array('code' => 400, 'status' => 'error', 'message' => 'Verifique, algún campo esta vacio.'), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+        }
+
+        $connDEFAULT  = null;
+        
+        return $json;
+    });
