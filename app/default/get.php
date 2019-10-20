@@ -1411,11 +1411,11 @@
         a.ESTFICCO2         AS          establecimiento_codigo_2,
         a.ESTFICCO3         AS          establecimiento_codigo_3,
         a.ESTFICOBS         AS          establecimiento_observacion,
-        a.PERFICAEM         AS          establecimiento_empresa_codigo,
-        a.PERFICAEM         AS          establecimiento_empresa_nombre,
-        a.PERFICAUS         AS          establecimiento_usuario,
-        a.PERFICAFH         AS          establecimiento_fecha_hora,
-        a.PERFICAIP         AS          establecimiento_ip,
+        a.ESTFICAEM         AS          establecimiento_empresa_codigo,
+        a.ESTFICAEM         AS          establecimiento_empresa_nombre,
+        a.ESTFICAUS         AS          establecimiento_usuario,
+        a.ESTFICAFH         AS          establecimiento_fecha_hora,
+        a.ESTFICAIP         AS          establecimiento_ip,
 
         b.DOMFICCOD         AS          tipo_estado_codigo,
         b.DOMFICNOM         AS          tipo_estado_nombre,
@@ -1436,10 +1436,10 @@
         INNER JOIN DOMFIC b ON a.PERFICECC = b.DOMFICCOD
         INNER JOIN DOMFIC c ON a.PERFICTPC = c.DOMFICCOD
         INNER JOIN DOMFIC d ON a.PERFICTDC = d.DOMFICCOD
-        INNER JOIN DOMFIC e ON a.ESTFICPEC = e.PERFICCOD
-        INNER JOIN DOMFIC f ON a.ESTFICDIC = f.LOCDISCOD
+        INNER JOIN PERFIC e ON a.ESTFICPEC = e.PERFICCOD
+        INNER JOIN LOCDIS f ON a.ESTFICDIC = f.LOCDISCOD
 
-        ORDER BY a.PERFICNOM";
+        ORDER BY a.ESTFICNOM";
 
         try {
             $connDEFAULT  = getConnectionDEFAULT();
@@ -1541,11 +1541,11 @@
             a.ESTFICCO2         AS          establecimiento_codigo_2,
             a.ESTFICCO3         AS          establecimiento_codigo_3,
             a.ESTFICOBS         AS          establecimiento_observacion,
-            a.PERFICAEM         AS          establecimiento_empresa_codigo,
-            a.PERFICAEM         AS          establecimiento_empresa_nombre,
-            a.PERFICAUS         AS          establecimiento_usuario,
-            a.PERFICAFH         AS          establecimiento_fecha_hora,
-            a.PERFICAIP         AS          establecimiento_ip,
+            a.ESTFICAEM         AS          establecimiento_empresa_codigo,
+            a.ESTFICAEM         AS          establecimiento_empresa_nombre,
+            a.ESTFICAUS         AS          establecimiento_usuario,
+            a.ESTFICAFH         AS          establecimiento_fecha_hora,
+            a.ESTFICAIP         AS          establecimiento_ip,
 
             b.DOMFICCOD         AS          tipo_estado_codigo,
             b.DOMFICNOM         AS          tipo_estado_nombre,
@@ -1566,12 +1566,12 @@
             INNER JOIN DOMFIC b ON a.PERFICECC = b.DOMFICCOD
             INNER JOIN DOMFIC c ON a.PERFICTPC = c.DOMFICCOD
             INNER JOIN DOMFIC d ON a.PERFICTDC = d.DOMFICCOD
-            INNER JOIN DOMFIC e ON a.ESTFICPEC = e.PERFICCOD
-            INNER JOIN DOMFIC f ON a.ESTFICDIC = f.LOCDISCOD
+            INNER JOIN PERFIC e ON a.ESTFICPEC = e.PERFICCOD
+            INNER JOIN LOCDIS f ON a.ESTFICDIC = f.LOCDISCOD
 
             WHERE a.ESTFICCOD = ?
 
-            ORDER BY a.PERFICNOM";
+            ORDER BY a.ESTFICNOM";
 
             try {
                 $connDEFAULT  = getConnectionDEFAULT();
