@@ -1111,7 +1111,7 @@
             INNER JOIN LOCPAI f ON e.LOCDEPPAC = f.LOCPAICOD
 
             WHERE a.LOCDISCOD = ?
-            
+
             ORDER BY f.LOCPAINOM, e.LOCDEPNOM, a.LOCDISNOM";
 
             try {
@@ -1214,7 +1214,7 @@
         d.DOMFICCOD         AS          tipo_documento_codigo,
         d.DOMFICNOM         AS          tipo_documento_nombre
         
-        FROM LOCDIS a
+        FROM PERFIC a
         INNER JOIN DOMFIC b ON a.PERFICECC = b.DOMFICCOD
         INNER JOIN DOMFIC c ON a.PERFICTPC = c.DOMFICCOD
         INNER JOIN DOMFIC d ON a.PERFICTDC = d.DOMFICCOD
@@ -1318,7 +1318,7 @@
             d.DOMFICCOD         AS          tipo_documento_codigo,
             d.DOMFICNOM         AS          tipo_documento_nombre
             
-            FROM LOCDIS a
+            FROM PERFIC a
             INNER JOIN DOMFIC b ON a.PERFICECC = b.DOMFICCOD
             INNER JOIN DOMFIC c ON a.PERFICTPC = c.DOMFICCOD
             INNER JOIN DOMFIC d ON a.PERFICTDC = d.DOMFICCOD
