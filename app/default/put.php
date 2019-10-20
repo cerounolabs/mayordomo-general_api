@@ -221,7 +221,7 @@
         $val08      = $request->getParsedBody()['establecimiento_total_potrero'];
         $val09      = $request->getParsedBody()['establecimiento_codigo_senacsa'];
         $val10      = $request->getParsedBody()['establecimiento_codigo_sigor'];
-        $val11      = $request->getParsedBody()['establecimiento_sitrap'];
+        $val11      = $request->getParsedBody()['establecimiento_codigo_sitrap'];
         $val12      = $request->getParsedBody()['establecimiento_observacion'];
         $val13      = $request->getParsedBody()['establecimiento_empresa_codigo'];
         $val14      = $request->getParsedBody()['establecimiento_usuario'];
