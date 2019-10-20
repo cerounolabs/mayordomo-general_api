@@ -1426,16 +1426,16 @@
         d.DOMFICCOD         AS          tipo_finalidad_codigo,
         d.DOMFICNOM         AS          tipo_finalidad_nombre,
 
-        e.PERFICNOM         AS          persona_completo,
-        e.PERFICDOC         AS          persona_documento,
+        e.PERFICCOD         AS          persona_codigo,
+        e.PERFICDOC         AS          persona_completo,
 
         f.LOCDISCOD         AS          distrito_codigo,
         f.LOCDISNOM         AS          distrito_nombre
         
         FROM ESTFIC a
-        INNER JOIN DOMFIC b ON a.PERFICECC = b.DOMFICCOD
-        INNER JOIN DOMFIC c ON a.PERFICTPC = c.DOMFICCOD
-        INNER JOIN DOMFIC d ON a.PERFICTDC = d.DOMFICCOD
+        INNER JOIN DOMFIC b ON a.ESTFICECC = b.DOMFICCOD
+        INNER JOIN DOMFIC c ON a.ESTFICTEC = c.DOMFICCOD
+        INNER JOIN DOMFIC d ON a.ESTFICTFC = d.DOMFICCOD
         INNER JOIN PERFIC e ON a.ESTFICPEC = e.PERFICCOD
         INNER JOIN LOCDIS f ON a.ESTFICDIC = f.LOCDISCOD
 
@@ -1556,16 +1556,16 @@
             d.DOMFICCOD         AS          tipo_finalidad_codigo,
             d.DOMFICNOM         AS          tipo_finalidad_nombre,
 
-            e.PERFICNOM         AS          persona_completo,
-            e.PERFICDOC         AS          persona_documento,
+            e.PERFICCOD         AS          persona_codigo,
+            e.PERFICDOC         AS          persona_completo,
 
             f.LOCDISCOD         AS          distrito_codigo,
             f.LOCDISNOM         AS          distrito_nombre
             
             FROM ESTFIC a
-            INNER JOIN DOMFIC b ON a.PERFICECC = b.DOMFICCOD
-            INNER JOIN DOMFIC c ON a.PERFICTPC = c.DOMFICCOD
-            INNER JOIN DOMFIC d ON a.PERFICTDC = d.DOMFICCOD
+            INNER JOIN DOMFIC b ON a.ESTFICECC = b.DOMFICCOD
+            INNER JOIN DOMFIC c ON a.ESTFICTEC = c.DOMFICCOD
+            INNER JOIN DOMFIC d ON a.ESTFICTFC = d.DOMFICCOD
             INNER JOIN PERFIC e ON a.ESTFICPEC = e.PERFICCOD
             INNER JOIN LOCDIS f ON a.ESTFICDIC = f.LOCDISCOD
 
