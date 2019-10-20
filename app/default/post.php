@@ -158,3 +158,46 @@
         
         return $json;
     });
+
+    $app->post('/v1/default/400', function($request) {
+        require __DIR__.'/../../src/connect.php';
+
+        $val01      = $request->getParsedBody()['tipo_estado_codigo'];
+        $val02      = $request->getParsedBody()['tipo_persona_codigo'];
+        $val03      = $request->getParsedBody()['tipo_documento_codigo'];
+        $val04      = $request->getParsedBody()['persona_completo'];
+        $val05      = $request->getParsedBody()['persona_documento'];
+        $val06      = $request->getParsedBody()['persona_telefono'];
+        $val07      = $request->getParsedBody()['persona_email'];
+        $val08      = $request->getParsedBody()['persona_observacion'];
+        $val09      = $request->getParsedBody()['persona_empresa_codigo'];
+        $val10      = $request->getParsedBody()['persona_usuario'];
+        $val11      = $request->getParsedBody()['persona_fecha_hora'];
+        $val12      = $request->getParsedBody()['persona_ip'];
+
+        if (isset($val01) && isset($val02) && isset($val03) && isset($val04) && isset($val05) && isset($val06) && isset($val07) && isset($val09) && isset($val10) && isset($val11) && isset($val12)) {
+            $sql00  = "INSERT INTO PERFIC (PERFICECC, PERFICTPC, PERFICTDC, PERFICNOM, PERFICDOC, PERFICTEL, PERFICMAI, PERFICOBS, PERFICAEM, PERFICAUS, PERFICAFH, PERFICAIP) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+            try {
+                $connDEFAULT  = getConnectionDEFAULT();
+                $stmtDEFAULT  = $connDEFAULT->prepare($sql00);
+                $stmtDEFAULT->execute([$val01, $val02, $val03, $val04, $val05, $val06, $val07, $val08, $val09, $val10, $val11, $val12]); 
+                
+                header("Content-Type: application/json; charset=utf-8");
+                $json       = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success INSERT', 'codigo' => $connDEFAULT->lastInsertId()), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+
+                $stmtDEFAULT->closeCursor();
+                $stmtDEFAULT = null;
+            } catch (PDOException $e) {
+                header("Content-Type: application/json; charset=utf-8");
+                $json = json_encode(array('code' => 204, 'status' => 'failure', 'message' => 'Error INSERT: '.$e), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+            }
+        } else {
+            header("Content-Type: application/json; charset=utf-8");
+            $json = json_encode(array('code' => 400, 'status' => 'error', 'message' => 'Verifique, algún campo esta vacio.'), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+        }
+
+        $connDEFAULT  = null;
+        
+        return $json;
+    });
