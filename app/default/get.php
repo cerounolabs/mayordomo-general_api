@@ -1428,6 +1428,7 @@
 
         e.PERFICCOD         AS          persona_codigo,
         e.PERFICDOC         AS          persona_completo,
+        e.PERFICDOC         AS          persona_documento,
 
         f.LOCDISCOD         AS          distrito_codigo,
         f.LOCDISNOM         AS          distrito_nombre
@@ -1471,6 +1472,7 @@
                     'tipo_finalidad_nombre'                     => $rowDEFAULT['tipo_finalidad_nombre'],
                     'persona_codigo'                            => $rowDEFAULT['persona_codigo'],
                     'persona_completo'                          => $rowDEFAULT['persona_completo'],
+                    'persona_documento'                         => $rowDEFAULT['persona_documento'],
                     'distrito_codigo'                           => $rowDEFAULT['distrito_codigo'],
                     'distrito_nombre'                           => $rowDEFAULT['distrito_nombre']
                 );
@@ -1506,6 +1508,7 @@
                     'tipo_finalidad_nombre'                     => '',
                     'persona_codigo'                            => '',
                     'persona_completo'                          => '',
+                    'persona_documento'                         => '',
                     'distrito_codigo'                           => '',
                     'distrito_nombre'                           => ''
                 );
@@ -1558,6 +1561,7 @@
 
             e.PERFICCOD         AS          persona_codigo,
             e.PERFICDOC         AS          persona_completo,
+            e.PERFICDOC         AS          persona_documento,
 
             f.LOCDISCOD         AS          distrito_codigo,
             f.LOCDISNOM         AS          distrito_nombre
@@ -1603,6 +1607,7 @@
                         'tipo_finalidad_nombre'                     => $rowDEFAULT['tipo_finalidad_nombre'],
                         'persona_codigo'                            => $rowDEFAULT['persona_codigo'],
                         'persona_completo'                          => $rowDEFAULT['persona_completo'],
+                        'persona_documento'                         => $rowDEFAULT['persona_documento'],
                         'distrito_codigo'                           => $rowDEFAULT['distrito_codigo'],
                         'distrito_nombre'                           => $rowDEFAULT['distrito_nombre']
                     );
@@ -1638,6 +1643,7 @@
                         'tipo_finalidad_nombre'                     => '',
                         'persona_codigo'                            => '',
                         'persona_completo'                          => '',
+                        'persona_documento'                         => '',
                         'distrito_codigo'                           => '',
                         'distrito_nombre'                           => ''
                     );
