@@ -1110,12 +1110,14 @@
             INNER JOIN LOCDEP e ON a.LOCDISDEC = e.LOCDEPCOD
             INNER JOIN LOCPAI f ON e.LOCDEPPAC = f.LOCPAICOD
 
+            WHERE a.LOCDISCOD = ?
+            
             ORDER BY f.LOCPAINOM, e.LOCDEPNOM, a.LOCDISNOM";
 
             try {
                 $connDEFAULT  = getConnectionDEFAULT();
                 $stmtDEFAULT  = $connDEFAULT->prepare($sql00);
-                $stmtDEFAULT->execute(); 
+                $stmtDEFAULT->execute([$val01]); 
 
                 while ($rowDEFAULT = $stmtDEFAULT->fetch()) {
                     $detalle    = array(
@@ -1291,98 +1293,105 @@
     $app->get('/v1/default/400/{codigo}', function($request) {
         require __DIR__.'/../../src/connect.php';
 
-        $sql00  = "SELECT
-        a.PERFICCOD         AS          persona_codigo,
-        a.PERFICNOM         AS          persona_completo,
-        a.PERFICDOC         AS          persona_documento,
-        a.PERFICTEL         AS          persona_telefono,
-        a.PERFICMAI         AS          persona_email,
-        a.PERFICOBS         AS          persona_observacion,
-        a.PERFICAEM         AS          persona_empresa_codigo,
-        a.PERFICAEM         AS          persona_empresa_nombre,
-        a.PERFICAUS         AS          persona_usuario,
-        a.PERFICAFH         AS          persona_fecha_hora,
-        a.PERFICAIP         AS          persona_ip,
-
-        b.DOMFICCOD         AS          tipo_estado_codigo,
-        b.DOMFICNOM         AS          tipo_estado_nombre,
-
-        c.DOMFICCOD         AS          tipo_persona_codigo,
-        c.DOMFICNOM         AS          tipo_persona_nombre,
-
-        d.DOMFICCOD         AS          tipo_documento_codigo,
-        d.DOMFICNOM         AS          tipo_documento_nombre
+        $val01      = $request->getAttribute('codigo');
         
-        FROM LOCDIS a
-        INNER JOIN DOMFIC b ON a.PERFICECC = b.DOMFICCOD
-        INNER JOIN DOMFIC c ON a.PERFICTPC = c.DOMFICCOD
-        INNER JOIN DOMFIC d ON a.PERFICTDC = d.DOMFICCOD
+        if (isset($val01)) {
+            $sql00  = "SELECT
+            a.PERFICCOD         AS          persona_codigo,
+            a.PERFICNOM         AS          persona_completo,
+            a.PERFICDOC         AS          persona_documento,
+            a.PERFICTEL         AS          persona_telefono,
+            a.PERFICMAI         AS          persona_email,
+            a.PERFICOBS         AS          persona_observacion,
+            a.PERFICAEM         AS          persona_empresa_codigo,
+            a.PERFICAEM         AS          persona_empresa_nombre,
+            a.PERFICAUS         AS          persona_usuario,
+            a.PERFICAFH         AS          persona_fecha_hora,
+            a.PERFICAIP         AS          persona_ip,
 
-        WHERE a.PERFICCOD = ?
-        ORDER BY a.PERFICNOM";
+            b.DOMFICCOD         AS          tipo_estado_codigo,
+            b.DOMFICNOM         AS          tipo_estado_nombre,
 
-        try {
-            $connDEFAULT  = getConnectionDEFAULT();
-            $stmtDEFAULT  = $connDEFAULT->prepare($sql00);
-            $stmtDEFAULT->execute(); 
+            c.DOMFICCOD         AS          tipo_persona_codigo,
+            c.DOMFICNOM         AS          tipo_persona_nombre,
 
-            while ($rowDEFAULT = $stmtDEFAULT->fetch()) {
-                $detalle    = array(
-                    'persona_codigo'                    => $rowDEFAULT['persona_codigo'],
-                    'persona_completo'                  => $rowDEFAULT['persona_completo'],
-                    'persona_documento'                 => $rowDEFAULT['persona_documento'],
-                    'persona_telefono'                  => $rowDEFAULT['persona_telefono'],
-                    'persona_email'                     => $rowDEFAULT['persona_email'],
-                    'persona_observacion'               => $rowDEFAULT['persona_observacion'],
-                    'persona_empresa_codigo'            => $rowDEFAULT['persona_empresa_codigo'],
-                    'persona_empresa_nombre'            => $rowDEFAULT['persona_empresa_nombre'],
-                    'persona_usuario'                   => $rowDEFAULT['persona_usuario'],
-                    'persona_fecha_hora'                => date_format(date_create($rowDEFAULT['persona_fecha_hora']), 'd/m/Y H:i:s'),
-                    'persona_ip'                        => $rowDEFAULT['persona_ip'],
-                    'tipo_estado_codigo'                => $rowDEFAULT['tipo_estado_codigo'],
-                    'tipo_estado_nombre'                => $rowDEFAULT['tipo_estado_nombre'],
-                    'tipo_persona_codigo'               => $rowDEFAULT['tipo_persona_codigo'],
-                    'tipo_persona_nombre'               => $rowDEFAULT['tipo_persona_nombre'],
-                    'tipo_documento_codigo'             => $rowDEFAULT['tipo_documento_codigo'],
-                    'tipo_documento_nombre'             => $rowDEFAULT['tipo_documento_nombre']
-                );
+            d.DOMFICCOD         AS          tipo_documento_codigo,
+            d.DOMFICNOM         AS          tipo_documento_nombre
+            
+            FROM LOCDIS a
+            INNER JOIN DOMFIC b ON a.PERFICECC = b.DOMFICCOD
+            INNER JOIN DOMFIC c ON a.PERFICTPC = c.DOMFICCOD
+            INNER JOIN DOMFIC d ON a.PERFICTDC = d.DOMFICCOD
 
-                $result[]   = $detalle;
-            }
+            WHERE a.PERFICCOD = ?
+            ORDER BY a.PERFICNOM";
 
-            if (isset($result)){
+            try {
+                $connDEFAULT  = getConnectionDEFAULT();
+                $stmtDEFAULT  = $connDEFAULT->prepare($sql00);
+                $stmtDEFAULT->execute([$val01]); 
+
+                while ($rowDEFAULT = $stmtDEFAULT->fetch()) {
+                    $detalle    = array(
+                        'persona_codigo'                    => $rowDEFAULT['persona_codigo'],
+                        'persona_completo'                  => $rowDEFAULT['persona_completo'],
+                        'persona_documento'                 => $rowDEFAULT['persona_documento'],
+                        'persona_telefono'                  => $rowDEFAULT['persona_telefono'],
+                        'persona_email'                     => $rowDEFAULT['persona_email'],
+                        'persona_observacion'               => $rowDEFAULT['persona_observacion'],
+                        'persona_empresa_codigo'            => $rowDEFAULT['persona_empresa_codigo'],
+                        'persona_empresa_nombre'            => $rowDEFAULT['persona_empresa_nombre'],
+                        'persona_usuario'                   => $rowDEFAULT['persona_usuario'],
+                        'persona_fecha_hora'                => date_format(date_create($rowDEFAULT['persona_fecha_hora']), 'd/m/Y H:i:s'),
+                        'persona_ip'                        => $rowDEFAULT['persona_ip'],
+                        'tipo_estado_codigo'                => $rowDEFAULT['tipo_estado_codigo'],
+                        'tipo_estado_nombre'                => $rowDEFAULT['tipo_estado_nombre'],
+                        'tipo_persona_codigo'               => $rowDEFAULT['tipo_persona_codigo'],
+                        'tipo_persona_nombre'               => $rowDEFAULT['tipo_persona_nombre'],
+                        'tipo_documento_codigo'             => $rowDEFAULT['tipo_documento_codigo'],
+                        'tipo_documento_nombre'             => $rowDEFAULT['tipo_documento_nombre']
+                    );
+
+                    $result[]   = $detalle;
+                }
+
+                if (isset($result)){
+                    header("Content-Type: application/json; charset=utf-8");
+                    $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success SELECT', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+                } else {
+                    $detalle = array(
+                        'persona_codigo'                    => '',
+                        'persona_completo'                  => '',
+                        'persona_documento'                 => '',
+                        'persona_telefono'                  => '',
+                        'persona_email'                     => '',
+                        'persona_observacion'               => '',
+                        'persona_empresa_codigo'            => '',
+                        'persona_empresa_nombre'            => '',
+                        'persona_usuario'                   => '',
+                        'persona_fecha_hora'                => '',
+                        'persona_ip'                        => '',
+                        'tipo_estado_codigo'                => '',
+                        'tipo_estado_nombre'                => '',
+                        'tipo_persona_codigo'               => '',
+                        'tipo_persona_nombre'               => '',
+                        'tipo_documento_codigo'             => '',
+                        'tipo_documento_nombre'             => ''
+                    );
+
+                    header("Content-Type: application/json; charset=utf-8");
+                    $json = json_encode(array('code' => 204, 'status' => 'ok', 'message' => 'No hay registros', 'data' => $detalle), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+                }
+
+                $stmtDEFAULT->closeCursor();
+                $stmtDEFAULT = null;
+            } catch (PDOException $e) {
                 header("Content-Type: application/json; charset=utf-8");
-                $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success SELECT', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
-            } else {
-                $detalle = array(
-                    'persona_codigo'                    => '',
-                    'persona_completo'                  => '',
-                    'persona_documento'                 => '',
-                    'persona_telefono'                  => '',
-                    'persona_email'                     => '',
-                    'persona_observacion'               => '',
-                    'persona_empresa_codigo'            => '',
-                    'persona_empresa_nombre'            => '',
-                    'persona_usuario'                   => '',
-                    'persona_fecha_hora'                => '',
-                    'persona_ip'                        => '',
-                    'tipo_estado_codigo'                => '',
-                    'tipo_estado_nombre'                => '',
-                    'tipo_persona_codigo'               => '',
-                    'tipo_persona_nombre'               => '',
-                    'tipo_documento_codigo'             => '',
-                    'tipo_documento_nombre'             => ''
-                );
-
-                header("Content-Type: application/json; charset=utf-8");
-                $json = json_encode(array('code' => 204, 'status' => 'ok', 'message' => 'No hay registros', 'data' => $detalle), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+                $json = json_encode(array('code' => 204, 'status' => 'failure', 'message' => 'Error SELECT: '.$e), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
             }
-
-            $stmtDEFAULT->closeCursor();
-            $stmtDEFAULT = null;
-        } catch (PDOException $e) {
+        } else {
             header("Content-Type: application/json; charset=utf-8");
-            $json = json_encode(array('code' => 204, 'status' => 'failure', 'message' => 'Error SELECT: '.$e), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+            $json = json_encode(array('code' => 400, 'status' => 'error', 'message' => 'Verifique, algún campo esta vacio.'), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
         }
 
         $connDEFAULT  = null;
