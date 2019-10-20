@@ -1405,7 +1405,7 @@
         $sql00  = "SELECT
         a.ESTFICCOD         AS          establecimiento_codigo,
         a.ESTFICNOM         AS          establecimiento_nombre,
-        a.ESTFICTHE         AS          establecimiento_total_hectaria,
+        a.ESTFICTHE         AS          establecimiento_total_hectarea,
         a.ESTFICTPO         AS          establecimiento_total_potrero,
         a.ESTFICCO1         AS          establecimiento_codigo_senacsa,
         a.ESTFICCO2         AS          establecimiento_codigo_sigor,
@@ -1451,7 +1451,7 @@
                 $detalle    = array(
                     'establecimiento_codigo'                    => $rowDEFAULT['establecimiento_codigo'],
                     'establecimiento_nombre'                    => $rowDEFAULT['establecimiento_nombre'],
-                    'establecimiento_total_hectaria'            => $rowDEFAULT['establecimiento_total_hectaria'],
+                    'establecimiento_total_hectarea'            => $rowDEFAULT['establecimiento_total_hectarea'],
                     'establecimiento_total_potrero'             => $rowDEFAULT['establecimiento_total_potrero'],
                     'establecimiento_codigo_senacsa'            => $rowDEFAULT['establecimiento_codigo_senacsa'],
                     'establecimiento_codigo_sigor'              => $rowDEFAULT['establecimiento_codigo_sigor'],
@@ -1487,7 +1487,7 @@
                 $detalle = array(
                     'establecimiento_codigo'                    => '',
                     'establecimiento_nombre'                    => '',
-                    'establecimiento_total_hectaria'            => '',
+                    'establecimiento_total_hectarea'            => '',
                     'establecimiento_total_potrero'             => '',
                     'establecimiento_codigo_senacsa'            => '',
                     'establecimiento_codigo_sigor'              => '',
@@ -1538,7 +1538,7 @@
             $sql00  = "SELECT
             a.ESTFICCOD         AS          establecimiento_codigo,
             a.ESTFICNOM         AS          establecimiento_nombre,
-            a.ESTFICTHE         AS          establecimiento_total_hectaria,
+            a.ESTFICTHE         AS          establecimiento_total_hectarea,
             a.ESTFICTPO         AS          establecimiento_total_potrero,
             a.ESTFICCO1         AS          establecimiento_codigo_senacsa,
             a.ESTFICCO2         AS          establecimiento_codigo_sigor,
@@ -1586,7 +1586,7 @@
                     $detalle    = array(
                         'establecimiento_codigo'                    => $rowDEFAULT['establecimiento_codigo'],
                         'establecimiento_nombre'                    => $rowDEFAULT['establecimiento_nombre'],
-                        'establecimiento_total_hectaria'            => $rowDEFAULT['establecimiento_total_hectaria'],
+                        'establecimiento_total_hectarea'            => $rowDEFAULT['establecimiento_total_hectarea'],
                         'establecimiento_total_potrero'             => $rowDEFAULT['establecimiento_total_potrero'],
                         'establecimiento_codigo_senacsa'            => $rowDEFAULT['establecimiento_codigo_senacsa'],
                         'establecimiento_codigo_sigor'              => $rowDEFAULT['establecimiento_codigo_sigor'],
@@ -1622,7 +1622,7 @@
                     $detalle = array(
                         'establecimiento_codigo'                    => '',
                         'establecimiento_nombre'                    => '',
-                        'establecimiento_total_hectaria'            => '',
+                        'establecimiento_total_hectarea'            => '',
                         'establecimiento_total_potrero'             => '',
                         'establecimiento_codigo_senacsa'            => '',
                         'establecimiento_codigo_sigor'              => '',
