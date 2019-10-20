@@ -206,3 +206,51 @@
         
         return $json;
     });
+
+    $app->put('/v1/default/500/{codigo}', function($request) {
+        require __DIR__.'/../../src/connect.php';
+
+        $val00      = $request->getAttribute('codigo');
+        $val01      = $request->getParsedBody()['tipo_estado_codigo'];
+        $val02      = $request->getParsedBody()['tipo_establecimiento_codigo'];
+        $val03      = $request->getParsedBody()['tipo_finalidad_codigo'];
+        $val04      = $request->getParsedBody()['persona_codigo'];
+        $val05      = $request->getParsedBody()['distrito_codigo'];
+        $val06      = $request->getParsedBody()['establecimiento_nombre'];
+        $val07      = $request->getParsedBody()['establecimiento_total_hectarea'];
+        $val08      = $request->getParsedBody()['establecimiento_total_potrero'];
+        $val09      = $request->getParsedBody()['establecimiento_codigo_senacsa'];
+        $val10      = $request->getParsedBody()['establecimiento_codigo_sigor'];
+        $val11      = $request->getParsedBody()['establecimiento_sitrap'];
+        $val12      = $request->getParsedBody()['establecimiento_observacion'];
+        $val13      = $request->getParsedBody()['establecimiento_empresa_codigo'];
+        $val14      = $request->getParsedBody()['establecimiento_usuario'];
+        $val15      = $request->getParsedBody()['establecimiento_fecha_hora'];
+        $val16      = $request->getParsedBody()['establecimiento_ip'];
+
+        if (isset($val01) && isset($val02) && isset($val03) && isset($val04) && isset($val05) && isset($val06) && isset($val13) && isset($val14) && isset($val15) && isset($val16)) {
+            $sql00  = "UPDATE ESTFIC SET ESTFICECC = ?, ESTFICTEC = ?, ESTFICTFC = ?, ESTFICPEC = ?, ESTFICDIC = ?, ESTFICNOM = ?, ESTFICTHE = ?, ESTFICTPO = ?, ESTFICCO1 = ?, ESTFICCO2 = ?, ESTFICCO3 = ?, ESTFICOBS = ?, ESTFICAEM = ?, ESTFICAUS = ?, ESTFICAFH = ?, ESTFICAIP = ? WHERE ESTFICCOD = ?";
+
+            try {
+                $connDEFAULT  = getConnectionDEFAULT();
+                $stmtDEFAULT  = $connDEFAULT->prepare($sql00);
+                $stmtDEFAULT->execute([$val01, $val02, $val03, $val04, $val05, $val06, $val07, $val08, $val09, $val10, $val11, $val12, $val13, $val14, $val15, $val16, $val00]);
+                
+                header("Content-Type: application/json; charset=utf-8");
+                $json       = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success UPDATE', 'codigo' => $val00), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+
+                $stmtDEFAULT->closeCursor();
+                $stmtDEFAULT = null;
+            } catch (PDOException $e) {
+                header("Content-Type: application/json; charset=utf-8");
+                $json = json_encode(array('code' => 204, 'status' => 'failure', 'message' => 'Error UPDATE: '.$e), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+            }
+        } else {
+            header("Content-Type: application/json; charset=utf-8");
+            $json = json_encode(array('code' => 400, 'status' => 'error', 'message' => 'Verifique, algún campo esta vacio.'), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+        }
+
+        $connDEFAULT  = null;
+        
+        return $json;
+    });
