@@ -368,3 +368,45 @@
         
         return $json;
     });
+
+    $app->post('/v1/default/603', function($request) {
+        require __DIR__.'/../../src/connect.php';
+
+        $val01      = $request->getParsedBody()['tipo_estado_codigo'];
+        $val02      = $request->getParsedBody()['tipo_pastura_codigo'];
+        $val03      = $request->getParsedBody()['establecimiento_codigo'];
+        $val04      = $request->getParsedBody()['establecimiento_seccion_codigo'];
+        $val05      = $request->getParsedBody()['establecimiento_potrero_nombre'];
+        $val06      = $request->getParsedBody()['establecimiento_potrero_hectarea'];
+        $val07      = $request->getParsedBody()['establecimiento_potrero_observacion'];
+        $aud01      = $request->getParsedBody()['auditoria_empresa_codigo'];
+        $aud02      = $request->getParsedBody()['auditoria_usuario'];
+        $aud03      = $request->getParsedBody()['auditoria_fecha_hora'];
+        $aud04      = $request->getParsedBody()['auditoria_ip'];
+
+        if (isset($val01) && isset($val02) && isset($val03)) {
+            $sql00  = "INSERT INTO ESTPOT (ESTPOTECC, ESTPOTTPC, ESTPOTESC, ESTPOTSEC, ESTPOTNOM, ESTPOTHEC, ESTPOTOBS, ESTPOTAEM, ESTPOTAUS, ESTPOTAFH, ESTPOTAIP) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+            try {
+                $connDEFAULT  = getConnectionDEFAULT();
+                $stmtDEFAULT  = $connDEFAULT->prepare($sql00);
+                $stmtDEFAULT->execute([$val01, $val02, $val03, $val04, $val05, $val06, $val07, $aud01, $aud02, $aud03, $aud04]); 
+                
+                header("Content-Type: application/json; charset=utf-8");
+                $json       = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success INSERT', 'codigo' => $connDEFAULT->lastInsertId()), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+
+                $stmtDEFAULT->closeCursor();
+                $stmtDEFAULT = null;
+            } catch (PDOException $e) {
+                header("Content-Type: application/json; charset=utf-8");
+                $json = json_encode(array('code' => 204, 'status' => 'failure', 'message' => 'Error INSERT: '.$e), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+            }
+        } else {
+            header("Content-Type: application/json; charset=utf-8");
+            $json = json_encode(array('code' => 400, 'status' => 'error', 'message' => 'Verifique, algún campo esta vacio.'), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+        }
+
+        $connDEFAULT  = null;
+        
+        return $json;
+    });
