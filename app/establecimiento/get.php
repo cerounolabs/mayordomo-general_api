@@ -143,7 +143,7 @@
             INNER JOIN mayordomo_default.DOMFIC c ON a.ESTPERTUC = c.DOMFICCOD
             INNER JOIN mayordomo_default.DOMFIC d ON a.ESTPERTPC = d.DOMFICCOD
             INNER JOIN mayordomo_default.DOMFIC e ON a.ESTPERPDC = e.DOMFICCOD
-            INNER JOIN mayordomo_default.ESTFIC f ON a.ESTPERESC = b.ESTFICCOD
+            INNER JOIN mayordomo_default.ESTFIC f ON a.ESTPERESC = f.ESTFICCOD
 
             WHERE a.ESTPERESC = ? 
 
