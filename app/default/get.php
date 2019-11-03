@@ -1979,7 +1979,7 @@
             
             FROM ESTSEC a
             INNER JOIN mayordomo_default.DOMFIC b ON a.ESTSECECC = b.DOMFICCOD
-            INNER JOIN mayordomo_default.ESTFIC f ON a.ESTSECESC = f.ESTFICCOD
+            INNER JOIN mayordomo_default.ESTFIC c ON a.ESTSECESC = c.ESTFICCOD
 
             WHERE a.ESTSECESC = ? 
 
@@ -2073,7 +2073,7 @@
             
             FROM ESTSEC a
             INNER JOIN mayordomo_default.DOMFIC b ON a.ESTSECECC = b.DOMFICCOD
-            INNER JOIN mayordomo_default.ESTFIC f ON a.ESTSECESC = f.ESTFICCOD
+            INNER JOIN mayordomo_default.ESTFIC c ON a.ESTSECESC = c.ESTFICCOD
 
             WHERE a.ESTSECESC = ? AND a.ESTSECCOD = ?
 
