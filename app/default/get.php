@@ -2179,7 +2179,7 @@
 
             WHERE a.ESTPOTESC = ?
 
-            ORDER BY a.ESTSECCOD, a.ESTPOTSEC";
+            ORDER BY a.ESTPOTESC, a.ESTPOTSEC";
 
             try {
                 $connDEFAULT  = getConnectionDEFAULT();
@@ -2292,7 +2292,7 @@
 
             WHERE a.ESTPOTESC = ? AND a.ESTPOTSEC = ?
 
-            ORDER BY a.ESTSECCOD, a.ESTPOTSEC";
+            ORDER BY a.ESTPOTESC, a.ESTPOTSEC";
 
             try {
                 $connDEFAULT  = getConnectionDEFAULT();
@@ -2406,7 +2406,7 @@
 
             WHERE a.ESTPOTESC = ? AND a.ESTPOTSEC = ? AND a.ESTPOTCOD = ?
 
-            ORDER BY a.ESTSECCOD, a.ESTPOTSEC";
+            ORDER BY a.ESTPOTESC, a.ESTPOTSEC";
 
             try {
                 $connDEFAULT  = getConnectionDEFAULT();
