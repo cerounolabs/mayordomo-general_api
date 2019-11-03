@@ -123,8 +123,8 @@
             a.ESTPERAFH         AS          auditoria_fecha_hora,
             a.ESTPERAIP         AS          auditoria_ip,
 
-            b.DOMFICCOD         AS          estado_codigo,
-            b.DOMFICNOM         AS          estado_nombre,
+            b.DOMFICCOD         AS          tipo_estado_codigo,
+            b.DOMFICNOM         AS          tipo_estado_nombre,
 
             c.DOMFICCOD         AS          tipo_usuario_codigo,
             c.DOMFICNOM         AS          tipo_usuario_nombre,
@@ -156,8 +156,8 @@
 
                 while ($rowESTABLECIMIENTO = $stmtESTABLECIMIENTO->fetch()) {
                     $detalle    = array(
-                        'estado_codigo'                                 => $rowESTABLECIMIENTO['estado_codigo'],
-                        'estado_nombre'                                 => $rowESTABLECIMIENTO['estado_nombre'],
+                        'tipo_estado_codigo'                            => $rowESTABLECIMIENTO['tipo_estado_codigo'],
+                        'tipo_estado_nombre'                            => $rowESTABLECIMIENTO['tipo_estado_nombre'],
                         'tipo_usuario_codigo'                           => $rowESTABLECIMIENTO['tipo_usuario_codigo'],
                         'tipo_usuario_nombre'                           => $rowESTABLECIMIENTO['tipo_usuario_nombre'],
                         'tipo_persona_codigo'                           => $rowESTABLECIMIENTO['tipo_persona_codigo'],
@@ -189,8 +189,8 @@
                     $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success SELECT', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
                 } else {
                     $detalle = array(
-                        'estado_codigo'                                 => '',
-                        'estado_nombre'                                 => '',
+                        'tipo_estado_codigo'                            => '',
+                        'tipo_estado_nombre'                            => '',
                         'tipo_usuario_codigo'                           => '',
                         'tipo_usuario_nombre'                           => '',
                         'tipo_persona_codigo'                           => '',
@@ -256,8 +256,8 @@
             a.ESTPERAFH         AS          auditoria_fecha_hora,
             a.ESTPERAIP         AS          auditoria_ip,
 
-            b.DOMFICCOD         AS          estado_codigo,
-            b.DOMFICNOM         AS          estado_nombre,
+            b.DOMFICCOD         AS          tipo_estado_codigo,
+            b.DOMFICNOM         AS          tipo_estado_nombre,
 
             c.DOMFICCOD         AS          tipo_usuario_codigo,
             c.DOMFICNOM         AS          tipo_usuario_nombre,
@@ -289,8 +289,8 @@
 
                 while ($rowESTABLECIMIENTO = $stmtESTABLECIMIENTO->fetch()) {
                     $detalle    = array(
-                        'estado_codigo'                                 => $rowESTABLECIMIENTO['estado_codigo'],
-                        'estado_nombre'                                 => $rowESTABLECIMIENTO['estado_nombre'],
+                        'tipo_estado_codigo'                            => $rowESTABLECIMIENTO['tipo_estado_codigo'],
+                        'tipo_estado_nombre'                            => $rowESTABLECIMIENTO['tipo_estado_nombre'],
                         'tipo_usuario_codigo'                           => $rowESTABLECIMIENTO['tipo_usuario_codigo'],
                         'tipo_usuario_nombre'                           => $rowESTABLECIMIENTO['tipo_usuario_nombre'],
                         'tipo_persona_codigo'                           => $rowESTABLECIMIENTO['tipo_persona_codigo'],
@@ -322,8 +322,8 @@
                     $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success SELECT', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
                 } else {
                     $detalle = array(
-                        'estado_codigo'                                 => '',
-                        'estado_nombre'                                 => '',
+                        'tipo_estado_codigo'                            => '',
+                        'tipo_estado_nombre'                            => '',
                         'tipo_usuario_codigo'                           => '',
                         'tipo_usuario_nombre'                           => '',
                         'tipo_persona_codigo'                           => '',
