@@ -138,7 +138,7 @@
             f.ESTFICCOD         AS          establecimiento_codigo,
             f.ESTFICNOM         AS          establecimiento_nombre
             
-            FROM ESTCAT a
+            FROM ESTPER a
             INNER JOIN mayordomo_default.DOMFIC b ON a.ESTPERECC = b.DOMFICCOD
             INNER JOIN mayordomo_default.DOMFIC c ON a.ESTPERTUC = c.DOMFICCOD
             INNER JOIN mayordomo_default.DOMFIC d ON a.ESTPERTPC = d.DOMFICCOD
@@ -271,7 +271,7 @@
             f.ESTFICCOD         AS          establecimiento_codigo,
             f.ESTFICNOM         AS          establecimiento_nombre
             
-            FROM ESTCAT a
+            FROM ESTPER a
             INNER JOIN mayordomo_default.DOMFIC b ON a.ESTPERECC = b.DOMFICCOD
             INNER JOIN mayordomo_default.DOMFIC c ON a.ESTPERTUC = c.DOMFICCOD
             INNER JOIN mayordomo_default.DOMFIC d ON a.ESTPERTPC = d.DOMFICCOD
