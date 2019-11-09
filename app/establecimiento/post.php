@@ -103,15 +103,15 @@
             $sql00  = "INSERT INTO ESTLOT (ESTLOTECC, ESTLOTESC, ESTLOTNOM, ESTLOTOBS, ESTLOTAEM, ESTLOTAUS, ESTLOTAFH, ESTLOTAIP) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
             try {
-                $connDEFAULT  = getConnectionDEFAULT();
-                $stmtDEFAULT  = $connDEFAULT->prepare($sql00);
-                $stmtDEFAULT->execute([$val01, $val02, $val03, $val04, $aud01, $aud02, $aud03, $aud04]); 
+                $connESTABLECIMIENTO  = getConnectionESTABLECIMIENTO();
+                $stmtESTABLECIMIENTO  = $connESTABLECIMIENTO->prepare($sql00);
+                $stmtESTABLECIMIENTO->execute([$val01, $val02, $val03, $val04, $aud01, $aud02, $aud03, $aud04]); 
                 
                 header("Content-Type: application/json; charset=utf-8");
-                $json       = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success INSERT', 'codigo' => $connDEFAULT->lastInsertId()), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+                $json       = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success INSERT', 'codigo' => $connESTABLECIMIENTO->lastInsertId()), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
 
-                $stmtDEFAULT->closeCursor();
-                $stmtDEFAULT = null;
+                $stmtESTABLECIMIENTO->closeCursor();
+                $stmtESTABLECIMIENTO = null;
             } catch (PDOException $e) {
                 header("Content-Type: application/json; charset=utf-8");
                 $json = json_encode(array('code' => 204, 'status' => 'failure', 'message' => 'Error INSERT: '.$e), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
@@ -121,7 +121,7 @@
             $json = json_encode(array('code' => 400, 'status' => 'error', 'message' => 'Verifique, algún campo esta vacio.'), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
         }
 
-        $connDEFAULT  = null;
+        $connESTABLECIMIENTO  = null;
         
         return $json;
     });
