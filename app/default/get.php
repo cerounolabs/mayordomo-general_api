@@ -2152,6 +2152,7 @@
             a.ESTPOTCOD         AS          establecimiento_potrero_codigo,
             a.ESTPOTNOM         AS          establecimiento_potrero_nombre,
             a.ESTPOTHEC         AS          establecimiento_potrero_hectarea,
+            a.ESTPOTCAP         AS          establecimiento_potrero_capacidad,
             a.ESTPOTOBS         AS          establecimiento_potrero_observacion,
             a.ESTPOTAEM         AS          auditoria_empresa_codigo,
             a.ESTPOTAEM         AS          auditoria_empresa_nombre,
@@ -2162,20 +2163,24 @@
             b.DOMFICCOD         AS          tipo_estado_codigo,
             b.DOMFICNOM         AS          tipo_estado_nombre,
 
-            c.DOMFICCOD         AS          tipo_pastura_codigo,
-            c.DOMFICNOM         AS          tipo_pastura_nombre,
+            c.DOMFICCOD         AS          tipo_pastura1_codigo,
+            c.DOMFICNOM         AS          tipo_pastura1_nombre,
 
-            d.ESTFICCOD         AS          establecimiento_codigo,
-            d.ESTFICNOM         AS          establecimiento_nombre,
+            d.DOMFICCOD         AS          tipo_pastura2_codigo,
+            d.DOMFICNOM         AS          tipo_pastura2_nombre,
 
-            e.ESTSECCOD         AS          establecimiento_seccion_codigo,
-            e.ESTSECNOM         AS          establecimiento_seccion_nombre
+            e.ESTFICCOD         AS          establecimiento_codigo,
+            e.ESTFICNOM         AS          establecimiento_nombre,
+
+            f.ESTSECCOD         AS          establecimiento_seccion_codigo,
+            f.ESTSECNOM         AS          establecimiento_seccion_nombre
             
             FROM ESTPOT a
             INNER JOIN mayordomo_default.DOMFIC b ON a.ESTPOTECC = b.DOMFICCOD
             INNER JOIN mayordomo_default.DOMFIC c ON a.ESTPOTTPC = c.DOMFICCOD
-            INNER JOIN mayordomo_default.ESTFIC d ON a.ESTPOTESC = d.ESTFICCOD
-            INNER JOIN mayordomo_default.ESTSEC e ON a.ESTPOTSEC = e.ESTSECCOD
+            INNER JOIN mayordomo_default.DOMFIC d ON a.ESTPOTTAC = d.DOMFICCOD
+            INNER JOIN mayordomo_default.ESTFIC e ON a.ESTPOTESC = e.ESTFICCOD
+            INNER JOIN mayordomo_default.ESTSEC f ON a.ESTPOTSEC = f.ESTSECCOD
 
             WHERE a.ESTPOTESC = ?
 
@@ -2190,8 +2195,10 @@
                     $detalle    = array(
                         'tipo_estado_codigo'                            => $rowDEFAULT['tipo_estado_codigo'],
                         'tipo_estado_nombre'                            => $rowDEFAULT['tipo_estado_nombre'],
-                        'tipo_pastura_codigo'                           => $rowDEFAULT['tipo_pastura_codigo'],
-                        'tipo_pastura_nombre'                           => $rowDEFAULT['tipo_pastura_nombre'],
+                        'tipo_pastura1_codigo'                          => $rowDEFAULT['tipo_pastura1_codigo'],
+                        'tipo_pastura1_nombre'                          => $rowDEFAULT['tipo_pastura1_nombre'],
+                        'tipo_pastura2_codigo'                          => $rowDEFAULT['tipo_pastura2_codigo'],
+                        'tipo_pastura2_nombre'                          => $rowDEFAULT['tipo_pastura2_nombre'],
                         'establecimiento_codigo'                        => $rowDEFAULT['establecimiento_codigo'],
                         'establecimiento_nombre'                        => $rowDEFAULT['establecimiento_nombre'],
                         'establecimiento_seccion_codigo'                => $rowDEFAULT['establecimiento_seccion_codigo'],
@@ -2199,6 +2206,7 @@
                         'establecimiento_potrero_codigo'                => $rowDEFAULT['establecimiento_potrero_codigo'],
                         'establecimiento_potrero_nombre'                => $rowDEFAULT['establecimiento_potrero_nombre'],
                         'establecimiento_potrero_hectarea'              => $rowDEFAULT['establecimiento_potrero_hectarea'],
+                        'establecimiento_potrero_capacidad'             => $rowDEFAULT['establecimiento_potrero_capacidad'],
                         'establecimiento_potrero_observacion'           => $rowDEFAULT['establecimiento_potrero_observacion'],
                         'auditoria_empresa_codigo'                      => $rowDEFAULT['auditoria_empresa_codigo'],
                         'auditoria_empresa_nombre'                      => $rowDEFAULT['auditoria_empresa_nombre'],
@@ -2217,8 +2225,10 @@
                     $detalle = array(
                         'tipo_estado_codigo'                            => '',
                         'tipo_estado_nombre'                            => '',
-                        'tipo_pastura_codigo'                           => '',
-                        'tipo_pastura_nombre'                           => '',
+                        'tipo_pastura1_codigo'                          => '',
+                        'tipo_pastura1_nombre'                          => '',
+                        'tipo_pastura2_codigo'                          => '',
+                        'tipo_pastura2_nombre'                          => '',
                         'establecimiento_codigo'                        => '',
                         'establecimiento_nombre'                        => '',
                         'establecimiento_seccion_codigo'                => '',
@@ -2226,6 +2236,7 @@
                         'establecimiento_potrero_codigo'                => '',
                         'establecimiento_potrero_nombre'                => '',
                         'establecimiento_potrero_hectarea'              => '',
+                        'establecimiento_potrero_capacidad'             => '',
                         'establecimiento_potrero_observacion'           => '',
                         'auditoria_empresa_codigo'                      => '',
                         'auditoria_empresa_nombre'                      => '',
@@ -2265,6 +2276,7 @@
             a.ESTPOTCOD         AS          establecimiento_potrero_codigo,
             a.ESTPOTNOM         AS          establecimiento_potrero_nombre,
             a.ESTPOTHEC         AS          establecimiento_potrero_hectarea,
+            a.ESTPOTCAP         AS          establecimiento_potrero_capacidad,
             a.ESTPOTOBS         AS          establecimiento_potrero_observacion,
             a.ESTPOTAEM         AS          auditoria_empresa_codigo,
             a.ESTPOTAEM         AS          auditoria_empresa_nombre,
@@ -2278,17 +2290,21 @@
             c.DOMFICCOD         AS          tipo_pastura_codigo,
             c.DOMFICNOM         AS          tipo_pastura_nombre,
 
-            d.ESTFICCOD         AS          establecimiento_codigo,
-            d.ESTFICNOM         AS          establecimiento_nombre,
+            d.DOMFICCOD         AS          tipo_pastura2_codigo,
+            d.DOMFICNOM         AS          tipo_pastura2_nombre,
 
-            e.ESTSECCOD         AS          establecimiento_seccion_codigo,
-            e.ESTSECNOM         AS          establecimiento_seccion_nombre
+            e.ESTFICCOD         AS          establecimiento_codigo,
+            e.ESTFICNOM         AS          establecimiento_nombre,
+
+            f.ESTSECCOD         AS          establecimiento_seccion_codigo,
+            f.ESTSECNOM         AS          establecimiento_seccion_nombre
             
             FROM ESTPOT a
             INNER JOIN mayordomo_default.DOMFIC b ON a.ESTPOTECC = b.DOMFICCOD
             INNER JOIN mayordomo_default.DOMFIC c ON a.ESTPOTTPC = c.DOMFICCOD
-            INNER JOIN mayordomo_default.ESTFIC d ON a.ESTPOTESC = d.ESTFICCOD
-            INNER JOIN mayordomo_default.ESTSEC e ON a.ESTPOTSEC = e.ESTSECCOD
+            INNER JOIN mayordomo_default.DOMFIC d ON a.ESTPOTTAC = d.DOMFICCOD
+            INNER JOIN mayordomo_default.ESTFIC e ON a.ESTPOTESC = e.ESTFICCOD
+            INNER JOIN mayordomo_default.ESTSEC f ON a.ESTPOTSEC = f.ESTSECCOD
 
             WHERE a.ESTPOTESC = ? AND a.ESTPOTSEC = ?
 
@@ -2303,15 +2319,18 @@
                     $detalle    = array(
                         'tipo_estado_codigo'                            => $rowDEFAULT['tipo_estado_codigo'],
                         'tipo_estado_nombre'                            => $rowDEFAULT['tipo_estado_nombre'],
-                        'tipo_pastura_codigo'                           => $rowDEFAULT['tipo_pastura_codigo'],
-                        'tipo_pastura_nombre'                           => $rowDEFAULT['tipo_pastura_nombre'],
+                        'tipo_pastura1_codigo'                          => $rowDEFAULT['tipo_pastura1_codigo'],
+                        'tipo_pastura1_nombre'                          => $rowDEFAULT['tipo_pastura1_nombre'],
+                        'tipo_pastura2_codigo'                          => $rowDEFAULT['tipo_pastura2_codigo'],
+                        'tipo_pastura2_nombre'                          => $rowDEFAULT['tipo_pastura2_nombre'],
                         'establecimiento_codigo'                        => $rowDEFAULT['establecimiento_codigo'],
                         'establecimiento_nombre'                        => $rowDEFAULT['establecimiento_nombre'],
                         'establecimiento_seccion_codigo'                => $rowDEFAULT['establecimiento_seccion_codigo'],
                         'establecimiento_seccion_nombre'                => $rowDEFAULT['establecimiento_seccion_nombre'],
-                        'establecimiento_potrero_nombre'                => $rowDEFAULT['establecimiento_potrero_codigo'],
-                        'establecimiento_potrero_codigo'                => $rowDEFAULT['establecimiento_potrero_nombre'],
+                        'establecimiento_potrero_codigo'                => $rowDEFAULT['establecimiento_potrero_codigo'],
+                        'establecimiento_potrero_nombre'                => $rowDEFAULT['establecimiento_potrero_nombre'],
                         'establecimiento_potrero_hectarea'              => $rowDEFAULT['establecimiento_potrero_hectarea'],
+                        'establecimiento_potrero_capacidad'             => $rowDEFAULT['establecimiento_potrero_capacidad'],
                         'establecimiento_potrero_observacion'           => $rowDEFAULT['establecimiento_potrero_observacion'],
                         'auditoria_empresa_codigo'                      => $rowDEFAULT['auditoria_empresa_codigo'],
                         'auditoria_empresa_nombre'                      => $rowDEFAULT['auditoria_empresa_nombre'],
@@ -2330,8 +2349,10 @@
                     $detalle = array(
                         'tipo_estado_codigo'                            => '',
                         'tipo_estado_nombre'                            => '',
-                        'tipo_pastura_codigo'                           => '',
-                        'tipo_pastura_nombre'                           => '',
+                        'tipo_pastura1_codigo'                          => '',
+                        'tipo_pastura1_nombre'                          => '',
+                        'tipo_pastura2_codigo'                          => '',
+                        'tipo_pastura2_nombre'                          => '',
                         'establecimiento_codigo'                        => '',
                         'establecimiento_nombre'                        => '',
                         'establecimiento_seccion_codigo'                => '',
@@ -2339,6 +2360,7 @@
                         'establecimiento_potrero_codigo'                => '',
                         'establecimiento_potrero_nombre'                => '',
                         'establecimiento_potrero_hectarea'              => '',
+                        'establecimiento_potrero_capacidad'             => '',
                         'establecimiento_potrero_observacion'           => '',
                         'auditoria_empresa_codigo'                      => '',
                         'auditoria_empresa_nombre'                      => '',
@@ -2379,6 +2401,7 @@
             a.ESTPOTCOD         AS          establecimiento_potrero_codigo,
             a.ESTPOTNOM         AS          establecimiento_potrero_nombre,
             a.ESTPOTHEC         AS          establecimiento_potrero_hectarea,
+            a.ESTPOTCAP         AS          establecimiento_potrero_capacidad,
             a.ESTPOTOBS         AS          establecimiento_potrero_observacion,
             a.ESTPOTAEM         AS          auditoria_empresa_codigo,
             a.ESTPOTAEM         AS          auditoria_empresa_nombre,
@@ -2392,17 +2415,21 @@
             c.DOMFICCOD         AS          tipo_pastura_codigo,
             c.DOMFICNOM         AS          tipo_pastura_nombre,
 
-            d.ESTFICCOD         AS          establecimiento_codigo,
-            d.ESTFICNOM         AS          establecimiento_nombre,
+            d.DOMFICCOD         AS          tipo_pastura2_codigo,
+            d.DOMFICNOM         AS          tipo_pastura2_nombre,
 
-            e.ESTSECCOD         AS          establecimiento_seccion_codigo,
-            e.ESTSECNOM         AS          establecimiento_seccion_nombre
+            e.ESTFICCOD         AS          establecimiento_codigo,
+            e.ESTFICNOM         AS          establecimiento_nombre,
+
+            f.ESTSECCOD         AS          establecimiento_seccion_codigo,
+            f.ESTSECNOM         AS          establecimiento_seccion_nombre
             
             FROM ESTPOT a
             INNER JOIN mayordomo_default.DOMFIC b ON a.ESTPOTECC = b.DOMFICCOD
             INNER JOIN mayordomo_default.DOMFIC c ON a.ESTPOTTPC = c.DOMFICCOD
-            INNER JOIN mayordomo_default.ESTFIC d ON a.ESTPOTESC = d.ESTFICCOD
-            INNER JOIN mayordomo_default.ESTSEC e ON a.ESTPOTSEC = e.ESTSECCOD
+            INNER JOIN mayordomo_default.DOMFIC d ON a.ESTPOTTAC = d.DOMFICCOD
+            INNER JOIN mayordomo_default.ESTFIC e ON a.ESTPOTESC = e.ESTFICCOD
+            INNER JOIN mayordomo_default.ESTSEC f ON a.ESTPOTSEC = f.ESTSECCOD
 
             WHERE a.ESTPOTESC = ? AND a.ESTPOTSEC = ? AND a.ESTPOTCOD = ?
 
@@ -2417,8 +2444,10 @@
                     $detalle    = array(
                         'tipo_estado_codigo'                            => $rowDEFAULT['tipo_estado_codigo'],
                         'tipo_estado_nombre'                            => $rowDEFAULT['tipo_estado_nombre'],
-                        'tipo_pastura_codigo'                           => $rowDEFAULT['tipo_pastura_codigo'],
-                        'tipo_pastura_nombre'                           => $rowDEFAULT['tipo_pastura_nombre'],
+                        'tipo_pastura1_codigo'                          => $rowDEFAULT['tipo_pastura1_codigo'],
+                        'tipo_pastura1_nombre'                          => $rowDEFAULT['tipo_pastura1_nombre'],
+                        'tipo_pastura2_codigo'                          => $rowDEFAULT['tipo_pastura2_codigo'],
+                        'tipo_pastura2_nombre'                          => $rowDEFAULT['tipo_pastura2_nombre'],
                         'establecimiento_codigo'                        => $rowDEFAULT['establecimiento_codigo'],
                         'establecimiento_nombre'                        => $rowDEFAULT['establecimiento_nombre'],
                         'establecimiento_seccion_codigo'                => $rowDEFAULT['establecimiento_seccion_codigo'],
@@ -2426,6 +2455,7 @@
                         'establecimiento_potrero_codigo'                => $rowDEFAULT['establecimiento_potrero_codigo'],
                         'establecimiento_potrero_nombre'                => $rowDEFAULT['establecimiento_potrero_nombre'],
                         'establecimiento_potrero_hectarea'              => $rowDEFAULT['establecimiento_potrero_hectarea'],
+                        'establecimiento_potrero_capacidad'             => $rowDEFAULT['establecimiento_potrero_capacidad'],
                         'establecimiento_potrero_observacion'           => $rowDEFAULT['establecimiento_potrero_observacion'],
                         'auditoria_empresa_codigo'                      => $rowDEFAULT['auditoria_empresa_codigo'],
                         'auditoria_empresa_nombre'                      => $rowDEFAULT['auditoria_empresa_nombre'],
@@ -2444,8 +2474,10 @@
                     $detalle = array(
                         'tipo_estado_codigo'                            => '',
                         'tipo_estado_nombre'                            => '',
-                        'tipo_pastura_codigo'                           => '',
-                        'tipo_pastura_nombre'                           => '',
+                        'tipo_pastura1_codigo'                          => '',
+                        'tipo_pastura1_nombre'                          => '',
+                        'tipo_pastura2_codigo'                          => '',
+                        'tipo_pastura2_nombre'                          => '',
                         'establecimiento_codigo'                        => '',
                         'establecimiento_nombre'                        => '',
                         'establecimiento_seccion_codigo'                => '',
@@ -2453,6 +2485,7 @@
                         'establecimiento_potrero_codigo'                => '',
                         'establecimiento_potrero_nombre'                => '',
                         'establecimiento_potrero_hectarea'              => '',
+                        'establecimiento_potrero_capacidad'             => '',
                         'establecimiento_potrero_observacion'           => '',
                         'auditoria_empresa_codigo'                      => '',
                         'auditoria_empresa_nombre'                      => '',

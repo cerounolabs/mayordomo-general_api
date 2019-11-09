@@ -373,24 +373,26 @@
         require __DIR__.'/../../src/connect.php';
 
         $val01      = $request->getParsedBody()['tipo_estado_codigo'];
-        $val02      = $request->getParsedBody()['tipo_pastura_codigo'];
-        $val03      = $request->getParsedBody()['establecimiento_codigo'];
-        $val04      = $request->getParsedBody()['establecimiento_seccion_codigo'];
-        $val05      = $request->getParsedBody()['establecimiento_potrero_nombre'];
-        $val06      = $request->getParsedBody()['establecimiento_potrero_hectarea'];
-        $val07      = $request->getParsedBody()['establecimiento_potrero_observacion'];
+        $val02      = $request->getParsedBody()['tipo_pastura1_codigo'];
+        $val03      = $request->getParsedBody()['tipo_pastura2_codigo'];
+        $val04      = $request->getParsedBody()['establecimiento_codigo'];
+        $val05      = $request->getParsedBody()['establecimiento_seccion_codigo'];
+        $val06      = $request->getParsedBody()['establecimiento_potrero_nombre'];
+        $val07      = $request->getParsedBody()['establecimiento_potrero_hectarea'];
+        $val08      = $request->getParsedBody()['establecimiento_potrero_capacidad'];
+        $val09      = $request->getParsedBody()['establecimiento_potrero_observacion'];
         $aud01      = $request->getParsedBody()['auditoria_empresa_codigo'];
         $aud02      = $request->getParsedBody()['auditoria_usuario'];
         $aud03      = $request->getParsedBody()['auditoria_fecha_hora'];
         $aud04      = $request->getParsedBody()['auditoria_ip'];
 
         if (isset($val01) && isset($val02) && isset($val03)) {
-            $sql00  = "INSERT INTO ESTPOT (ESTPOTECC, ESTPOTTPC, ESTPOTESC, ESTPOTSEC, ESTPOTNOM, ESTPOTHEC, ESTPOTOBS, ESTPOTAEM, ESTPOTAUS, ESTPOTAFH, ESTPOTAIP) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $sql00  = "INSERT INTO ESTPOT (ESTPOTECC, ESTPOTTPC, ESTPOTTAC, ESTPOTESC, ESTPOTSEC, ESTPOTNOM, ESTPOTHEC, ESTPOTCAP, ESTPOTOBS, ESTPOTAEM, ESTPOTAUS, ESTPOTAFH, ESTPOTAIP) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             try {
                 $connDEFAULT  = getConnectionDEFAULT();
                 $stmtDEFAULT  = $connDEFAULT->prepare($sql00);
-                $stmtDEFAULT->execute([$val01, $val02, $val03, $val04, $val05, $val06, $val07, $aud01, $aud02, $aud03, $aud04]); 
+                $stmtDEFAULT->execute([$val01, $val02, $val03, $val04, $val05, $val06, $val07, $val08, $val09, $aud01, $aud02, $aud03, $aud04]); 
                 
                 header("Content-Type: application/json; charset=utf-8");
                 $json       = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success INSERT', 'codigo' => $connDEFAULT->lastInsertId()), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
