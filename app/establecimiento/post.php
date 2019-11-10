@@ -125,3 +125,63 @@
         
         return $json;
     });
+
+    $app->post('/v1/establecimiento/605', function($request) {
+        require __DIR__.'/../../src/connect.php';
+
+        $val01      = $request->getParsedBody()['tipo_origen_codigo'];
+        $val02      = $request->getParsedBody()['tipo_raza_codigo'];
+        $val03      = $request->getParsedBody()['tipo_subcategoria_codigo'];
+        $val04      = $request->getParsedBody()['establecimiento_codigo'];
+        $val05      = $request->getParsedBody()['persona_codigo'];
+        $val06      = $request->getParsedBody()['establecimiento_poblacion_cantidad'];
+        $val07      = $request->getParsedBody()['establecimiento_poblacion_peso'];
+        $val08      = $request->getParsedBody()['establecimiento_poblacion_observacion'];
+
+        $aud01      = $request->getParsedBody()['auditoria_empresa_codigo'];
+        $aud02      = $request->getParsedBody()['auditoria_usuario'];
+        $aud03      = $request->getParsedBody()['auditoria_fecha_hora'];
+        $aud04      = $request->getParsedBody()['auditoria_ip'];
+
+        if (isset($val01) && isset($val02) && isset($val03)) {
+            $sql00  = "SELECT * FROM ESTPOB WHERE ESTPOBTOC = ? AND ESTPOBTRC = ? AND ESTPOBTSC = ? AND ESTPOBESC = ? AND ESTPOBPEC = ?";
+            $sql01  = "UPDATE ESTPOB SET ESTPOBCAN = ?, ESTPOBPES = ?, ESTPOBOBS = ?, ESTPOBAEM = ?, ESTPOBAUS = ?, ESTPOBAFH = ?, ESTPOBAIP = ? WHERE ESTPOBTOC = ? AND ESTPOBTRC = ? AND ESTPOBTSC = ? AND ESTPOBESC = ? AND ESTPOBPEC = ?";
+            $sql02  = "INSERT INTO ESTPOB (ESTPOBTOC, ESTPOBTRC, ESTPOBTSC, ESTPOBESC, ESTPOBPEC, ESTPOBCAN, ESTPOBPES, ESTPOBOBS, ESTPOBAEM, ESTPOBAUS, ESTPOBAFH, ESTPOBAIP) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+            try {
+                $connESTABLECIMIENTO    = getConnectionESTABLECIMIENTO();
+
+                $stmtESTABLECIMIENTO00  = $connESTABLECIMIENTO->prepare($sql00);
+                $stmtESTABLECIMIENTO00->execute([$val01, $val02, $val03, $val04, $val05]);
+
+                $rowESTABLECIMIENTO00   = $stmtESTABLECIMIENTO00->fetch(PDO::FETCH_ASSOC);
+
+                if (!$rowESTABLECIMIENTO00){
+                    $stmtESTABLECIMIENTO01  = $connESTABLECIMIENTO->prepare($sql02);
+                    $stmtESTABLECIMIENTO01->execute([$val01, $val02, $val03, $val04, $val05, $val06, $val07, $val08, $aud01, $aud02, $aud03, $aud04]);
+                } else {
+                    $stmtESTABLECIMIENTO01  = $connESTABLECIMIENTO->prepare($sql01);
+                    $stmtESTABLECIMIENTO01->execute([$val06, $val07, $val08, $aud01, $aud02, $aud03, $aud04, $val01, $val02, $val03, $val04, $val05]);    
+                }
+
+                header("Content-Type: application/json; charset=utf-8");
+                $json       = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success INSERT', 'codigo' => $connESTABLECIMIENTO->lastInsertId()), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+
+                $stmtESTABLECIMIENTO00->closeCursor();
+                $stmtESTABLECIMIENTO00 = null;
+
+                $stmtESTABLECIMIENTO01->closeCursor();
+                $stmtESTABLECIMIENTO01 = null;
+            } catch (PDOException $e) {
+                header("Content-Type: application/json; charset=utf-8");
+                $json = json_encode(array('code' => 204, 'status' => 'failure', 'message' => 'Error INSERT: '.$e), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+            }
+        } else {
+            header("Content-Type: application/json; charset=utf-8");
+            $json = json_encode(array('code' => 400, 'status' => 'error', 'message' => 'Verifique, algún campo esta vacio.'), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+        }
+
+        $connESTABLECIMIENTO  = null;
+        
+        return $json;
+    });
