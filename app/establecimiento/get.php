@@ -585,7 +585,10 @@
             e.ESTFICNOM         AS          establecimiento_nombre,
 
             f.ESTPERCOD         AS          persona_codigo,
-            f.ESTPERPER         AS          persona_completo
+            f.ESTPERPER         AS          persona_completo,
+
+            g.DOMFICCOD         AS          tipo_categoria_codigo,
+            g.DOMFICNOM         AS          tipo_categoria_nombre
             
             FROM ESTPOB a
             INNER JOIN mayordomo_default.DOMFIC b ON a.ESTPOBTOC = b.DOMFICCOD
@@ -593,8 +596,10 @@
             INNER JOIN mayordomo_default.DOMFIC d ON a.ESTPOBTSC = d.DOMFICCOD
             INNER JOIN mayordomo_default.ESTFIC e ON a.ESTPOBESC = e.ESTFICCOD
             INNER JOIN mayordomo_establecimiento.ESTPER f ON a.ESTPOBPEC = f.ESTPERCOD
+            INNER JOIN mayordomo_default.DOMTRI g ON a.ESTPOBTSC = g.DOMTRICO3
+            INNER JOIN mayordomo_default.DOMFIC h ON g.DOMTRICO2 = h.DOMFICCOD
 
-            WHERE a.ESTPOBESC = ? 
+            WHERE a.ESTPOBESC = ?
 
             ORDER BY a.ESTPOBESC, a.ESTPOBTOC, a.ESTPOBTRC, a.ESTPOBTSC";
 
@@ -609,6 +614,8 @@
                         'tipo_origen_nombre'                            => $rowESTABLECIMIENTO['tipo_origen_nombre'],
                         'tipo_raza_codigo'                              => $rowESTABLECIMIENTO['tipo_raza_codigo'],
                         'tipo_raza_nombre'                              => $rowESTABLECIMIENTO['tipo_raza_nombre'],
+                        'tipo_categoria_codigo'                         => $rowESTABLECIMIENTO['tipo_categoria_codigo'],
+                        'tipo_categoria_nombre'                         => $rowESTABLECIMIENTO['tipo_categoria_nombre'],
                         'tipo_subcategoria_codigo'                      => $rowESTABLECIMIENTO['tipo_subcategoria_codigo'],
                         'tipo_subcategoria_nombre'                      => $rowESTABLECIMIENTO['tipo_subcategoria_nombre'],
                         'establecimiento_codigo'                        => $rowESTABLECIMIENTO['establecimiento_codigo'],
@@ -638,6 +645,8 @@
                         'tipo_origen_nombre'                            => '',
                         'tipo_raza_codigo'                              => '',
                         'tipo_raza_nombre'                              => '',
+                        'tipo_categoria_codigo'                         => '',
+                        'tipo_categoria_nombre'                         => '',
                         'tipo_subcategoria_codigo'                      => '',
                         'tipo_subcategoria_nombre'                      => '',
                         'establecimiento_codigo'                        => '',
@@ -707,14 +716,19 @@
             e.ESTFICNOM         AS          establecimiento_nombre,
 
             f.ESTPERCOD         AS          persona_codigo,
-            f.ESTPERPER         AS          persona_completo
-            
+            f.ESTPERPER         AS          persona_completo,
+
+            g.DOMFICCOD         AS          tipo_categoria_codigo,
+            g.DOMFICNOM         AS          tipo_categoria_nombre
+
             FROM ESTPOB a
             INNER JOIN mayordomo_default.DOMFIC b ON a.ESTPOBTOC = b.DOMFICCOD
             INNER JOIN mayordomo_default.DOMFIC c ON a.ESTPOBTRC = c.DOMFICCOD
             INNER JOIN mayordomo_default.DOMFIC d ON a.ESTPOBTSC = d.DOMFICCOD
             INNER JOIN mayordomo_default.ESTFIC e ON a.ESTPOBESC = e.ESTFICCOD
             INNER JOIN mayordomo_establecimiento.ESTPER f ON a.ESTPOBPEC = f.ESTPERCOD
+            INNER JOIN mayordomo_default.DOMTRI g ON a.ESTPOBTSC = g.DOMTRICO3
+            INNER JOIN mayordomo_default.DOMFIC h ON g.DOMTRICO2 = h.DOMFICCOD
 
             WHERE a.ESTPOBESC = ? AND a.ESTPOBCOD = ?
 
@@ -731,6 +745,8 @@
                         'tipo_origen_nombre'                            => $rowESTABLECIMIENTO['tipo_origen_nombre'],
                         'tipo_raza_codigo'                              => $rowESTABLECIMIENTO['tipo_raza_codigo'],
                         'tipo_raza_nombre'                              => $rowESTABLECIMIENTO['tipo_raza_nombre'],
+                        'tipo_categoria_codigo'                         => $rowESTABLECIMIENTO['tipo_categoria_codigo'],
+                        'tipo_categoria_nombre'                         => $rowESTABLECIMIENTO['tipo_categoria_nombre'],
                         'tipo_subcategoria_codigo'                      => $rowESTABLECIMIENTO['tipo_subcategoria_codigo'],
                         'tipo_subcategoria_nombre'                      => $rowESTABLECIMIENTO['tipo_subcategoria_nombre'],
                         'establecimiento_codigo'                        => $rowESTABLECIMIENTO['establecimiento_codigo'],
@@ -760,6 +776,8 @@
                         'tipo_origen_nombre'                            => '',
                         'tipo_raza_codigo'                              => '',
                         'tipo_raza_nombre'                              => '',
+                        'tipo_categoria_codigo'                         => '',
+                        'tipo_categoria_nombre'                         => '',
                         'tipo_subcategoria_codigo'                      => '',
                         'tipo_subcategoria_nombre'                      => '',
                         'establecimiento_codigo'                        => '',
