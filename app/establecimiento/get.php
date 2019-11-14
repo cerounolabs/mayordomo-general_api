@@ -587,8 +587,8 @@
             f.ESTPERCOD         AS          persona_codigo,
             f.ESTPERPER         AS          persona_completo,
 
-            g.DOMFICCOD         AS          tipo_categoria_codigo,
-            g.DOMFICNOM         AS          tipo_categoria_nombre
+            h.DOMFICCOD         AS          tipo_categoria_codigo,
+            h.DOMFICNOM         AS          tipo_categoria_nombre
             
             FROM ESTPOB a
             INNER JOIN mayordomo_default.DOMFIC b ON a.ESTPOBTOC = b.DOMFICCOD
@@ -718,8 +718,8 @@
             f.ESTPERCOD         AS          persona_codigo,
             f.ESTPERPER         AS          persona_completo,
 
-            g.DOMFICCOD         AS          tipo_categoria_codigo,
-            g.DOMFICNOM         AS          tipo_categoria_nombre
+            h.DOMFICCOD         AS          tipo_categoria_codigo,
+            h.DOMFICNOM         AS          tipo_categoria_nombre
 
             FROM ESTPOB a
             INNER JOIN mayordomo_default.DOMFIC b ON a.ESTPOBTOC = b.DOMFICCOD
