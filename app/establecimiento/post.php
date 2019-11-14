@@ -247,7 +247,7 @@
 
         $val01      = $request->getParsedBody()['tipo_estado_codigo'];
         $val02      = $request->getParsedBody()['tipo_subcategoria_codigo'];
-        $val03      = $request->getParsedBody()['establecimiento_ubicacion'];
+        $val03      = $request->getParsedBody()['establecimiento_ubicacion_codigo'];
         $val04      = $request->getParsedBody()['establecimiento_ubicacion_detalle_cantidad'];
         $val05      = $request->getParsedBody()['establecimiento_ubicacion_detalle_observacion'];
 
