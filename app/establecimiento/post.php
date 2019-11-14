@@ -189,8 +189,8 @@
     $app->post('/v1/establecimiento/606', function($request) {
         require __DIR__.'/../../src/connect.php';
 
-        $val01      = $request->getParsedBody()['potrero_codigo'];
-        $val02      = $request->getParsedBody()['lote_codigo'];
+        $val01      = $request->getParsedBody()['establecimiento_potrero_codigo'];
+        $val02      = $request->getParsedBody()['establecimiento_lote_codigo'];
         $val03      = $request->getParsedBody()['establecimiento_codigo'];
         $val04      = $request->getParsedBody()['establecimiento_ubicacion_nombre'];
         $val05      = $request->getParsedBody()['establecimiento_ubicacion_observacion'];
