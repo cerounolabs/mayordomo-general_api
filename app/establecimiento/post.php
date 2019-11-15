@@ -245,38 +245,39 @@
         require __DIR__.'/../../src/connect.php';
 
         $val01      = $request->getParsedBody()['tipo_estado_codigo'];
-        $val02      = $request->getParsedBody()['tipo_subcategoria_codigo'];
-        $val03      = $request->getParsedBody()['establecimiento_ubicacion_codigo'];
-        $val04      = $request->getParsedBody()['establecimiento_ubicacion_detalle_cantidad'];
-        $val05      = $request->getParsedBody()['establecimiento_ubicacion_detalle_observacion'];
+        $val02      = $request->getParsedBody()['tipo_categoria_codigo'];
+        $val03      = $request->getParsedBody()['tipo_subcategoria_codigo'];
+        $val04      = $request->getParsedBody()['establecimiento_ubicacion_codigo'];
+        $val05      = $request->getParsedBody()['establecimiento_ubicacion_detalle_cantidad'];
+        $val06      = $request->getParsedBody()['establecimiento_ubicacion_detalle_observacion'];
 
         $aud01      = $request->getParsedBody()['auditoria_empresa_codigo'];
         $aud02      = $request->getParsedBody()['auditoria_usuario'];
         $aud03      = $request->getParsedBody()['auditoria_fecha_hora'];
         $aud04      = $request->getParsedBody()['auditoria_ip'];
 
-        if (isset($val02) && isset($val03) && isset($val04)) {
-            $sql00  = "SELECT ESTUBDCOD FROM ESTUBD WHERE ESTUBDECC = ? AND ESTUBDTSC = ? AND ESTUBDUBC = ?";
-            $sql01  = "INSERT INTO ESTUBD (ESTUBDECC, ESTUBDTSC, ESTUBDUBC, ESTUBDCAN, ESTUBDOBS, ESTUBDAEM, ESTUBDAUS, ESTUBDAFH, ESTUBDAIP) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            $sql02  = "UPDATE ESTUBD SET ESTUBDCAN = ESTUBDCAN + ?, ESTUBDOBS = ?, ESTUBDAEM = ?, ESTUBDAUS = ?, ESTUBDAFH = ?, ESTUBDAIP = ? WHERE ESTUBDECC = ? AND ESTUBDTSC = ? AND ESTUBDUBC = ?";
+        if (isset($val02) && isset($val03) && isset($val04) && isset($val05)) {
+            $sql00  = "SELECT ESTUBDCOD FROM ESTUBD WHERE ESTUBDECC = ? AND ESTUBDTCC = ? AND ESTUBDTSC = ? AND ESTUBDUBC = ?";
+            $sql01  = "INSERT INTO ESTUBD (ESTUBDECC, ESTUBDTCC, ESTUBDTSC, ESTUBDUBC, ESTUBDCAN, ESTUBDOBS, ESTUBDAEM, ESTUBDAUS, ESTUBDAFH, ESTUBDAIP) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $sql02  = "UPDATE ESTUBD SET ESTUBDCAN = ESTUBDCAN + ?, ESTUBDOBS = ?, ESTUBDAEM = ?, ESTUBDAUS = ?, ESTUBDAFH = ?, ESTUBDAIP = ? WHERE ESTUBDECC = ? AND ESTUBDTCC = ? AND ESTUBDTSC = ? AND ESTUBDUBC = ?";
 
             try {
                 $connESTABLECIMIENTO    = getConnectionESTABLECIMIENTO();
 
                 $stmtESTABLECIMIENTO00  = $connESTABLECIMIENTO->prepare($sql00);
-                $stmtESTABLECIMIENTO00->execute([$val01, $val02, $val03]);
+                $stmtESTABLECIMIENTO00->execute([$val01, $val02, $val03, $val04]);
 
                 $rowESTABLECIMIENTO00   = $stmtESTABLECIMIENTO00->fetch(PDO::FETCH_ASSOC);
 
                 if (!$rowESTABLECIMIENTO00){
                     $stmtESTABLECIMIENTO01  = $connESTABLECIMIENTO->prepare($sql01);
-                    $stmtESTABLECIMIENTO01->execute([$val01, $val02, $val03, $val04, $val05, $aud01, $aud02, $aud03, $aud04]);
-                    $codigo     = $connESTABLECIMIENTO->lastInsertId();
+                    $stmtESTABLECIMIENTO01->execute([$val01, $val02, $val03, $val04, $val05, $val06, $aud01, $aud02, $aud03, $aud04]);
+                    $codigo     = $connESTABLECIMIENTO->lastInsertId()['ESTUBDCOD'];
                     $mensaje    = 'Success INSERT';
                 } else {
                     $stmtESTABLECIMIENTO01  = $connESTABLECIMIENTO->prepare($sql02);
-                    $stmtESTABLECIMIENTO01->execute([$val04, $val05, $aud01, $aud02, $aud03, $aud04, $val01, $val02, $val03]);
-                    $codigo = $rowESTABLECIMIENTO00;
+                    $stmtESTABLECIMIENTO01->execute([$val05, $val06, $aud01, $aud02, $aud03, $aud04, $val01, $val02, $val03, $val04]);
+                    $codigo = $rowESTABLECIMIENTO00['ESTUBDCOD'];
                     $mensaje    = 'Success UPDATE'; 
                 }
 
@@ -298,6 +299,6 @@
         }
 
         $connESTABLECIMIENTO  = null;
-        
+
         return $json;
     });
