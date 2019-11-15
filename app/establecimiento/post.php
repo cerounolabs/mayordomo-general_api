@@ -214,12 +214,12 @@
                 if (!$rowESTABLECIMIENTO00){
                     $stmtESTABLECIMIENTO01  = $connESTABLECIMIENTO->prepare($sql01);
                     $stmtESTABLECIMIENTO01->execute([$val01, $val02, $val03, $val04, $val05, $aud01, $aud02, $aud03, $aud04]);
-                    $codigo                 = $stmtESTABLECIMIENTO01->lastInsertId();
+                    $codigo                 = $stmtESTABLECIMIENTO01->lastInsertId()['ESTUBCCOD'];
 
                     $stmtESTABLECIMIENTO01->closeCursor();
                     $stmtESTABLECIMIENTO01  = null;
                 } else {
-                    $codigo = $rowESTABLECIMIENTO00;
+                    $codigo = $rowESTABLECIMIENTO00['ESTUBCCOD'];
                 }
 
                 header("Content-Type: application/json; charset=utf-8");
