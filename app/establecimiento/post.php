@@ -209,15 +209,17 @@
 
                 $stmtESTABLECIMIENTO00  = $connESTABLECIMIENTO->prepare($sql00);
                 $stmtESTABLECIMIENTO00->execute([$val01, $val02, $val03]);
-
                 $rowESTABLECIMIENTO00   = $stmtESTABLECIMIENTO00->fetch(PDO::FETCH_ASSOC);
 
                 if (!$rowESTABLECIMIENTO00){
                     $stmtESTABLECIMIENTO01  = $connESTABLECIMIENTO->prepare($sql01);
                     $stmtESTABLECIMIENTO01->execute([$val01, $val02, $val03, $val04, $val05, $aud01, $aud02, $aud03, $aud04]);
-                    $codigo = $stmtESTABLECIMIENTO01->lastInsertId();
+                    $codigo                 = $stmtESTABLECIMIENTO01->lastInsertId();
+
+                    $stmtESTABLECIMIENTO01->closeCursor();
+                    $stmtESTABLECIMIENTO01  = null;
                 } else {
-                    $codigo = $rowESTABLECIMIENTO00;    
+                    $codigo = $rowESTABLECIMIENTO00;
                 }
 
                 header("Content-Type: application/json; charset=utf-8");
@@ -225,9 +227,6 @@
 
                 $stmtESTABLECIMIENTO00->closeCursor();
                 $stmtESTABLECIMIENTO00 = null;
-
-                $stmtESTABLECIMIENTO01->closeCursor();
-                $stmtESTABLECIMIENTO01 = null;
             } catch (PDOException $e) {
                 header("Content-Type: application/json; charset=utf-8");
                 $json = json_encode(array('code' => 204, 'status' => 'failure', 'message' => 'Error INSERT: '.$e), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
