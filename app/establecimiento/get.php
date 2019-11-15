@@ -814,3 +814,378 @@
         
         return $json;
     });
+
+    $app->get('/v1/establecimiento/606/{codigo}', function($request) {
+        require __DIR__.'/../../src/connect.php';
+
+        $val01      = $request->getAttribute('codigo');
+        
+        if (isset($val01)) {
+            $sql00  = "SELECT
+            a.ESTUBCCOD         AS          establecimiento_ubicacion_codigo,
+            a.ESTUBCNOM         AS          establecimiento_ubicacion_nombre,
+            a.ESTUBCOBS         AS          establecimiento_ubicacion_observacion,
+
+            a.ESTUBCAEM         AS          auditoria_empresa_codigo,
+            a.ESTUBCAEM         AS          auditoria_empresa_nombre,
+            a.ESTUBCAUS         AS          auditoria_usuario,
+            a.ESTUBCAFH         AS          auditoria_fecha_hora,
+            a.ESTUBCAIP         AS          auditoria_ip,
+
+            b.ESTPOTCOD         AS          establecimiento_potrero_codigo,
+            b.ESTPOTNOM         AS          establecimiento_potrero_nombre,
+
+            c.ESTLOTCOD         AS          establecimiento_lote_codigo,
+            c.ESTLOTNOM         AS          establecimiento_lote_nombre,
+
+            d.ESTFICCOD         AS          establecimiento_codigo,
+            d.ESTFICNOM         AS          establecimiento_nombre
+            
+            FROM ESTUBC a
+            INNER JOIN mayordomo_default.ESTPOT b ON a.ESTUBCPOC = b.ESTPOTCOD
+            INNER JOIN mayordomo_establecimiento.ESTLOT c ON a.ESTUBCLOT = c.ESTLOTCOD
+            INNER JOIN mayordomo_default.ESTFIC d ON a.ESTUBCESC = d.ESTFICCOD
+
+            WHERE a.ESTUBCESC = ?
+
+            ORDER BY a.ESTUBCESC, b.ESTPOTNOM, c.ESTLOTNOM";
+
+            $sql01  = "SELECT
+            a.ESTUBDCOD         AS          establecimiento_ubicacion_detalle_codigo,
+            a.ESTUBDCAN         AS          establecimiento_ubicacion_detalle_cantidad,
+            a.ESTUBDOBS         AS          establecimiento_ubicacion_detalle_observacion,
+
+            a.ESTUBDAEM         AS          auditoria_empresa_codigo,
+            a.ESTUBDAEM         AS          auditoria_empresa_nombre,
+            a.ESTUBDAUS         AS          auditoria_usuario,
+            a.ESTUBDAFH         AS          auditoria_fecha_hora,
+            a.ESTUBDAIP         AS          auditoria_ip,
+
+            b.DOMFICCOD         AS          tipo_estado_codigo,
+            b.DOMFICNOM         AS          tipo_estado_nombre,
+
+            c.DOMFICCOD         AS          tipo_categoria_codigo,
+            c.DOMFICNOM         AS          tipo_categoria_nombre,
+
+            d.DOMFICCOD         AS          tipo_subcategoria_codigo,
+            d.DOMFICNOM         AS          tipo_subcategoria_nombre,
+
+            e.ESTUBCCOD         AS          establecimiento_ubicacion_codigo,
+            e.ESTUBCNOM         AS          establecimiento_ubicacion_nombre
+
+            FROM ESTUBD a
+            INNER JOIN mayordomo_default.DOMFIC b ON a.ESTUBDECC = b.DOMFICCOD
+            INNER JOIN mayordomo_default.DOMFIC c ON a.ESTUBDTCC = c.DOMFICCOD
+            INNER JOIN mayordomo_default.DOMFIC d ON a.ESTUBDTSC = d.DOMFICCOD
+            INNER JOIN mayordomo_establecimiento.ESTUBC e ON a.ESTUBDUBC = e.ESTUBCCOD
+
+            WHERE a.ESTUBDTSC = ?
+
+            ORDER BY c.DOMFICNOM, d.DOMFICNOM";
+
+            try {
+                $connESTABLECIMIENTO  = getConnectionESTABLECIMIENTO();
+                $stmtESTABLECIMIENTO  = $connESTABLECIMIENTO->prepare($sql00);
+                $stmtESTABLECIMIENTO->execute([$val01]); 
+
+                while ($rowESTABLECIMIENTO = $stmtESTABLECIMIENTO->fetch()) {
+                    $stmtESTABLECIMIENTO01  = $connESTABLECIMIENTO->prepare($sql01);
+                    $stmtESTABLECIMIENTO01->execute([$rowESTABLECIMIENTO['establecimiento_ubicacion_codigo']]);
+
+                    $cantUbicado = 0;
+
+                    while ($rowESTABLECIMIENTO01 = $stmtESTABLECIMIENTO01->fetch()) {
+                        $cantUbicado = $cantUbicado + $rowESTABLECIMIENTO01['establecimiento_ubicacion_detalle_cantidad'];
+                        $detalle        = array(
+                            'establecimiento_ubicacion_detalle_codigo'              => $rowESTABLECIMIENTO01['establecimiento_ubicacion_detalle_codigo'],
+                            'establecimiento_ubicacion_detalle_cantidad'            => $rowESTABLECIMIENTO01['establecimiento_ubicacion_detalle_cantidad'],
+                            'establecimiento_ubicacion_detalle_observacion'         => $rowESTABLECIMIENTO01['establecimiento_ubicacion_detalle_observacion'],
+                            'establecimiento_ubicacion_codigo'                      => $rowESTABLECIMIENTO01['establecimiento_ubicacion_codigo'],
+                            'establecimiento_ubicacion_nombre'                      => $rowESTABLECIMIENTO01['establecimiento_ubicacion_nombre'],
+                            'tipo_estado_codigo'                                    => $rowESTABLECIMIENTO01['tipo_estado_codigo'],
+                            'tipo_estado_nombre'                                    => $rowESTABLECIMIENTO01['tipo_estado_nombre'],
+                            'tipo_categoria_codigo'                                 => $rowESTABLECIMIENTO01['tipo_categoria_codigo'],
+                            'tipo_categoria_nombre'                                 => $rowESTABLECIMIENTO01['tipo_categoria_nombre'],
+                            'tipo_subcategoria_codigo'                              => $rowESTABLECIMIENTO01['tipo_subcategoria_codigo'],
+                            'tipo_subcategoria_nombre'                              => $rowESTABLECIMIENTO01['tipo_subcategoria_nombre'],
+                            'auditoria_empresa_codigo'                              => $rowESTABLECIMIENTO01['auditoria_empresa_codigo'],
+                            'auditoria_empresa_nombre'                              => $rowESTABLECIMIENTO01['auditoria_empresa_nombre'],
+                            'auditoria_usuario'                                     => $rowESTABLECIMIENTO01['auditoria_usuario'],
+                            'auditoria_fecha_hora'                                  => date_format(date_create($rowESTABLECIMIENTO01['auditoria_fecha_hora']), 'd/m/Y H:i:s'),
+                            'auditoria_ip'                                          => $rowESTABLECIMIENTO01['auditoria_ip']
+                        );    
+                        $result_detalle[]   = $detalle;
+                    }
+
+                    if (!isset($result_detalle)){
+                        $result_detalle = array(
+                            'establecimiento_ubicacion_detalle_codigo'              => '',
+                            'establecimiento_ubicacion_detalle_cantidad'            => '',
+                            'establecimiento_ubicacion_detalle_observacion'         => '',
+                            'establecimiento_ubicacion_codigo'                      => '',
+                            'establecimiento_ubicacion_nombre'                      => '',
+                            'tipo_estado_codigo'                                    => '',
+                            'tipo_estado_nombre'                                    => '',
+                            'tipo_categoria_codigo'                                 => '',
+                            'tipo_categoria_nombre'                                 => '',
+                            'tipo_subcategoria_codigo'                              => '',
+                            'tipo_subcategoria_nombre'                              => '',
+                            'auditoria_empresa_codigo'                              => '',
+                            'auditoria_empresa_nombre'                              => '',
+                            'auditoria_usuario'                                     => '',
+                            'auditoria_fecha_hora'                                  => '',
+                            'auditoria_ip'                                          => ''
+                        );
+                    }
+
+                    $detalle    = array(
+                        'establecimiento_ubicacion_codigo'              => $rowESTABLECIMIENTO['establecimiento_ubicacion_codigo'],
+                        'establecimiento_ubicacion_nombre'              => $rowESTABLECIMIENTO['establecimiento_ubicacion_nombre'],
+                        'establecimiento_ubicacion_cantidad'            => $cantUbicado,
+                        'establecimiento_ubicacion_observacion'         => $rowESTABLECIMIENTO['establecimiento_ubicacion_observacion'],
+                        'establecimiento_potrero_codigo'                => $rowESTABLECIMIENTO['establecimiento_potrero_codigo'],
+                        'establecimiento_potrero_nombre'                => $rowESTABLECIMIENTO['establecimiento_potrero_nombre'],
+                        'establecimiento_lote_codigo'                   => $rowESTABLECIMIENTO['establecimiento_lote_codigo'],
+                        'establecimiento_lote_nombre'                   => $rowESTABLECIMIENTO['establecimiento_lote_nombre'],
+                        'establecimiento_codigo'                        => $rowESTABLECIMIENTO['establecimiento_codigo'],
+                        'establecimiento_nombre'                        => $rowESTABLECIMIENTO['establecimiento_nombre'],
+                        'auditoria_empresa_codigo'                      => $rowESTABLECIMIENTO['auditoria_empresa_codigo'],
+                        'auditoria_empresa_nombre'                      => $rowESTABLECIMIENTO['auditoria_empresa_nombre'],
+                        'auditoria_usuario'                             => $rowESTABLECIMIENTO['auditoria_usuario'],
+                        'auditoria_fecha_hora'                          => date_format(date_create($rowESTABLECIMIENTO['auditoria_fecha_hora']), 'd/m/Y H:i:s'),
+                        'auditoria_ip'                                  => $rowESTABLECIMIENTO['auditoria_ip'],
+                        'detalle'                                       => $result_detalle
+                    );
+                    $result[]   = $detalle;
+                }
+
+                if (isset($result)){
+                    header("Content-Type: application/json; charset=utf-8");
+                    $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success SELECT', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+                } else {
+                    $detalle = array(
+                        'establecimiento_ubicacion_codigo'              => '',
+                        'establecimiento_ubicacion_nombre'              => '',
+                        'establecimiento_ubicacion_cantidad'            => '',
+                        'establecimiento_ubicacion_observacion'         => '',
+                        'establecimiento_potrero_codigo'                => '',
+                        'establecimiento_potrero_nombre'                => '',
+                        'establecimiento_lote_codigo'                   => '',
+                        'establecimiento_lote_nombre'                   => '',
+                        'establecimiento_codigo'                        => '',
+                        'establecimiento_nombre'                        => '',
+                        'auditoria_empresa_codigo'                      => '',
+                        'auditoria_empresa_nombre'                      => '',
+                        'auditoria_usuario'                             => '',
+                        'auditoria_fecha_hora'                          => '',
+                        'auditoria_ip'                                  => '',
+                        'detalle'                                       => ''
+                    );
+
+                    header("Content-Type: application/json; charset=utf-8");
+                    $json = json_encode(array('code' => 204, 'status' => 'ok', 'message' => 'No hay registros', 'data' => $detalle), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+                }
+
+                $stmtESTABLECIMIENTO->closeCursor();
+                $stmtESTABLECIMIENTO = null;
+            } catch (PDOException $e) {
+                header("Content-Type: application/json; charset=utf-8");
+                $json = json_encode(array('code' => 204, 'status' => 'failure', 'message' => 'Error SELECT: '.$e), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+            }
+        } else {
+            header("Content-Type: application/json; charset=utf-8");
+            $json = json_encode(array('code' => 400, 'status' => 'error', 'message' => 'Verifique, algún campo esta vacio.'), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+        }
+
+        $connESTABLECIMIENTO  = null;
+        
+        return $json;
+    });
+
+    $app->get('/v1/establecimiento/606/{codigo}/{ubicacion}', function($request) {
+        require __DIR__.'/../../src/connect.php';
+
+        $val01      = $request->getAttribute('codigo');
+        $val01      = $request->getAttribute('ubicacion');
+        
+        if (isset($val01) && isset($val02)) {
+            $sql00  = "SELECT
+            a.ESTUBCCOD         AS          establecimiento_ubicacion_codigo,
+            a.ESTUBCNOM         AS          establecimiento_ubicacion_nombre,
+            a.ESTUBCOBS         AS          establecimiento_ubicacion_observacion,
+
+            a.ESTUBCAEM         AS          auditoria_empresa_codigo,
+            a.ESTUBCAEM         AS          auditoria_empresa_nombre,
+            a.ESTUBCAUS         AS          auditoria_usuario,
+            a.ESTUBCAFH         AS          auditoria_fecha_hora,
+            a.ESTUBCAIP         AS          auditoria_ip,
+
+            b.ESTPOTCOD         AS          establecimiento_potrero_codigo,
+            b.ESTPOTNOM         AS          establecimiento_potrero_nombre,
+
+            c.ESTLOTCOD         AS          establecimiento_lote_codigo,
+            c.ESTLOTNOM         AS          establecimiento_lote_nombre,
+
+            d.ESTFICCOD         AS          establecimiento_codigo,
+            d.ESTFICNOM         AS          establecimiento_nombre
+            
+            FROM ESTUBC a
+            INNER JOIN mayordomo_default.ESTPOT b ON a.ESTUBCPOC = b.ESTPOTCOD
+            INNER JOIN mayordomo_establecimiento.ESTLOT c ON a.ESTUBCLOT = c.ESTLOTCOD
+            INNER JOIN mayordomo_default.ESTFIC d ON a.ESTUBCESC = d.ESTFICCOD
+
+            WHERE a.ESTUBCESC = ? AND a.ESTUBCCOD = ?
+
+            ORDER BY a.ESTUBCESC, b.ESTPOTNOM, c.ESTLOTNOM";
+
+            $sql01  = "SELECT
+            a.ESTUBDCOD         AS          establecimiento_ubicacion_detalle_codigo,
+            a.ESTUBDCAN         AS          establecimiento_ubicacion_detalle_cantidad,
+            a.ESTUBDOBS         AS          establecimiento_ubicacion_detalle_observacion,
+
+            a.ESTUBDAEM         AS          auditoria_empresa_codigo,
+            a.ESTUBDAEM         AS          auditoria_empresa_nombre,
+            a.ESTUBDAUS         AS          auditoria_usuario,
+            a.ESTUBDAFH         AS          auditoria_fecha_hora,
+            a.ESTUBDAIP         AS          auditoria_ip,
+
+            b.DOMFICCOD         AS          tipo_estado_codigo,
+            b.DOMFICNOM         AS          tipo_estado_nombre,
+
+            c.DOMFICCOD         AS          tipo_categoria_codigo,
+            c.DOMFICNOM         AS          tipo_categoria_nombre,
+
+            d.DOMFICCOD         AS          tipo_subcategoria_codigo,
+            d.DOMFICNOM         AS          tipo_subcategoria_nombre,
+
+            e.ESTUBCCOD         AS          establecimiento_ubicacion_codigo,
+            e.ESTUBCNOM         AS          establecimiento_ubicacion_nombre
+
+            FROM ESTUBD a
+            INNER JOIN mayordomo_default.DOMFIC b ON a.ESTUBDECC = b.DOMFICCOD
+            INNER JOIN mayordomo_default.DOMFIC c ON a.ESTUBDTCC = c.DOMFICCOD
+            INNER JOIN mayordomo_default.DOMFIC d ON a.ESTUBDTSC = d.DOMFICCOD
+            INNER JOIN mayordomo_establecimiento.ESTUBC e ON a.ESTUBDUBC = e.ESTUBCCOD
+
+            WHERE a.ESTUBDTSC = ?
+
+            ORDER BY c.DOMFICNOM, d.DOMFICNOM";
+
+            try {
+                $connESTABLECIMIENTO  = getConnectionESTABLECIMIENTO();
+                $stmtESTABLECIMIENTO  = $connESTABLECIMIENTO->prepare($sql00);
+                $stmtESTABLECIMIENTO->execute([$val01, $val02]);
+
+                while ($rowESTABLECIMIENTO = $stmtESTABLECIMIENTO->fetch()) {
+                    $stmtESTABLECIMIENTO01  = $connESTABLECIMIENTO->prepare($sql01);
+                    $stmtESTABLECIMIENTO01->execute([$rowESTABLECIMIENTO['establecimiento_ubicacion_codigo']]);
+
+                    $cantUbicado = 0;
+
+                    while ($rowESTABLECIMIENTO01 = $stmtESTABLECIMIENTO01->fetch()) {
+                        $cantUbicado = $cantUbicado + $rowESTABLECIMIENTO01['establecimiento_ubicacion_detalle_cantidad'];
+                        $detalle        = array(
+                            'establecimiento_ubicacion_detalle_codigo'              => $rowESTABLECIMIENTO01['establecimiento_ubicacion_detalle_codigo'],
+                            'establecimiento_ubicacion_detalle_cantidad'            => $rowESTABLECIMIENTO01['establecimiento_ubicacion_detalle_cantidad'],
+                            'establecimiento_ubicacion_detalle_observacion'         => $rowESTABLECIMIENTO01['establecimiento_ubicacion_detalle_observacion'],
+                            'establecimiento_ubicacion_codigo'                      => $rowESTABLECIMIENTO01['establecimiento_ubicacion_codigo'],
+                            'establecimiento_ubicacion_nombre'                      => $rowESTABLECIMIENTO01['establecimiento_ubicacion_nombre'],
+                            'tipo_estado_codigo'                                    => $rowESTABLECIMIENTO01['tipo_estado_codigo'],
+                            'tipo_estado_nombre'                                    => $rowESTABLECIMIENTO01['tipo_estado_nombre'],
+                            'tipo_categoria_codigo'                                 => $rowESTABLECIMIENTO01['tipo_categoria_codigo'],
+                            'tipo_categoria_nombre'                                 => $rowESTABLECIMIENTO01['tipo_categoria_nombre'],
+                            'tipo_subcategoria_codigo'                              => $rowESTABLECIMIENTO01['tipo_subcategoria_codigo'],
+                            'tipo_subcategoria_nombre'                              => $rowESTABLECIMIENTO01['tipo_subcategoria_nombre'],
+                            'auditoria_empresa_codigo'                              => $rowESTABLECIMIENTO01['auditoria_empresa_codigo'],
+                            'auditoria_empresa_nombre'                              => $rowESTABLECIMIENTO01['auditoria_empresa_nombre'],
+                            'auditoria_usuario'                                     => $rowESTABLECIMIENTO01['auditoria_usuario'],
+                            'auditoria_fecha_hora'                                  => date_format(date_create($rowESTABLECIMIENTO01['auditoria_fecha_hora']), 'd/m/Y H:i:s'),
+                            'auditoria_ip'                                          => $rowESTABLECIMIENTO01['auditoria_ip']
+                        );    
+                        $result_detalle[]   = $detalle;
+                    }
+
+                    if (!isset($result_detalle)){
+                        $result_detalle = array(
+                            'establecimiento_ubicacion_detalle_codigo'              => '',
+                            'establecimiento_ubicacion_detalle_cantidad'            => '',
+                            'establecimiento_ubicacion_detalle_observacion'         => '',
+                            'establecimiento_ubicacion_codigo'                      => '',
+                            'establecimiento_ubicacion_nombre'                      => '',
+                            'tipo_estado_codigo'                                    => '',
+                            'tipo_estado_nombre'                                    => '',
+                            'tipo_categoria_codigo'                                 => '',
+                            'tipo_categoria_nombre'                                 => '',
+                            'tipo_subcategoria_codigo'                              => '',
+                            'tipo_subcategoria_nombre'                              => '',
+                            'auditoria_empresa_codigo'                              => '',
+                            'auditoria_empresa_nombre'                              => '',
+                            'auditoria_usuario'                                     => '',
+                            'auditoria_fecha_hora'                                  => '',
+                            'auditoria_ip'                                          => ''
+                        );
+                    }
+
+                    $detalle    = array(
+                        'establecimiento_ubicacion_codigo'              => $rowESTABLECIMIENTO['establecimiento_ubicacion_codigo'],
+                        'establecimiento_ubicacion_nombre'              => $rowESTABLECIMIENTO['establecimiento_ubicacion_nombre'],
+                        'establecimiento_ubicacion_cantidad'            => $cantUbicado,
+                        'establecimiento_ubicacion_observacion'         => $rowESTABLECIMIENTO['establecimiento_ubicacion_observacion'],
+                        'establecimiento_potrero_codigo'                => $rowESTABLECIMIENTO['establecimiento_potrero_codigo'],
+                        'establecimiento_potrero_nombre'                => $rowESTABLECIMIENTO['establecimiento_potrero_nombre'],
+                        'establecimiento_lote_codigo'                   => $rowESTABLECIMIENTO['establecimiento_lote_codigo'],
+                        'establecimiento_lote_nombre'                   => $rowESTABLECIMIENTO['establecimiento_lote_nombre'],
+                        'establecimiento_codigo'                        => $rowESTABLECIMIENTO['establecimiento_codigo'],
+                        'establecimiento_nombre'                        => $rowESTABLECIMIENTO['establecimiento_nombre'],
+                        'auditoria_empresa_codigo'                      => $rowESTABLECIMIENTO['auditoria_empresa_codigo'],
+                        'auditoria_empresa_nombre'                      => $rowESTABLECIMIENTO['auditoria_empresa_nombre'],
+                        'auditoria_usuario'                             => $rowESTABLECIMIENTO['auditoria_usuario'],
+                        'auditoria_fecha_hora'                          => date_format(date_create($rowESTABLECIMIENTO['auditoria_fecha_hora']), 'd/m/Y H:i:s'),
+                        'auditoria_ip'                                  => $rowESTABLECIMIENTO['auditoria_ip'],
+                        'detalle'                                       => $result_detalle
+                    );
+                    $result[]   = $detalle;
+                }
+
+                if (isset($result)){
+                    header("Content-Type: application/json; charset=utf-8");
+                    $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success SELECT', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+                } else {
+                    $detalle = array(
+                        'establecimiento_ubicacion_codigo'              => '',
+                        'establecimiento_ubicacion_nombre'              => '',
+                        'establecimiento_ubicacion_cantidad'            => '',
+                        'establecimiento_ubicacion_observacion'         => '',
+                        'establecimiento_potrero_codigo'                => '',
+                        'establecimiento_potrero_nombre'                => '',
+                        'establecimiento_lote_codigo'                   => '',
+                        'establecimiento_lote_nombre'                   => '',
+                        'establecimiento_codigo'                        => '',
+                        'establecimiento_nombre'                        => '',
+                        'auditoria_empresa_codigo'                      => '',
+                        'auditoria_empresa_nombre'                      => '',
+                        'auditoria_usuario'                             => '',
+                        'auditoria_fecha_hora'                          => '',
+                        'auditoria_ip'                                  => '',
+                        'detalle'                                       => ''
+                    );
+
+                    header("Content-Type: application/json; charset=utf-8");
+                    $json = json_encode(array('code' => 204, 'status' => 'ok', 'message' => 'No hay registros', 'data' => $detalle), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+                }
+
+                $stmtESTABLECIMIENTO->closeCursor();
+                $stmtESTABLECIMIENTO = null;
+            } catch (PDOException $e) {
+                header("Content-Type: application/json; charset=utf-8");
+                $json = json_encode(array('code' => 204, 'status' => 'failure', 'message' => 'Error SELECT: '.$e), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+            }
+        } else {
+            header("Content-Type: application/json; charset=utf-8");
+            $json = json_encode(array('code' => 400, 'status' => 'error', 'message' => 'Verifique, algún campo esta vacio.'), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+        }
+
+        $connESTABLECIMIENTO  = null;
+        
+        return $json;
+    });
