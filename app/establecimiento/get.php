@@ -1107,7 +1107,7 @@
 
                     if (!isset($result_detalle)){
                         $result_detalle = array(
-                            'establecimiento_ubicacion_detalle_codigo'              => '',
+                            'establecimiento_ubicacion_detalle_codigo'              => 0,
                             'establecimiento_ubicacion_detalle_cantidad'            => '',
                             'establecimiento_ubicacion_detalle_observacion'         => '',
                             'establecimiento_ubicacion_codigo'                      => '',
