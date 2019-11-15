@@ -879,7 +879,7 @@
             INNER JOIN mayordomo_default.DOMFIC d ON a.ESTUBDTSC = d.DOMFICCOD
             INNER JOIN mayordomo_establecimiento.ESTUBC e ON a.ESTUBDUBC = e.ESTUBCCOD
 
-            WHERE a.ESTUBDTSC = ?
+            WHERE a.ESTUBDUBC = ?
 
             ORDER BY c.DOMFICNOM, d.DOMFICNOM";
 
