@@ -196,3 +196,70 @@
         
         return $json;
     });
+
+    $app->get('/v1/grafico/004/{codigo}', function($request) {
+        require __DIR__.'/../../src/connect.php';
+
+        $val01      = $request->getAttribute('codigo');
+        
+        if (isset($val01)) {
+            $sql00  = "SELECT
+            SUM(a.ESTPOBCAN)    AS          establecimiento_poblacion_cantidad,
+
+            c.DOMFICCOD         AS          tipo_categoria_codigo,
+            c.DOMFICNOM         AS          tipo_categoria_nombre
+            
+            FROM ESTPOB a
+            INNER JOIN mayordomo_default.DOMTRI b ON a.ESTPOBTSC = b.DOMTRICO3
+            INNER JOIN mayordomo_default.DOMFIC c ON b.DOMTRICO2 = c.DOMFICCOD
+
+            WHERE a.ESTPOBESC = ?
+
+            GROUP BY c.DOMFICCOD
+
+            ORDER BY c.DOMFICCOD";
+
+            try {
+                $connESTABLECIMIENTO  = getConnectionESTABLECIMIENTO();
+                $stmtESTABLECIMIENTO  = $connESTABLECIMIENTO->prepare($sql00);
+                $stmtESTABLECIMIENTO->execute([$val01]); 
+
+                while ($rowESTABLECIMIENTO = $stmtESTABLECIMIENTO->fetch()) {
+                    $detalle    = array(
+                        'tipo_categoria_codigo'                         => $rowESTABLECIMIENTO['tipo_categoria_codigo'],
+                        'tipo_categoria_nombre'                         => $rowESTABLECIMIENTO['tipo_categoria_nombre'],
+                        'establecimiento_poblacion_cantidad'            => $rowESTABLECIMIENTO['establecimiento_poblacion_cantidad']
+                    );
+
+                    $result[]   = $detalle;
+                }
+
+                if (isset($result)){
+                    header("Content-Type: application/json; charset=utf-8");
+                    $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success SELECT', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+                } else {
+                    $detalle = array(
+                        'tipo_categoria_codigo'                         => '',
+                        'tipo_categoria_nombre'                         => '',
+                        'establecimiento_poblacion_cantidad'            => ''
+                    );
+
+                    header("Content-Type: application/json; charset=utf-8");
+                    $json = json_encode(array('code' => 204, 'status' => 'ok', 'message' => 'No hay registros', 'data' => $detalle), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+                }
+
+                $stmtESTABLECIMIENTO->closeCursor();
+                $stmtESTABLECIMIENTO = null;
+            } catch (PDOException $e) {
+                header("Content-Type: application/json; charset=utf-8");
+                $json = json_encode(array('code' => 204, 'status' => 'failure', 'message' => 'Error SELECT: '.$e), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+            }
+        } else {
+            header("Content-Type: application/json; charset=utf-8");
+            $json = json_encode(array('code' => 400, 'status' => 'error', 'message' => 'Verifique, algún campo esta vacio.'), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+        }
+
+        $connESTABLECIMIENTO  = null;
+        
+        return $json;
+    });
