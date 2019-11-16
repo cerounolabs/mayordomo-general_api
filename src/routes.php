@@ -10,3 +10,5 @@
 
 	require __DIR__.'/../app/senacsa/get.php';					//METODO GET
 	require __DIR__.'/../app/senacsa/post.php';					//METODO POST
+
+	require __DIR__.'/../app/report/grafico.php';				//METODO GET
