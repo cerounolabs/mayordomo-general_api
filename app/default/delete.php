@@ -297,3 +297,91 @@
         
         return $json;
     });
+
+    $app->delete('/v1/default/602/{codigo}', function($request) {
+        require __DIR__.'/../../src/connect.php';
+
+        $val01      = $request->getAttribute('codigo');
+        $aud01      = $request->getParsedBody()['auditoria_empresa_codigo'];
+        $aud02      = $request->getParsedBody()['auditoria_usuario'];
+        $aud03      = $request->getParsedBody()['auditoria_fecha_hora'];
+        $aud04      = $request->getParsedBody()['auditoria_ip'];
+
+        if (isset($aud01) && isset($aud02) && isset($aud03) && isset($aud04) && isset($val01)) {
+            $sql00  = "UPDATE ESTSEC SET ESTSECAEM = ?, ESTSECAUS = ?, ESTSECAFH = ?, ESTSECAIP = ? WHERE ESTSECCOD = ?";
+            $sql01  = "DELETE FROM ESTSEC WHERE ESTSECCOD = ?";
+
+            try {
+                $connDEFAULT    = getConnectionDEFAULT();
+
+                $stmtDEFAULT00  = $connDEFAULT->prepare($sql00);
+                $stmtDEFAULT00->execute([$aud01, $aud02, $aud03, $aud04, $val01]);
+
+                $stmtDEFAULT01  = $connDEFAULT->prepare($sql01);
+                $stmtDEFAULT01->execute([$val01]);
+
+                header("Content-Type: application/json; charset=utf-8");
+                $json                   = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success DELETE'), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+
+                $stmtDEFAULT00->closeCursor();
+                $stmtDEFAULT00  = null;
+
+                $stmtDEFAULT01->closeCursor();
+                $stmtDEFAULT01  = null;
+            } catch (PDOException $e) {
+                header("Content-Type: application/json; charset=utf-8");
+                $json                   = json_encode(array('code' => 204, 'status' => 'failure', 'message' => 'Error INSERT: '.$e), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+            }
+        } else {
+            header("Content-Type: application/json; charset=utf-8");
+            $json = json_encode(array('code' => 400, 'status' => 'error', 'message' => 'Verifique, algún campo esta vacio.'), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+        }
+
+        $connDEFAULT  = null;
+
+        return $json;
+    });
+
+    $app->delete('/v1/default/603/{codigo}', function($request) {
+        require __DIR__.'/../../src/connect.php';
+
+        $val01      = $request->getAttribute('codigo');
+        $aud01      = $request->getParsedBody()['auditoria_empresa_codigo'];
+        $aud02      = $request->getParsedBody()['auditoria_usuario'];
+        $aud03      = $request->getParsedBody()['auditoria_fecha_hora'];
+        $aud04      = $request->getParsedBody()['auditoria_ip'];
+
+        if (isset($aud01) && isset($aud02) && isset($aud03) && isset($aud04) && isset($val01)) {
+            $sql00  = "UPDATE ESTPOT SET ESTPOTAEM = ?, ESTPOTAUS = ?, ESTPOTAFH = ?, ESTPOTAIP = ? WHERE ESTPOTCOD = ?";
+            $sql01  = "DELETE FROM ESTPOT WHERE ESTPOTCOD = ?";
+
+            try {
+                $connDEFAULT    = getConnectionDEFAULT();
+
+                $stmtDEFAULT00  = $connDEFAULT->prepare($sql00);
+                $stmtDEFAULT00->execute([$aud01, $aud02, $aud03, $aud04, $val01]);
+
+                $stmtDEFAULT01  = $connDEFAULT->prepare($sql01);
+                $stmtDEFAULT01->execute([$val01]);
+
+                header("Content-Type: application/json; charset=utf-8");
+                $json                   = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success DELETE'), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+
+                $stmtDEFAULT00->closeCursor();
+                $stmtDEFAULT00  = null;
+
+                $stmtDEFAULT01->closeCursor();
+                $stmtDEFAULT01  = null;
+            } catch (PDOException $e) {
+                header("Content-Type: application/json; charset=utf-8");
+                $json                   = json_encode(array('code' => 204, 'status' => 'failure', 'message' => 'Error INSERT: '.$e), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+            }
+        } else {
+            header("Content-Type: application/json; charset=utf-8");
+            $json = json_encode(array('code' => 400, 'status' => 'error', 'message' => 'Verifique, algún campo esta vacio.'), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+        }
+
+        $connDEFAULT  = null;
+
+        return $json;
+    });
