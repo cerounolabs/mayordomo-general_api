@@ -600,7 +600,7 @@
 
             WHERE a.ESTPOBESC = ?
 
-            ORDER BY a.ESTPOBESC, h.DOMFICCOD, d.DOMFICCOD";
+            ORDER BY a.ESTPOBESC, g.DOMFICCOD, d.DOMFICCOD";
 
             try {
                 $connESTABLECIMIENTO  = getConnectionESTABLECIMIENTO();
@@ -730,7 +730,7 @@
 
             WHERE a.ESTPOBESC = ? AND a.ESTPOBCOD = ?
 
-            ORDER BY a.ESTPOBESC, h.DOMFICCOD, d.DOMFICCOD";
+            ORDER BY a.ESTPOBESC, g.DOMFICCOD, d.DOMFICCOD";
 
             try {
                 $connESTABLECIMIENTO  = getConnectionESTABLECIMIENTO();
