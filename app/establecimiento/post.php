@@ -325,7 +325,7 @@
 
         if (isset($val01) && isset($val02) && isset($val03) && isset($val04) && isset($val05) && isset($val06) && isset($val07) && isset($val08) && isset($val09) && isset($val10)) {
 //            $sql00  = "INSERT INTO ANIFIC (ANIFICECC, ANIFICTOC, ANIFICTRC, ANIFICTSC, ANIFICESC, ANIFICPEC, ANIFICCO1, ANIFICOBS, ANIFICAEM, ANIFICAUS, ANIFICAFH, ANIFICAIP) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            $sql01  = "INSERT INTO ANINAC (ANINACESC, ANINACPEC, ANINACANC, ANINACOBS, ANINACAEM, ANINACAUS, ANINACAFH, ANINACAIP) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+//            $sql01  = "INSERT INTO ANINAC (ANINACESC, ANINACPEC, ANINACANC, ANINACOBS, ANINACAEM, ANINACAUS, ANINACAFH, ANINACAIP) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             $sql02  = "INSERT INTO ANIPES (ANIPESTPC, ANIPESESC, ANIPESANC, ANIPESFEC, ANIPESPES, ANIPESOBS, ANIPESAEM, ANIPESAUS, ANIPESAFH, ANIPESAIP) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $sql03  = "SELECT ESTPOBCOD FROM ESTPOB WHERE ESTPOBTOC = ? AND ESTPOBTRC = ? AND ESTPOBTSC = ? AND ESTPOBESC = ? AND ESTPOBPEC = ?";
             $sql041 = "INSERT INTO ESTPOB (ESTPOBTOC, ESTPOBTRC, ESTPOBTSC, ESTPOBESC, ESTPOBPEC, ESTPOBCAN, ESTPOBPES, ESTPOBOBS, ESTPOBAEM, ESTPOBAUS, ESTPOBAFH, ESTPOBAIP) VALUES (?, ?, ?, ?, ?, 1, ?, ?, ?, ?, ?, ?)";
@@ -341,8 +341,8 @@
 //                $ANIFICCOD              = $connESTABLECIMIENTO->lastInsertId()['ANIFICCOD'];
                 $ANIFICCOD = 1;
 
-                $stmtESTABLECIMIENTO01  = $connESTABLECIMIENTO->prepare($sql01);
-                $stmtESTABLECIMIENTO01->execute([$val06, $val07, $ANIFICCOD, $val11, $aud01, $aud02, $aud03, $aud04]);
+//                $stmtESTABLECIMIENTO01  = $connESTABLECIMIENTO->prepare($sql01);
+//                $stmtESTABLECIMIENTO01->execute([$val06, $val07, $ANIFICCOD, $val11, $aud01, $aud02, $aud03, $aud04]);
                 
                 $stmtESTABLECIMIENTO02  = $connESTABLECIMIENTO->prepare($sql02);
                 $stmtESTABLECIMIENTO02->execute([$val05, $val06, $ANIFICCOD, $val09, $val10, $val11, $aud01, $aud02, $aud03, $aud04]);
@@ -369,8 +369,8 @@
 //                $stmtESTABLECIMIENTO00->closeCursor();
 //                $stmtESTABLECIMIENTO00 = null;
 
-                $stmtESTABLECIMIENTO01->closeCursor();
-                $stmtESTABLECIMIENTO01 = null;
+//                $stmtESTABLECIMIENTO01->closeCursor();
+//                $stmtESTABLECIMIENTO01 = null;
 
                 $stmtESTABLECIMIENTO02->closeCursor();
                 $stmtESTABLECIMIENTO02 = null;
