@@ -352,8 +352,8 @@
                     $stmtESTABLECIMIENTO04 = $connESTABLECIMIENTO->prepare($sql041);
                     $stmtESTABLECIMIENTO04->execute([$val02, $val03, $val04, $val06, $val07, $val10, $val11, $aud01, $aud02, $aud03, $aud04]);
                 } else {
-                    $stmtESTABLECIMIENTO01  = $connESTABLECIMIENTO->prepare($sql042);
-                    $stmtESTABLECIMIENTO01->execute([$aud01, $aud02, $aud03, $aud04, $val02, $val03, $val04, $val06, $val07]); 
+                    $stmtESTABLECIMIENTO04  = $connESTABLECIMIENTO->prepare($sql042);
+                    $stmtESTABLECIMIENTO04->execute([$aud01, $aud02, $aud03, $aud04, $val02, $val03, $val04, $val06, $val07]); 
                 }
 
                 header("Content-Type: application/json; charset=utf-8");
