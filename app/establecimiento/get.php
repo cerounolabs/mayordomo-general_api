@@ -587,8 +587,8 @@
             f.ESTPERCOD         AS          persona_codigo,
             f.ESTPERPER         AS          persona_completo,
 
-            h.DOMFICCOD         AS          tipo_categoria_codigo,
-            h.DOMFICNOM         AS          tipo_categoria_nombre
+            g.DOMFICCOD         AS          tipo_categoria_codigo,
+            g.DOMFICNOM         AS          tipo_categoria_nombre
             
             FROM ESTPOB a
             INNER JOIN mayordomo_default.DOMFIC b ON a.ESTPOBTOC = b.DOMFICCOD
@@ -596,8 +596,7 @@
             INNER JOIN mayordomo_default.DOMFIC d ON a.ESTPOBTSC = d.DOMFICCOD
             INNER JOIN mayordomo_default.ESTFIC e ON a.ESTPOBESC = e.ESTFICCOD
             INNER JOIN mayordomo_establecimiento.ESTPER f ON a.ESTPOBPEC = f.ESTPERCOD
-            INNER JOIN mayordomo_default.DOMTRI g ON a.ESTPOBTSC = g.DOMTRICO3
-            INNER JOIN mayordomo_default.DOMFIC h ON g.DOMTRICO2 = h.DOMFICCOD
+            INNER JOIN mayordomo_default.DOMFIC g ON g.ESTPOBTCC = h.DOMFICCOD
 
             WHERE a.ESTPOBESC = ?
 
@@ -718,17 +717,16 @@
             f.ESTPERCOD         AS          persona_codigo,
             f.ESTPERPER         AS          persona_completo,
 
-            h.DOMFICCOD         AS          tipo_categoria_codigo,
-            h.DOMFICNOM         AS          tipo_categoria_nombre
-
+            g.DOMFICCOD         AS          tipo_categoria_codigo,
+            g.DOMFICNOM         AS          tipo_categoria_nombre
+            
             FROM ESTPOB a
             INNER JOIN mayordomo_default.DOMFIC b ON a.ESTPOBTOC = b.DOMFICCOD
             INNER JOIN mayordomo_default.DOMFIC c ON a.ESTPOBTRC = c.DOMFICCOD
             INNER JOIN mayordomo_default.DOMFIC d ON a.ESTPOBTSC = d.DOMFICCOD
             INNER JOIN mayordomo_default.ESTFIC e ON a.ESTPOBESC = e.ESTFICCOD
             INNER JOIN mayordomo_establecimiento.ESTPER f ON a.ESTPOBPEC = f.ESTPERCOD
-            INNER JOIN mayordomo_default.DOMTRI g ON a.ESTPOBTSC = g.DOMTRICO3
-            INNER JOIN mayordomo_default.DOMFIC h ON g.DOMTRICO2 = h.DOMFICCOD
+            INNER JOIN mayordomo_default.DOMFIC g ON g.ESTPOBTCC = h.DOMFICCOD
 
             WHERE a.ESTPOBESC = ? AND a.ESTPOBCOD = ?
 
