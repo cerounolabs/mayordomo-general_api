@@ -324,7 +324,7 @@
         $aud04      = $request->getParsedBody()['auditoria_ip'];
 
         if (isset($val01) && isset($val02) && isset($val03) && isset($val04) && isset($val05) && isset($val06) && isset($val07) && isset($val08) && isset($val09) && isset($val10)) {
-            $sql00  = "INSERT INTO ANIFIC (ANIFICECC, ANIFICTOC, ANIFICTRC, ANIFICTSC, ANIFICESC, ANIFICPEC, ANIFICCO1, ANIFICOBS, ANIFICAEM, ANIFICAUS, ANIFICAFH, ANIFICAIP) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+//            $sql00  = "INSERT INTO ANIFIC (ANIFICECC, ANIFICTOC, ANIFICTRC, ANIFICTSC, ANIFICESC, ANIFICPEC, ANIFICCO1, ANIFICOBS, ANIFICAEM, ANIFICAUS, ANIFICAFH, ANIFICAIP) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $sql01  = "INSERT INTO ANINAC (ANINACESC, ANINACPEC, ANINACANC, ANINACOBS, ANINACAEM, ANINACAUS, ANINACAFH, ANINACAIP) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             $sql02  = "INSERT INTO ANIPES (ANIPESTPC, ANIPESESC, ANIPESANC, ANIPESFEC, ANIPESPES, ANIPESOBS, ANIPESAEM, ANIPESAUS, ANIPESAFH, ANIPESAIP) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $sql03  = "SELECT ESTPOBCOD FROM ESTPOB WHERE ESTPOBTOC = ? AND ESTPOBTRC = ? AND ESTPOBTSC = ? AND ESTPOBESC = ? AND ESTPOBPEC = ?";
@@ -334,11 +334,12 @@
             try {
                 $connESTABLECIMIENTO    = getConnectionESTABLECIMIENTO();
 
-                $stmtESTABLECIMIENTO00  = $connESTABLECIMIENTO->prepare($sql00);
-                $stmtESTABLECIMIENTO00->execute([$val01, $val02, $val03, $val04, $val06, $val07, $val08, $val11, $aud01, $aud02, $aud03, $aud04]);
+//                $stmtESTABLECIMIENTO00  = $connESTABLECIMIENTO->prepare($sql00);
+//                $stmtESTABLECIMIENTO00->execute([$val01, $val02, $val03, $val04, $val06, $val07, $val08, $val11, $aud01, $aud02, $aud03, $aud04]);
 
-                $rowESTABLECIMIENTO00   = $stmtESTABLECIMIENTO00->fetch(PDO::FETCH_ASSOC);
-                $ANIFICCOD              = $connESTABLECIMIENTO->lastInsertId()['ANIFICCOD'];
+//                $rowESTABLECIMIENTO00   = $stmtESTABLECIMIENTO00->fetch(PDO::FETCH_ASSOC);
+//                $ANIFICCOD              = $connESTABLECIMIENTO->lastInsertId()['ANIFICCOD'];
+                $ANIFICCOD = 1;
 
                 $stmtESTABLECIMIENTO01  = $connESTABLECIMIENTO->prepare($sql01);
                 $stmtESTABLECIMIENTO01->execute([$val06, $val07, $ANIFICCOD, $val11, $aud01, $aud02, $aud03, $aud04]);
@@ -356,7 +357,7 @@
                     $codigo     = $connESTABLECIMIENTO->lastInsertId()['ESTPOBCOD'];
                     $mensaje    = 'Success INSERT';
                 } else {
-                    $stmtESTABLECIMIENTO01  = $connESTABLECIMIENTO->prepare($sql02);
+                    $stmtESTABLECIMIENTO01  = $connESTABLECIMIENTO->prepare($sql042);
                     $stmtESTABLECIMIENTO01->execute([$aud01, $aud02, $aud03, $aud04, $val02, $val03, $val04, $val06, $val07]);
                     $codigo = $rowESTABLECIMIENTO00['ESTPOBCOD'];
                     $mensaje    = 'Success UPDATE'; 
@@ -365,8 +366,8 @@
                 header("Content-Type: application/json; charset=utf-8");
                 $json       = json_encode(array('code' => 200, 'status' => 'ok', 'message' => $mensaje, 'codigo' => $codigo), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
 
-                $stmtESTABLECIMIENTO00->closeCursor();
-                $stmtESTABLECIMIENTO00 = null;
+//                $stmtESTABLECIMIENTO00->closeCursor();
+//                $stmtESTABLECIMIENTO00 = null;
 
                 $stmtESTABLECIMIENTO01->closeCursor();
                 $stmtESTABLECIMIENTO01 = null;
