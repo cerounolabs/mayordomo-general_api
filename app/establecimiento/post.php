@@ -341,10 +341,10 @@
                 $ANIFICCOD              = $connESTABLECIMIENTO->lastInsertId()['ANIFICCOD'];
 
                 $stmtESTABLECIMIENTO01  = $connESTABLECIMIENTO->prepare($sql01);
-                $stmtESTABLECIMIENTO01->execute([$val06, $val07, $ANIFICCOD, $val11, $aud01, $aud02, $aud03, $aud04]);
+                $stmtESTABLECIMIENTO01->execute([$val07, $val08, $ANIFICCOD, $val11, $aud01, $aud02, $aud03, $aud04]);
                 
                 $stmtESTABLECIMIENTO02  = $connESTABLECIMIENTO->prepare($sql02);
-                $stmtESTABLECIMIENTO02->execute([$val05, $val06, $ANIFICCOD, $val09, $val10, $val11, $aud01, $aud02, $aud03, $aud04]);
+                $stmtESTABLECIMIENTO02->execute([$val06, $val07, $ANIFICCOD, $val10, $val11, $val12, $aud01, $aud02, $aud03, $aud04]);
 
                 $stmtESTABLECIMIENTO03  = $connESTABLECIMIENTO->prepare($sql03);
                 $stmtESTABLECIMIENTO03->execute([$val02, $val03, $val04, $val05, $val07, $val08]);
