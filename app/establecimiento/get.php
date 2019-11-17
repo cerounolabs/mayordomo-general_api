@@ -596,7 +596,7 @@
             INNER JOIN mayordomo_default.DOMFIC d ON a.ESTPOBTSC = d.DOMFICCOD
             INNER JOIN mayordomo_default.ESTFIC e ON a.ESTPOBESC = e.ESTFICCOD
             INNER JOIN mayordomo_establecimiento.ESTPER f ON a.ESTPOBPEC = f.ESTPERCOD
-            INNER JOIN mayordomo_default.DOMFIC g ON g.ESTPOBTCC = h.DOMFICCOD
+            INNER JOIN mayordomo_default.DOMFIC g ON a.ESTPOBTCC = g.DOMFICCOD
 
             WHERE a.ESTPOBESC = ?
 
@@ -726,7 +726,7 @@
             INNER JOIN mayordomo_default.DOMFIC d ON a.ESTPOBTSC = d.DOMFICCOD
             INNER JOIN mayordomo_default.ESTFIC e ON a.ESTPOBESC = e.ESTFICCOD
             INNER JOIN mayordomo_establecimiento.ESTPER f ON a.ESTPOBPEC = f.ESTPERCOD
-            INNER JOIN mayordomo_default.DOMFIC g ON g.ESTPOBTCC = h.DOMFICCOD
+            INNER JOIN mayordomo_default.DOMFIC g ON a.ESTPOBTCC = h.DOMFICCOD
 
             WHERE a.ESTPOBESC = ? AND a.ESTPOBCOD = ?
 
