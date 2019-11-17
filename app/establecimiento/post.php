@@ -302,3 +302,65 @@
 
         return $json;
     });
+
+    $app->post('/v1/establecimiento/608', function($request) {
+        require __DIR__.'/../../src/connect.php';
+
+        $val01      = $request->getParsedBody()['tipo_estado_codigo'];
+        $val02      = $request->getParsedBody()['tipo_origen_codigo'];
+        $val03      = $request->getParsedBody()['tipo_raza_codigo'];
+        $val04      = $request->getParsedBody()['tipo_subcategoria_codigo'];
+        $val05      = $request->getParsedBody()['tipo_peso_codigo'];
+        $val06      = $request->getParsedBody()['establecimiento_codigo'];
+        $val07      = $request->getParsedBody()['establecimiento_persona_codigo'];
+        $val08      = $request->getParsedBody()['animal_codigo1_nacimiento'];
+        $val09      = $request->getParsedBody()['animal_pesaje_fecha'];
+        $val10      = $request->getParsedBody()['animal_pesaje_peso'];
+        $val11      = $request->getParsedBody()['animal_observacion'];
+
+        $aud01      = $request->getParsedBody()['auditoria_empresa_codigo'];
+        $aud02      = $request->getParsedBody()['auditoria_usuario'];
+        $aud03      = $request->getParsedBody()['auditoria_fecha_hora'];
+        $aud04      = $request->getParsedBody()['auditoria_ip'];
+
+        if (isset($val01) && isset($val02) && isset($val03) && isset($val04) && isset($val05) && isset($val06) && isset($val07) && isset($val08) && isset($val09) && isset($val10)) {
+            $sql00  = "INSERT INTO ANIFIC (ANIFICECC, ANIFICTOC, ANIFICTRC, ANIFICTSC, ANIFICESC, ANIFICPEC, ANIFICCO1, ANIFICOBS, ANIFICAEM, ANIFICAUS, ANIFICAFH, ANIFICAIP) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $sql01  = "INSERT INTO ANINAC (ANINACESC, ANINACPEC, ANINACANC, ANINACOBS, ANINACAEM, ANINACAUS, ANINACAFH, ANINACAIP) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            $sql02  = "INSERT INTO ANIPES (ANIPESTPC, ANIPESESC, ANIPESANC, ANIPESFEC, ANIPESPES, ANIPESOBS, ANIPESAEM, ANIPESAUS, ANIPESAFH, ANIPESAIP) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+            try {
+                $connESTABLECIMIENTO    = getConnectionESTABLECIMIENTO();
+
+                $stmtESTABLECIMIENTO00  = $connESTABLECIMIENTO->prepare($sql00);
+                $stmtESTABLECIMIENTO00->execute([$val01, $val02, $val03, $val04, $val06, $val07, $val08, $val11, $aud01, $aud02, $aud03, $aud04]);
+
+                $rowESTABLECIMIENTO00   = $stmtESTABLECIMIENTO00->fetch(PDO::FETCH_ASSOC);
+                $ANIFICCOD              = $connESTABLECIMIENTO->lastInsertId()['ANIFICCOD'];
+
+                $stmtESTABLECIMIENTO01  = $connESTABLECIMIENTO->prepare($sql01);
+                $stmtESTABLECIMIENTO01->execute([$val06, $val07, $ANIFICCOD, $val11, $aud01, $aud02, $aud03, $aud04]);
+                
+                $stmtESTABLECIMIENTO02  = $connESTABLECIMIENTO->prepare($sql02);
+                $stmtESTABLECIMIENTO02->execute([$val05, $val06, $ANIFICCOD, $val09, $val10, $val11, $aud01, $aud02, $aud03, $aud04]);
+
+                header("Content-Type: application/json; charset=utf-8");
+                $json       = json_encode(array('code' => 200, 'status' => 'ok', 'message' => $mensaje, 'codigo' => $codigo), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+
+                $stmtESTABLECIMIENTO00->closeCursor();
+                $stmtESTABLECIMIENTO00 = null;
+
+                $stmtESTABLECIMIENTO01->closeCursor();
+                $stmtESTABLECIMIENTO01 = null;
+            } catch (PDOException $e) {
+                header("Content-Type: application/json; charset=utf-8");
+                $json = json_encode(array('code' => 204, 'status' => 'failure', 'message' => 'Error INSERT: '.$e), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+            }
+        } else {
+            header("Content-Type: application/json; charset=utf-8");
+            $json = json_encode(array('code' => 400, 'status' => 'error', 'message' => 'Verifique, algún campo esta vacio.'), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+        }
+
+        $connESTABLECIMIENTO  = null;
+
+        return $json;
+    });
