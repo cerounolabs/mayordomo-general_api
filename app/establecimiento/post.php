@@ -310,33 +310,34 @@
         $val01      = $request->getParsedBody()['tipo_estado_codigo'];
         $val02      = $request->getParsedBody()['tipo_origen_codigo'];
         $val03      = $request->getParsedBody()['tipo_raza_codigo'];
-        $val04      = $request->getParsedBody()['tipo_subcategoria_codigo'];
-        $val05      = $request->getParsedBody()['tipo_peso_codigo'];
-        $val06      = $request->getParsedBody()['establecimiento_codigo'];
-        $val07      = $request->getParsedBody()['establecimiento_persona_codigo'];
-        $val08      = $request->getParsedBody()['animal_codigo1_nacimiento'];
-        $val09      = $request->getParsedBody()['animal_pesaje_fecha'];
-        $val10      = $request->getParsedBody()['animal_pesaje_peso'];
-        $val11      = $request->getParsedBody()['animal_observacion'];
+        $val04      = $request->getParsedBody()['tipo_categoria_codigo'];
+        $val05      = $request->getParsedBody()['tipo_subcategoria_codigo'];
+        $val06      = $request->getParsedBody()['tipo_peso_codigo'];
+        $val07      = $request->getParsedBody()['establecimiento_codigo'];
+        $val08      = $request->getParsedBody()['establecimiento_persona_codigo'];
+        $val09      = $request->getParsedBody()['animal_codigo1_nacimiento'];
+        $val10      = $request->getParsedBody()['animal_pesaje_fecha'];
+        $val11      = $request->getParsedBody()['animal_pesaje_peso'];
+        $val12      = $request->getParsedBody()['animal_observacion'];
 
         $aud01      = $request->getParsedBody()['auditoria_empresa_codigo'];
         $aud02      = $request->getParsedBody()['auditoria_usuario'];
         $aud03      = $request->getParsedBody()['auditoria_fecha_hora'];
         $aud04      = $request->getParsedBody()['auditoria_ip'];
 
-        if (isset($val01) && isset($val02) && isset($val03) && isset($val04) && isset($val05) && isset($val06) && isset($val07) && isset($val08) && isset($val09) && isset($val10)) {
-            $sql00  = "INSERT INTO ANIFIC (ANIFICECC, ANIFICTOC, ANIFICTRC, ANIFICTSC, ANIFICESC, ANIFICPEC, ANIFICCO1, ANIFICOBS, ANIFICAEM, ANIFICAUS, ANIFICAFH, ANIFICAIP) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        if (isset($val01) && isset($val02) && isset($val03) && isset($val04) && isset($val05) && isset($val06) && isset($val07) && isset($val08) && isset($val09) && isset($val10) && isset($val11)) {
+            $sql00  = "INSERT INTO ANIFIC (ANIFICECC, ANIFICTOC, ANIFICTRC, ANIFICTCC, ANIFICTSC, ANIFICESC, ANIFICPEC, ANIFICCO1, ANIFICOBS, ANIFICAEM, ANIFICAUS, ANIFICAFH, ANIFICAIP) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $sql01  = "INSERT INTO ANINAC (ANINACESC, ANINACPEC, ANINACANC, ANINACOBS, ANINACAEM, ANINACAUS, ANINACAFH, ANINACAIP) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             $sql02  = "INSERT INTO ANIPES (ANIPESTPC, ANIPESESC, ANIPESANC, ANIPESFEC, ANIPESPES, ANIPESOBS, ANIPESAEM, ANIPESAUS, ANIPESAFH, ANIPESAIP) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            $sql03  = "SELECT ESTPOBCOD FROM ESTPOB WHERE ESTPOBTOC = ? AND ESTPOBTRC = ? AND ESTPOBTSC = ? AND ESTPOBESC = ? AND ESTPOBPEC = ?";
-            $sql041 = "INSERT INTO ESTPOB (ESTPOBTOC, ESTPOBTRC, ESTPOBTSC, ESTPOBESC, ESTPOBPEC, ESTPOBCAN, ESTPOBPES, ESTPOBOBS, ESTPOBAEM, ESTPOBAUS, ESTPOBAFH, ESTPOBAIP) VALUES (?, ?, ?, ?, ?, 1, ?, ?, ?, ?, ?, ?)";
-            $sql042 = "UPDATE ESTPOB SET ESTPOBCAN = ESTPOBCAN + 1, ESTPOBAEM = ?, ESTPOBAUS = ?, ESTPOBAFH = ?, ESTPOBAIP = ? WHERE ESTPOBTOC = ? AND ESTPOBTRC = ? AND ESTPOBTSC = ? AND ESTPOBESC = ? AND ESTPOBPEC = ?";
+            $sql03  = "SELECT ESTPOBCOD FROM ESTPOB WHERE ESTPOBTOC = ? AND ESTPOBTRC = ? AND ESTPOBTCC = ? AND ESTPOBTSC = ? AND ESTPOBESC = ? AND ESTPOBPEC = ?";
+            $sql041 = "INSERT INTO ESTPOB (ESTPOBTOC, ESTPOBTRC, ESTPOBTCC, ESTPOBTSC, ESTPOBESC, ESTPOBPEC, ESTPOBCAN, ESTPOBPES, ESTPOBOBS, ESTPOBAEM, ESTPOBAUS, ESTPOBAFH, ESTPOBAIP) VALUES (?, ?, ?, ?, ?, 1, ?, ?, ?, ?, ?, ?)";
+            $sql042 = "UPDATE ESTPOB SET ESTPOBCAN = ESTPOBCAN + 1, ESTPOBAEM = ?, ESTPOBAUS = ?, ESTPOBAFH = ?, ESTPOBAIP = ? WHERE ESTPOBTOC = ? AND ESTPOBTRC = ? AND ESTPOBTCC = ? AND ESTPOBTSC = ? AND ESTPOBESC = ? AND ESTPOBPEC = ?";
             
             try {
                 $connESTABLECIMIENTO    = getConnectionESTABLECIMIENTO();
 
                 $stmtESTABLECIMIENTO00  = $connESTABLECIMIENTO->prepare($sql00);
-                $stmtESTABLECIMIENTO00->execute([$val01, $val02, $val03, $val04, $val06, $val07, $val08, $val11, $aud01, $aud02, $aud03, $aud04]);
+                $stmtESTABLECIMIENTO00->execute([$val01, $val02, $val03, $val04, $val06, $val07, $val08, $val09, $val11, $aud01, $aud02, $aud03, $aud04]);
                 $ANIFICCOD              = $connESTABLECIMIENTO->lastInsertId()['ANIFICCOD'];
 
                 $stmtESTABLECIMIENTO01  = $connESTABLECIMIENTO->prepare($sql01);
@@ -346,15 +347,15 @@
                 $stmtESTABLECIMIENTO02->execute([$val05, $val06, $ANIFICCOD, $val09, $val10, $val11, $aud01, $aud02, $aud03, $aud04]);
 
                 $stmtESTABLECIMIENTO03  = $connESTABLECIMIENTO->prepare($sql03);
-                $stmtESTABLECIMIENTO03->execute([$val02, $val03, $val04, $val06, $val07]);
+                $stmtESTABLECIMIENTO03->execute([$val02, $val03, $val04, $val05, $val07, $val08]);
                 $rowESTABLECIMIENTO03   = $stmtESTABLECIMIENTO03->fetch(PDO::FETCH_ASSOC);
 
                 if (!$rowESTABLECIMIENTO03){
                     $stmtESTABLECIMIENTO04 = $connESTABLECIMIENTO->prepare($sql041);
-                    $stmtESTABLECIMIENTO04->execute([$val02, $val03, $val04, $val06, $val07, $val10, $val11, $aud01, $aud02, $aud03, $aud04]);
+                    $stmtESTABLECIMIENTO04->execute([$val02, $val03, $val04, $val05, $val07, $val08, $val11, $val12, $aud01, $aud02, $aud03, $aud04]);
                 } else {
                     $stmtESTABLECIMIENTO04  = $connESTABLECIMIENTO->prepare($sql042);
-                    $stmtESTABLECIMIENTO04->execute([$aud01, $aud02, $aud03, $aud04, $val02, $val03, $val04, $val06, $val07]); 
+                    $stmtESTABLECIMIENTO04->execute([$aud01, $aud02, $aud03, $aud04, $val02, $val03, $val04, $val05, $val07, $val08]); 
                 }
 
                 header("Content-Type: application/json; charset=utf-8");
