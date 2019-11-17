@@ -336,7 +336,6 @@
 
                 $stmtESTABLECIMIENTO00  = $connESTABLECIMIENTO->prepare($sql00);
                 $stmtESTABLECIMIENTO00->execute([$val01, $val02, $val03, $val04, $val06, $val07, $val08, $val11, $aud01, $aud02, $aud03, $aud04]);
-                $rowESTABLECIMIENTO00   = $stmtESTABLECIMIENTO00->fetch(PDO::FETCH_ASSOC);
                 $ANIFICCOD              = $connESTABLECIMIENTO->lastInsertId()['ANIFICCOD'];
 
                 $stmtESTABLECIMIENTO01  = $connESTABLECIMIENTO->prepare($sql01);
