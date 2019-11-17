@@ -131,37 +131,38 @@
 
         $val01      = $request->getParsedBody()['tipo_origen_codigo'];
         $val02      = $request->getParsedBody()['tipo_raza_codigo'];
-        $val03      = $request->getParsedBody()['tipo_subcategoria_codigo'];
-        $val04      = $request->getParsedBody()['establecimiento_codigo'];
-        $val05      = $request->getParsedBody()['persona_codigo'];
-        $val06      = $request->getParsedBody()['establecimiento_poblacion_cantidad'];
-        $val07      = $request->getParsedBody()['establecimiento_poblacion_peso'];
-        $val08      = $request->getParsedBody()['establecimiento_poblacion_observacion'];
+        $val03      = $request->getParsedBody()['tipo_categoria_codigo'];
+        $val04      = $request->getParsedBody()['tipo_subcategoria_codigo'];
+        $val05      = $request->getParsedBody()['establecimiento_codigo'];
+        $val06      = $request->getParsedBody()['establecimiento_persona_codigo'];
+        $val07      = $request->getParsedBody()['establecimiento_poblacion_cantidad'];
+        $val08      = $request->getParsedBody()['establecimiento_poblacion_peso'];
+        $val09      = $request->getParsedBody()['establecimiento_poblacion_observacion'];
 
         $aud01      = $request->getParsedBody()['auditoria_empresa_codigo'];
         $aud02      = $request->getParsedBody()['auditoria_usuario'];
         $aud03      = $request->getParsedBody()['auditoria_fecha_hora'];
         $aud04      = $request->getParsedBody()['auditoria_ip'];
 
-        if (isset($val01) && isset($val02) && isset($val03)) {
-            $sql00  = "SELECT * FROM ESTPOB WHERE ESTPOBTOC = ? AND ESTPOBTRC = ? AND ESTPOBTSC = ? AND ESTPOBESC = ? AND ESTPOBPEC = ?";
-            $sql01  = "UPDATE ESTPOB SET ESTPOBCAN = ?, ESTPOBPES = ?, ESTPOBOBS = ?, ESTPOBAEM = ?, ESTPOBAUS = ?, ESTPOBAFH = ?, ESTPOBAIP = ? WHERE ESTPOBTOC = ? AND ESTPOBTRC = ? AND ESTPOBTSC = ? AND ESTPOBESC = ? AND ESTPOBPEC = ?";
-            $sql02  = "INSERT INTO ESTPOB (ESTPOBTOC, ESTPOBTRC, ESTPOBTSC, ESTPOBESC, ESTPOBPEC, ESTPOBCAN, ESTPOBPES, ESTPOBOBS, ESTPOBAEM, ESTPOBAUS, ESTPOBAFH, ESTPOBAIP) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        if (isset($val01) && isset($val02) && isset($val03) && isset($val04)) {
+            $sql00  = "SELECT * FROM ESTPOB WHERE ESTPOBTOC = ? AND ESTPOBTRC = ? AND ESTPOBTCC = ? AND ESTPOBTSC = ? AND ESTPOBESC = ? AND ESTPOBPEC = ?";
+            $sql01  = "UPDATE ESTPOB SET ESTPOBCAN = ?, ESTPOBPES = ?, ESTPOBOBS = ?, ESTPOBAEM = ?, ESTPOBAUS = ?, ESTPOBAFH = ?, ESTPOBAIP = ? WHERE ESTPOBTOC = ? AND ESTPOBTRC = ? AND ESTPOBTCC = ? AND ESTPOBTSC = ? AND ESTPOBESC = ? AND ESTPOBPEC = ?";
+            $sql02  = "INSERT INTO ESTPOB (ESTPOBTOC, ESTPOBTRC, ESTPOBTCC, ESTPOBTSC, ESTPOBESC, ESTPOBPEC, ESTPOBCAN, ESTPOBPES, ESTPOBOBS, ESTPOBAEM, ESTPOBAUS, ESTPOBAFH, ESTPOBAIP) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             try {
                 $connESTABLECIMIENTO    = getConnectionESTABLECIMIENTO();
 
                 $stmtESTABLECIMIENTO00  = $connESTABLECIMIENTO->prepare($sql00);
-                $stmtESTABLECIMIENTO00->execute([$val01, $val02, $val03, $val04, $val05]);
+                $stmtESTABLECIMIENTO00->execute([$val01, $val02, $val03, $val04, $val05, $val06]);
 
                 $rowESTABLECIMIENTO00   = $stmtESTABLECIMIENTO00->fetch(PDO::FETCH_ASSOC);
 
                 if (!$rowESTABLECIMIENTO00){
                     $stmtESTABLECIMIENTO01  = $connESTABLECIMIENTO->prepare($sql02);
-                    $stmtESTABLECIMIENTO01->execute([$val01, $val02, $val03, $val04, $val05, $val06, $val07, $val08, $aud01, $aud02, $aud03, $aud04]);
+                    $stmtESTABLECIMIENTO01->execute([$val01, $val02, $val03, $val04, $val05, $val06, $val07, $val08, $val09, $aud01, $aud02, $aud03, $aud04]);
                 } else {
                     $stmtESTABLECIMIENTO01  = $connESTABLECIMIENTO->prepare($sql01);
-                    $stmtESTABLECIMIENTO01->execute([$val06, $val07, $val08, $aud01, $aud02, $aud03, $aud04, $val01, $val02, $val03, $val04, $val05]);    
+                    $stmtESTABLECIMIENTO01->execute([$val07, $val08, $val09, $aud01, $aud02, $aud03, $aud04, $val01, $val02, $val03, $val04, $val05, $val06]);    
                 }
 
                 header("Content-Type: application/json; charset=utf-8");
