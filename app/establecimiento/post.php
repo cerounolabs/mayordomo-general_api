@@ -146,7 +146,7 @@
 
         if (isset($val01) && isset($val02) && isset($val03) && isset($val04)) {
             $sql00  = "SELECT * FROM ESTPOB WHERE ESTPOBTOC = ? AND ESTPOBTRC = ? AND ESTPOBTCC = ? AND ESTPOBTSC = ? AND ESTPOBESC = ? AND ESTPOBPEC = ?";
-            $sql01  = "UPDATE ESTPOB SET ESTPOBCAN = ?, ESTPOBOBS = ?, ESTPOBAEM = ?, ESTPOBAUS = ?, ESTPOBAFH = ?, ESTPOBAIP = ? WHERE ESTPOBTOC = ? AND ESTPOBTRC = ? AND ESTPOBTCC = ? AND ESTPOBTSC = ? AND ESTPOBESC = ? AND ESTPOBPEC = ?";
+            $sql01  = "UPDATE ESTPOB SET ESTPOBCAN = ?, ESTPOBPES = ?, ESTPOBOBS = ?, ESTPOBAEM = ?, ESTPOBAUS = ?, ESTPOBAFH = ?, ESTPOBAIP = ? WHERE ESTPOBTOC = ? AND ESTPOBTRC = ? AND ESTPOBTCC = ? AND ESTPOBTSC = ? AND ESTPOBESC = ? AND ESTPOBPEC = ?";
             $sql02  = "INSERT INTO ESTPOB (ESTPOBTOC, ESTPOBTRC, ESTPOBTCC, ESTPOBTSC, ESTPOBESC, ESTPOBPEC, ESTPOBCAN, ESTPOBPES, ESTPOBOBS, ESTPOBAEM, ESTPOBAUS, ESTPOBAFH, ESTPOBAIP) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             try {
@@ -162,7 +162,7 @@
                     $stmtESTABLECIMIENTO01->execute([$val01, $val02, $val03, $val04, $val05, $val06, $val07, $val08, $val09, $aud01, $aud02, $aud03, $aud04]);
                 } else {
                     $stmtESTABLECIMIENTO01  = $connESTABLECIMIENTO->prepare($sql01);
-                    $stmtESTABLECIMIENTO01->execute([$val07, $val09, $aud01, $aud02, $aud03, $aud04, $val01, $val02, $val03, $val04, $val05, $val06]);    
+                    $stmtESTABLECIMIENTO01->execute([$val07, $val08, $val09, $aud01, $aud02, $aud03, $aud04, $val01, $val02, $val03, $val04, $val05, $val06]);    
                 }
 
                 header("Content-Type: application/json; charset=utf-8");
