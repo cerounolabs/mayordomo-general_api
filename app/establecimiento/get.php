@@ -1252,30 +1252,30 @@
 
                 while ($rowESTABLECIMIENTO = $stmtESTABLECIMIENTO->fetch()) {
                     $detalle    = array(
-                        'animal_nacimiento_codigo'                              => $rowESTABLECIMIENTO01['animal_nacimiento_codigo'],
-                        'animal_nacimiento_observacion'                         => $rowESTABLECIMIENTO01['animal_nacimiento_observacion'],
-                        'establecimiento_codigo'                                => $rowESTABLECIMIENTO01['establecimiento_codigo'],
-                        'establecimiento_nombre'                                => $rowESTABLECIMIENTO01['establecimiento_nombre'],
-                        'establecimiento_persona_codigo'                        => $rowESTABLECIMIENTO01['establecimiento_persona_codigo'],
-                        'establecimiento_persona_completo'                      => $rowESTABLECIMIENTO01['establecimiento_persona_completo'],
-                        'animal_codigo'                                         => $rowESTABLECIMIENTO01['animal_codigo'],
-                        'animal_codigo1_nacimiento'                             => $rowESTABLECIMIENTO01['animal_codigo1_nacimiento'],
-                        'animal_pesaje_codigo'                                  => $rowESTABLECIMIENTO01['animal_pesaje_codigo'],
-                        'animal_pesaje_fecha'                                   => $rowESTABLECIMIENTO01['animal_pesaje_fecha'],
-                        'animal_pesaje_peso'                                    => $rowESTABLECIMIENTO01['animal_pesaje_peso'],
-                        'tipo_origen_codigo'                                    => $rowESTABLECIMIENTO01['tipo_origen_codigo'],
-                        'tipo_origen_nombre'                                    => $rowESTABLECIMIENTO01['tipo_origen_nombre'],
-                        'tipo_raza_codigo'                                      => $rowESTABLECIMIENTO01['tipo_raza_codigo'],
-                        'tipo_raza_nombre'                                      => $rowESTABLECIMIENTO01['tipo_raza_nombre'],
-                        'tipo_categoria_codigo'                                 => $rowESTABLECIMIENTO01['tipo_categoria_codigo'],
-                        'tipo_categoria_nombre'                                 => $rowESTABLECIMIENTO01['tipo_categoria_nombre'],
-                        'tipo_subcategoria_codigo'                              => $rowESTABLECIMIENTO01['tipo_subcategoria_codigo'],
-                        'tipo_subcategoria_nombre'                              => $rowESTABLECIMIENTO01['tipo_subcategoria_nombre'],
-                        'auditoria_empresa_codigo'                              => $rowESTABLECIMIENTO01['auditoria_empresa_codigo'],
-                        'auditoria_empresa_nombre'                              => $rowESTABLECIMIENTO01['auditoria_empresa_nombre'],
-                        'auditoria_usuario'                                     => $rowESTABLECIMIENTO01['auditoria_usuario'],
-                        'auditoria_fecha_hora'                                  => date_format(date_create($rowESTABLECIMIENTO01['auditoria_fecha_hora']), 'd/m/Y H:i:s'),
-                        'auditoria_ip'                                          => $rowESTABLECIMIENTO01['auditoria_ip']
+                        'animal_nacimiento_codigo'                              => $rowESTABLECIMIENTO['animal_nacimiento_codigo'],
+                        'animal_nacimiento_observacion'                         => $rowESTABLECIMIENTO['animal_nacimiento_observacion'],
+                        'establecimiento_codigo'                                => $rowESTABLECIMIENTO['establecimiento_codigo'],
+                        'establecimiento_nombre'                                => $rowESTABLECIMIENTO['establecimiento_nombre'],
+                        'establecimiento_persona_codigo'                        => $rowESTABLECIMIENTO['establecimiento_persona_codigo'],
+                        'establecimiento_persona_completo'                      => $rowESTABLECIMIENTO['establecimiento_persona_completo'],
+                        'animal_codigo'                                         => $rowESTABLECIMIENTO['animal_codigo'],
+                        'animal_codigo1_nacimiento'                             => $rowESTABLECIMIENTO['animal_codigo1_nacimiento'],
+                        'animal_pesaje_codigo'                                  => $rowESTABLECIMIENTO['animal_pesaje_codigo'],
+                        'animal_pesaje_fecha'                                   => date_format(date_create($rowESTABLECIMIENTO['animal_pesaje_fecha']), 'd/m/Y'),
+                        'animal_pesaje_peso'                                    => $rowESTABLECIMIENTO['animal_pesaje_peso'],
+                        'tipo_origen_codigo'                                    => $rowESTABLECIMIENTO['tipo_origen_codigo'],
+                        'tipo_origen_nombre'                                    => $rowESTABLECIMIENTO['tipo_origen_nombre'],
+                        'tipo_raza_codigo'                                      => $rowESTABLECIMIENTO['tipo_raza_codigo'],
+                        'tipo_raza_nombre'                                      => $rowESTABLECIMIENTO['tipo_raza_nombre'],
+                        'tipo_categoria_codigo'                                 => $rowESTABLECIMIENTO['tipo_categoria_codigo'],
+                        'tipo_categoria_nombre'                                 => $rowESTABLECIMIENTO['tipo_categoria_nombre'],
+                        'tipo_subcategoria_codigo'                              => $rowESTABLECIMIENTO['tipo_subcategoria_codigo'],
+                        'tipo_subcategoria_nombre'                              => $rowESTABLECIMIENTO['tipo_subcategoria_nombre'],
+                        'auditoria_empresa_codigo'                              => $rowESTABLECIMIENTO['auditoria_empresa_codigo'],
+                        'auditoria_empresa_nombre'                              => $rowESTABLECIMIENTO['auditoria_empresa_nombre'],
+                        'auditoria_usuario'                                     => $rowESTABLECIMIENTO['auditoria_usuario'],
+                        'auditoria_fecha_hora'                                  => date_format(date_create($rowESTABLECIMIENTO['auditoria_fecha_hora']), 'd/m/Y H:i:s'),
+                        'auditoria_ip'                                          => $rowESTABLECIMIENTO['auditoria_ip']
                     );
 
                     $result[]   = $detalle;
@@ -1307,8 +1307,8 @@
                         'tipo_subcategoria_nombre'                              => '',
                         'auditoria_empresa_codigo'                              => '',
                         'auditoria_empresa_nombre'                              => '',
-                        'auditoria_usuario'                                     => $val02_1,
-                        'auditoria_fecha_hora'                                  => $val02_2,
+                        'auditoria_usuario'                                     => '',
+                        'auditoria_fecha_hora'                                  => '',
                         'auditoria_ip'                                          => ''
                     );
 
