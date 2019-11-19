@@ -1235,7 +1235,7 @@
             INNER JOIN mayordomo_default.ESTFIC b ON a.ANINACESC = b.ESTFICCOD
             INNER JOIN mayordomo_establecimiento.ESTPER c ON a.ANINACPEC = c.ESTPERCOD
             INNER JOIN mayordomo_establecimiento.ANIFIC d ON a.ANINACANC = d.ANIFICCOD
-            INNER JOIN mayordomo_establecimiento.ANIPES e ON d.ANIFICCOD = e.ANIPESCOD
+            INNER JOIN mayordomo_establecimiento.ANIPES e ON a.ANINACANC = e.ANIPESANC
             INNER JOIN mayordomo_default.DOMFIC f ON d.ANIFICTOC = f.DOMFICCOD
             INNER JOIN mayordomo_default.DOMFIC g ON d.ANIFICTRC = g.DOMFICCOD
             INNER JOIN mayordomo_default.DOMFIC h ON d.ANIFICTCC = h.DOMFICCOD
