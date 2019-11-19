@@ -337,7 +337,7 @@
                 $connESTABLECIMIENTO    = getConnectionESTABLECIMIENTO();
 
                 $stmtESTABLECIMIENTO00  = $connESTABLECIMIENTO->prepare($sql00);
-                $stmtESTABLECIMIENTO00->execute([$val01, $val02, $val03, $val04, $val06, $val07, $val08, $val09, $val11, $aud01, $aud02, $aud03, $aud04]);
+                $stmtESTABLECIMIENTO00->execute([$val01, $val02, $val03, $val04, $val05, $val07, $val08, $val09, $val11, $aud01, $aud02, $aud03, $aud04]);
                 $ANIFICCOD              = $connESTABLECIMIENTO->lastInsertId()['ANIFICCOD'];
 
                 $stmtESTABLECIMIENTO01  = $connESTABLECIMIENTO->prepare($sql01);
