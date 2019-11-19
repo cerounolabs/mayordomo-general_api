@@ -1187,3 +1187,147 @@
         
         return $json;
     });
+
+    $app->get('/v1/establecimiento/608/{codigo}/{nacimiento}', function($request) {
+        require __DIR__.'/../../src/connect.php';
+
+        $val01      = $request->getAttribute('codigo');
+        $val02_1    = date_format(date_create($request->getAttribute('nacimiento'), 'Y-m-d 00:00:00'));
+        $val02_2    = date_format(date_create($request->getAttribute('nacimiento'), 'Y-m-d 23:59:59'));
+        
+        if (isset($val01) && isset($val02_1) && isset($val02_2)) {
+            $sql00  = "SELECT
+            a.ANINACCOD         AS          animal_nacimiento_codigo,
+            a.ANINACOBS         AS          animal_nacimiento_observacion,
+
+            a.ANINACAEM         AS          auditoria_empresa_codigo,
+            a.ANINACAEM         AS          auditoria_empresa_nombre,
+            a.ANINACAUS         AS          auditoria_usuario,
+            a.ANINACAFH         AS          auditoria_fecha_hora,
+            a.ANINACAIP         AS          auditoria_ip,
+
+            b.ESTFICCOD         AS          establecimiento_codigo,
+            b.ESTFICNOM         AS          establecimiento_nombre,
+
+            c.ESTPERCOD         AS          establecimiento_persona_codigo,
+            c.ESTPERPER         AS          establecimiento_persona_completo,
+            
+            d.ANIFICCOD         AS          animal_codigo,
+            d.ANIFICCO1         AS          animal_codigo1_nacimiento,
+
+            e.ANIPESCOD         AS          animal_pesaje_codigo,
+            e.ANIPESFEC         AS          animal_pesaje_fecha,
+            e.ANIPESPES         AS          animal_pesaje_peso,
+
+            f.DOMFICCOD         AS          tipo_origen_codigo,
+            f.DOMFICNOM         AS          tipo_origen_nombre,
+
+            g.DOMFICCOD         AS          tipo_raza_codigo,
+            g.DOMFICNOM         AS          tipo_raza_nombre,
+
+            h.DOMFICCOD         AS          tipo_categoria_codigo,
+            h.DOMFICNOM         AS          tipo_categoria_nombre,
+
+            i.DOMFICCOD         AS          tipo_subcategoria_codigo,
+            i.DOMFICNOM         AS          tipo_subcategoria_nombre
+
+            FROM ANINAC a
+            INNER JOIN mayordomo_default.ESTFIC b ON a.ANINACESC = b.ESTFICCOD
+            INNER JOIN mayordomo_establecimiento.ESTPER c ON a.ANINACPEC = c.ESTPERCOD
+            INNER JOIN mayordomo_establecimiento.ANIFIC d ON a.ANINACANC = d.ANIFICCOD
+            INNER JOIN mayordomo_establecimiento.ANIPES e ON d.ANIFICCOD = e.ANIPESCOD
+            INNER JOIN mayordomo_default.DOMFIC f ON d.ANIFICTOC = f.DOMFICCOD
+            INNER JOIN mayordomo_default.DOMFIC g ON d.ANIFICTRC = g.DOMFICCOD
+            INNER JOIN mayordomo_default.DOMFIC h ON d.ANIFICTCC = h.DOMFICCOD
+            INNER JOIN mayordomo_default.DOMFIC i ON d.ANIFICTSC = i.DOMFICCOD
+
+            WHERE a.ANINACESC = ? AND a.ANINACAFH >= ? AND a.ANINACAFH <= ? AND e.ANIPESTPC = 76
+
+            ORDER BY a.ANINACAFH";
+
+            try {
+                $connESTABLECIMIENTO  = getConnectionESTABLECIMIENTO();
+                $stmtESTABLECIMIENTO  = $connESTABLECIMIENTO->prepare($sql00);
+                $stmtESTABLECIMIENTO->execute([$val01, $val02_1, $val02_2]); 
+
+                while ($rowESTABLECIMIENTO = $stmtESTABLECIMIENTO->fetch()) {
+                    $detalle    = array(
+                        'animal_nacimiento_codigo'                              => $rowESTABLECIMIENTO01['animal_nacimiento_codigo'],
+                        'animal_nacimiento_observacion'                         => $rowESTABLECIMIENTO01['animal_nacimiento_observacion'],
+                        'establecimiento_codigo'                                => $rowESTABLECIMIENTO01['establecimiento_codigo'],
+                        'establecimiento_nombre'                                => $rowESTABLECIMIENTO01['establecimiento_nombre'],
+                        'establecimiento_persona_codigo'                        => $rowESTABLECIMIENTO01['establecimiento_persona_codigo'],
+                        'establecimiento_persona_completo'                      => $rowESTABLECIMIENTO01['establecimiento_persona_completo'],
+                        'animal_codigo'                                         => $rowESTABLECIMIENTO01['animal_codigo'],
+                        'animal_codigo1_nacimiento'                             => $rowESTABLECIMIENTO01['animal_codigo1_nacimiento'],
+                        'animal_pesaje_codigo'                                  => $rowESTABLECIMIENTO01['animal_pesaje_codigo'],
+                        'animal_pesaje_fecha'                                   => $rowESTABLECIMIENTO01['animal_pesaje_fecha'],
+                        'animal_pesaje_peso'                                    => $rowESTABLECIMIENTO01['animal_pesaje_peso'],
+                        'tipo_origen_codigo'                                    => $rowESTABLECIMIENTO01['tipo_origen_codigo'],
+                        'tipo_origen_nombre'                                    => $rowESTABLECIMIENTO01['tipo_origen_nombre'],
+                        'tipo_raza_codigo'                                      => $rowESTABLECIMIENTO01['tipo_raza_codigo'],
+                        'tipo_raza_nombre'                                      => $rowESTABLECIMIENTO01['tipo_raza_nombre'],
+                        'tipo_categoria_codigo'                                 => $rowESTABLECIMIENTO01['tipo_categoria_codigo'],
+                        'tipo_categoria_nombre'                                 => $rowESTABLECIMIENTO01['tipo_categoria_nombre'],
+                        'tipo_subcategoria_codigo'                              => $rowESTABLECIMIENTO01['tipo_subcategoria_codigo'],
+                        'tipo_subcategoria_nombre'                              => $rowESTABLECIMIENTO01['tipo_subcategoria_nombre'],
+                        'auditoria_empresa_codigo'                              => $rowESTABLECIMIENTO01['auditoria_empresa_codigo'],
+                        'auditoria_empresa_nombre'                              => $rowESTABLECIMIENTO01['auditoria_empresa_nombre'],
+                        'auditoria_usuario'                                     => $rowESTABLECIMIENTO01['auditoria_usuario'],
+                        'auditoria_fecha_hora'                                  => date_format(date_create($rowESTABLECIMIENTO01['auditoria_fecha_hora']), 'd/m/Y H:i:s'),
+                        'auditoria_ip'                                          => $rowESTABLECIMIENTO01['auditoria_ip']
+                    );
+
+                    $result[]   = $detalle;
+                }
+
+                if (isset($result)){
+                    header("Content-Type: application/json; charset=utf-8");
+                    $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success SELECT', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+                } else {
+                    $detalle = array(
+                        'animal_nacimiento_codigo'                              => '',
+                        'animal_nacimiento_observacion'                         => '',
+                        'establecimiento_codigo'                                => '',
+                        'establecimiento_nombre'                                => '',
+                        'establecimiento_persona_codigo'                        => '',
+                        'establecimiento_persona_completo'                      => '',
+                        'animal_codigo'                                         => '',
+                        'animal_codigo1_nacimiento'                             => '',
+                        'animal_pesaje_codigo'                                  => '',
+                        'animal_pesaje_fecha'                                   => '',
+                        'animal_pesaje_peso'                                    => '',
+                        'tipo_origen_codigo'                                    => '',
+                        'tipo_origen_nombre'                                    => '',
+                        'tipo_raza_codigo'                                      => '',
+                        'tipo_raza_nombre'                                      => '',
+                        'tipo_categoria_codigo'                                 => '',
+                        'tipo_categoria_nombre'                                 => '',
+                        'tipo_subcategoria_codigo'                              => '',
+                        'tipo_subcategoria_nombre'                              => '',
+                        'auditoria_empresa_codigo'                              => '',
+                        'auditoria_empresa_nombre'                              => '',
+                        'auditoria_usuario'                                     => '',
+                        'auditoria_fecha_hora'                                  => '',
+                        'auditoria_ip'                                          => ''
+                    );
+
+                    header("Content-Type: application/json; charset=utf-8");
+                    $json = json_encode(array('code' => 204, 'status' => 'ok', 'message' => 'No hay registros', 'data' => $detalle), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+                }
+
+                $stmtESTABLECIMIENTO->closeCursor();
+                $stmtESTABLECIMIENTO = null;
+            } catch (PDOException $e) {
+                header("Content-Type: application/json; charset=utf-8");
+                $json = json_encode(array('code' => 204, 'status' => 'failure', 'message' => 'Error SELECT: '.$e), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+            }
+        } else {
+            header("Content-Type: application/json; charset=utf-8");
+            $json = json_encode(array('code' => 400, 'status' => 'error', 'message' => 'Verifique, algún campo esta vacio.'), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+        }
+
+        $connESTABLECIMIENTO  = null;
+        
+        return $json;
+    });
