@@ -1192,8 +1192,8 @@
         require __DIR__.'/../../src/connect.php';
 
         $val01      = $request->getAttribute('codigo');
-        $val02_1    = date_format(date_create($request->getAttribute('nacimiento'), 'Y-m-d 00:00:00'));
-        $val02_2    = date_format(date_create($request->getAttribute('nacimiento'), 'Y-m-d 23:59:59'));
+        $val02_1    = date('Y-m-d 00:00:00', strtotime($request->getAttribute('nacimiento')));
+        $val02_2    = date('Y-m-d 23:59:59', strtotime($request->getAttribute('nacimiento')));
         
         if (isset($val01) && isset($val02_1) && isset($val02_2)) {
             $sql00  = "SELECT
