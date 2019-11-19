@@ -1307,8 +1307,8 @@
                         'tipo_subcategoria_nombre'                              => '',
                         'auditoria_empresa_codigo'                              => '',
                         'auditoria_empresa_nombre'                              => '',
-                        'auditoria_usuario'                                     => '',
-                        'auditoria_fecha_hora'                                  => '',
+                        'auditoria_usuario'                                     => $val02_1,
+                        'auditoria_fecha_hora'                                  => $val02_2,
                         'auditoria_ip'                                          => ''
                     );
 
