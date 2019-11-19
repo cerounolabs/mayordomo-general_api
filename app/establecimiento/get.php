@@ -1241,7 +1241,7 @@
             INNER JOIN mayordomo_default.DOMFIC h ON d.ANIFICTCC = h.DOMFICCOD
             INNER JOIN mayordomo_default.DOMFIC i ON d.ANIFICTSC = i.DOMFICCOD
 
-            WHERE a.ANINACESC >= ? AND a.ANINACAFH <= ? AND a.ANINACAFH <= ? AND e.ANIPESTPC = 76
+            WHERE a.ANINACESC <= ? AND a.ANINACAFH <= ? AND a.ANINACAFH >= ? AND e.ANIPESTPC = 76
 
             ORDER BY a.ANINACAFH";
 
