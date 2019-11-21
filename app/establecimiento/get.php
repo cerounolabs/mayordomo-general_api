@@ -1192,12 +1192,12 @@
         require __DIR__.'/../../src/connect.php';
 
         $val01      = $request->getAttribute('codigo');
-        $val02_1    = date('Y-m-d 00:00:00', strtotime($request->getAttribute('nacimiento')));
-        $val02_2    = date('Y-m-d 23:59:59', strtotime($request->getAttribute('nacimiento')));
+        $val02      = date('Y-m-d', strtotime($request->getAttribute('nacimiento')));
         
-        if (isset($val01) && isset($val02_1) && isset($val02_2)) {
+        if (isset($val01) && isset($val02)) {
             $sql00  = "SELECT
             a.ANINACCOD         AS          animal_nacimiento_codigo,
+            a.ANINACFEC         AS          animal_fecha_codigo,
             a.ANINACOBS         AS          animal_nacimiento_observacion,
 
             a.ANINACAEM         AS          auditoria_empresa_codigo,
@@ -1213,7 +1213,7 @@
             c.ESTPERPER         AS          establecimiento_persona_completo,
             
             d.ANIFICCOD         AS          animal_codigo,
-            d.ANIFICCO1         AS          animal_codigo1_nacimiento,
+            d.ANIFICCO1         AS          animal_codigo_nacimiento,
 
             e.ANIPESCOD         AS          animal_pesaje_codigo,
             e.ANIPESFEC         AS          animal_pesaje_fecha,
@@ -1241,25 +1241,26 @@
             INNER JOIN mayordomo_default.DOMFIC h ON d.ANIFICTCC = h.DOMFICCOD
             INNER JOIN mayordomo_default.DOMFIC i ON d.ANIFICTSC = i.DOMFICCOD
 
-            WHERE a.ANINACESC = ? AND a.ANINACAFH >= ? AND a.ANINACAFH <= ? AND e.ANIPESTPC = 76
+            WHERE a.ANINACESC = ? AND a.ANINACFEC = ?
 
-            ORDER BY a.ANINACAFH";
+            ORDER BY a.ANINACFEC";
 
             try {
                 $connESTABLECIMIENTO  = getConnectionESTABLECIMIENTO();
                 $stmtESTABLECIMIENTO  = $connESTABLECIMIENTO->prepare($sql00);
-                $stmtESTABLECIMIENTO->execute([$val01, $val02_1, $val02_2]); 
+                $stmtESTABLECIMIENTO->execute([$val01, $val02]); 
 
                 while ($rowESTABLECIMIENTO = $stmtESTABLECIMIENTO->fetch()) {
                     $detalle    = array(
                         'animal_nacimiento_codigo'                              => $rowESTABLECIMIENTO['animal_nacimiento_codigo'],
+                        'animal_fecha_codigo'                                   => date_format(date_create($rowESTABLECIMIENTO['animal_fecha_codigo']), 'd/m/Y'),
                         'animal_nacimiento_observacion'                         => $rowESTABLECIMIENTO['animal_nacimiento_observacion'],
                         'establecimiento_codigo'                                => $rowESTABLECIMIENTO['establecimiento_codigo'],
                         'establecimiento_nombre'                                => $rowESTABLECIMIENTO['establecimiento_nombre'],
                         'establecimiento_persona_codigo'                        => $rowESTABLECIMIENTO['establecimiento_persona_codigo'],
                         'establecimiento_persona_completo'                      => $rowESTABLECIMIENTO['establecimiento_persona_completo'],
                         'animal_codigo'                                         => $rowESTABLECIMIENTO['animal_codigo'],
-                        'animal_codigo1_nacimiento'                             => $rowESTABLECIMIENTO['animal_codigo1_nacimiento'],
+                        'animal_codigo_nacimiento'                              => $rowESTABLECIMIENTO['animal_codigo_nacimiento'],
                         'animal_pesaje_codigo'                                  => $rowESTABLECIMIENTO['animal_pesaje_codigo'],
                         'animal_pesaje_fecha'                                   => date_format(date_create($rowESTABLECIMIENTO['animal_pesaje_fecha']), 'd/m/Y'),
                         'animal_pesaje_peso'                                    => $rowESTABLECIMIENTO['animal_pesaje_peso'],
@@ -1287,13 +1288,14 @@
                 } else {
                     $detalle = array(
                         'animal_nacimiento_codigo'                              => '',
+                        'animal_fecha_codigo'                                   => '',
                         'animal_nacimiento_observacion'                         => '',
                         'establecimiento_codigo'                                => '',
                         'establecimiento_nombre'                                => '',
                         'establecimiento_persona_codigo'                        => '',
                         'establecimiento_persona_completo'                      => '',
                         'animal_codigo'                                         => '',
-                        'animal_codigo1_nacimiento'                             => '',
+                        'animal_codigo_nacimiento'                              => '',
                         'animal_pesaje_codigo'                                  => '',
                         'animal_pesaje_fecha'                                   => '',
                         'animal_pesaje_peso'                                    => '',
@@ -1305,6 +1307,150 @@
                         'tipo_categoria_nombre'                                 => '',
                         'tipo_subcategoria_codigo'                              => '',
                         'tipo_subcategoria_nombre'                              => '',
+                        'auditoria_empresa_codigo'                              => '',
+                        'auditoria_empresa_nombre'                              => '',
+                        'auditoria_usuario'                                     => '',
+                        'auditoria_fecha_hora'                                  => '',
+                        'auditoria_ip'                                          => ''
+                    );
+
+                    header("Content-Type: application/json; charset=utf-8");
+                    $json = json_encode(array('code' => 204, 'status' => 'ok', 'message' => 'No hay registros', 'data' => $detalle), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+                }
+
+                $stmtESTABLECIMIENTO->closeCursor();
+                $stmtESTABLECIMIENTO = null;
+            } catch (PDOException $e) {
+                header("Content-Type: application/json; charset=utf-8");
+                $json = json_encode(array('code' => 204, 'status' => 'failure', 'message' => 'Error SELECT: '.$e), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+            }
+        } else {
+            header("Content-Type: application/json; charset=utf-8");
+            $json = json_encode(array('code' => 400, 'status' => 'error', 'message' => 'Verifique, algún campo esta vacio.'), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+        }
+
+        $connESTABLECIMIENTO  = null;
+        
+        return $json;
+    });
+
+    $app->get('/v1/establecimiento/609/{codigo}/{tipo}/{donacion}', function($request) {
+        require __DIR__.'/../../src/connect.php';
+
+        $val01  = $request->getAttribute('codigo');
+        $val02  = $request->getAttribute('tipo');
+        $val03  = date('Y-m-d', strtotime($request->getAttribute('donacion')));
+        
+        if (isset($val01) && isset($val02) && isset($val03)) {
+            $sql00  = "SELECT
+            a.ANIDONCOD         AS          animal_donacion_codigo,
+            a.ANIDONFEC         AS          animal_donacion_fecha,
+            a.ANIDONOBS         AS          animal_donacion_observacion,
+
+            a.ANIDONAEM         AS          auditoria_empresa_codigo,
+            a.ANIDONAEM         AS          auditoria_empresa_nombre,
+            a.ANIDONAUS         AS          auditoria_usuario,
+            a.ANIDONAFH         AS          auditoria_fecha_hora,
+            a.ANIDONAIP         AS          auditoria_ip,
+
+            b.ESTFICCOD         AS          establecimiento_codigo,
+            b.ESTFICNOM         AS          establecimiento_nombre,
+         
+            c.ANIFICCOD         AS          animal_codigo,
+            c.ANIFICCO2         AS          animal_codigo_donacion,
+
+            d.ESTPERCOD         AS          establecimiento_persona_codigo,
+            d.ESTPERPER         AS          establecimiento_persona_completo,
+
+            e.DOMFICCOD         AS          tipo_origen_codigo,
+            e.DOMFICNOM         AS          tipo_origen_nombre,
+
+            f.DOMFICCOD         AS          tipo_raza_codigo,
+            f.DOMFICNOM         AS          tipo_raza_nombre,
+
+            g.DOMFICCOD         AS          tipo_categoria_codigo,
+            g.DOMFICNOM         AS          tipo_categoria_nombre,
+
+            h.DOMFICCOD         AS          tipo_subcategoria_codigo,
+            h.DOMFICNOM         AS          tipo_subcategoria_nombre,
+
+            i.DOMFICCOD         AS          tipo_donacion_codigo,
+            i.DOMFICNOM         AS          tipo_donacion_nombre
+
+            FROM ANIDON a
+            INNER JOIN mayordomo_default.ESTFIC b ON a.ANIDONESC = b.ESTFICCOD
+            INNER JOIN mayordomo_establecimiento.ANIFIC c ON a.ANIDONANC = c.ANIFICCOD
+            INNER JOIN mayordomo_establecimiento.ESTPER d ON c.ANIFICPEC = d.ESTPERCOD
+            INNER JOIN mayordomo_default.DOMFIC e ON c.ANIFICTOC = e.DOMFICCOD
+            INNER JOIN mayordomo_default.DOMFIC f ON c.ANIFICTRC = f.DOMFICCOD
+            INNER JOIN mayordomo_default.DOMFIC g ON c.ANIFICTCC = g.DOMFICCOD
+            INNER JOIN mayordomo_default.DOMFIC h ON c.ANIFICTSC = h.DOMFICCOD
+            INNER JOIN mayordomo_default.DOMFIC i ON a.ANIDONTDC = i.DOMFICCOD
+
+            WHERE a.ANIDONESC = ? AND a.ANIDONTDC = ? AND a.ANIDONFEC = ?
+
+            ORDER BY a.ANIDONFEC";
+
+            try {
+                $connESTABLECIMIENTO  = getConnectionESTABLECIMIENTO();
+                $stmtESTABLECIMIENTO  = $connESTABLECIMIENTO->prepare($sql00);
+                $stmtESTABLECIMIENTO->execute([$val01, $val02, $val03]); 
+
+                while ($rowESTABLECIMIENTO = $stmtESTABLECIMIENTO->fetch()) {
+                    $detalle    = array(
+                        'animal_donacion_codigo'                                => $rowESTABLECIMIENTO['animal_nacimiento_codigo'],
+                        'animal_donacion_fecha'                                 => date_format(date_create($rowESTABLECIMIENTO['animal_donacion_fecha']), 'd/m/Y'),
+                        'animal_donacion_observacion'                           => $rowESTABLECIMIENTO['animal_nacimiento_observacion'],
+                        'establecimiento_codigo'                                => $rowESTABLECIMIENTO['establecimiento_codigo'],
+                        'establecimiento_nombre'                                => $rowESTABLECIMIENTO['establecimiento_nombre'],
+                        'establecimiento_persona_codigo'                        => $rowESTABLECIMIENTO['establecimiento_persona_codigo'],
+                        'establecimiento_persona_completo'                      => $rowESTABLECIMIENTO['establecimiento_persona_completo'],
+                        'animal_codigo'                                         => $rowESTABLECIMIENTO['animal_codigo'],
+                        'animal_codigo_donacion'                                => $rowESTABLECIMIENTO['animal_codigo_donacion'],
+                        'tipo_origen_codigo'                                    => $rowESTABLECIMIENTO['tipo_origen_codigo'],
+                        'tipo_origen_nombre'                                    => $rowESTABLECIMIENTO['tipo_origen_nombre'],
+                        'tipo_raza_codigo'                                      => $rowESTABLECIMIENTO['tipo_raza_codigo'],
+                        'tipo_raza_nombre'                                      => $rowESTABLECIMIENTO['tipo_raza_nombre'],
+                        'tipo_categoria_codigo'                                 => $rowESTABLECIMIENTO['tipo_categoria_codigo'],
+                        'tipo_categoria_nombre'                                 => $rowESTABLECIMIENTO['tipo_categoria_nombre'],
+                        'tipo_subcategoria_codigo'                              => $rowESTABLECIMIENTO['tipo_subcategoria_codigo'],
+                        'tipo_subcategoria_nombre'                              => $rowESTABLECIMIENTO['tipo_subcategoria_nombre'],
+                        'tipo_donacion_codigo'                                  => $rowESTABLECIMIENTO['tipo_donacion_codigo'],
+                        'tipo_donacion_nombre'                                  => $rowESTABLECIMIENTO['tipo_donacion_nombre'],
+                        'auditoria_empresa_codigo'                              => $rowESTABLECIMIENTO['auditoria_empresa_codigo'],
+                        'auditoria_empresa_nombre'                              => $rowESTABLECIMIENTO['auditoria_empresa_nombre'],
+                        'auditoria_usuario'                                     => $rowESTABLECIMIENTO['auditoria_usuario'],
+                        'auditoria_fecha_hora'                                  => date_format(date_create($rowESTABLECIMIENTO['auditoria_fecha_hora']), 'd/m/Y H:i:s'),
+                        'auditoria_ip'                                          => $rowESTABLECIMIENTO['auditoria_ip']
+                    );
+
+                    $result[]   = $detalle;
+                }
+
+                if (isset($result)){
+                    header("Content-Type: application/json; charset=utf-8");
+                    $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success SELECT', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+                } else {
+                    $detalle = array(
+                        'animal_donacion_codigo'                                => '',
+                        'animal_donacion_fecha'                                 => '',
+                        'animal_donacion_observacion'                           => '',
+                        'establecimiento_codigo'                                => '',
+                        'establecimiento_nombre'                                => '',
+                        'establecimiento_persona_codigo'                        => '',
+                        'establecimiento_persona_completo'                      => '',
+                        'animal_codigo'                                         => '',
+                        'animal_codigo_donacion'                                => '',
+                        'tipo_origen_codigo'                                    => '',
+                        'tipo_origen_nombre'                                    => '',
+                        'tipo_raza_codigo'                                      => '',
+                        'tipo_raza_nombre'                                      => '',
+                        'tipo_categoria_codigo'                                 => '',
+                        'tipo_categoria_nombre'                                 => '',
+                        'tipo_subcategoria_codigo'                              => '',
+                        'tipo_subcategoria_nombre'                              => '',
+                        'tipo_donacion_codigo'                                  => '',
+                        'tipo_donacion_nombre'                                  => '',
                         'auditoria_empresa_codigo'                              => '',
                         'auditoria_empresa_nombre'                              => '',
                         'auditoria_usuario'                                     => '',
