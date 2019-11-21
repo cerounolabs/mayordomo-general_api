@@ -1334,14 +1334,13 @@
         return $json;
     });
 
-    $app->get('/v1/establecimiento/609/{codigo}/{tipo}/{donacion}', function($request) {
+    $app->get('/v1/establecimiento/609/{codigo}/{donacion}', function($request) {
         require __DIR__.'/../../src/connect.php';
 
         $val01  = $request->getAttribute('codigo');
-        $val02  = $request->getAttribute('tipo');
-        $val03  = date('Y-m-d', strtotime($request->getAttribute('donacion')));
+        $val02  = date('Y-m-d', strtotime($request->getAttribute('donacion')));
         
-        if (isset($val01) && isset($val02) && isset($val03)) {
+        if (isset($val01) && isset($val02)) {
             $sql00  = "SELECT
             a.ANIDONCOD         AS          animal_donacion_codigo,
             a.ANIDONFEC         AS          animal_donacion_fecha,
@@ -1387,14 +1386,14 @@
             INNER JOIN mayordomo_default.DOMFIC h ON c.ANIFICTSC = h.DOMFICCOD
             INNER JOIN mayordomo_default.DOMFIC i ON a.ANIDONTDC = i.DOMFICCOD
 
-            WHERE a.ANIDONESC = ? AND a.ANIDONTDC = ? AND a.ANIDONFEC = ?
+            WHERE a.ANIDONESC = ? AND a.ANIDONFEC = ?
 
             ORDER BY a.ANIDONFEC";
 
             try {
                 $connESTABLECIMIENTO  = getConnectionESTABLECIMIENTO();
                 $stmtESTABLECIMIENTO  = $connESTABLECIMIENTO->prepare($sql00);
-                $stmtESTABLECIMIENTO->execute([$val01, $val02, $val03]); 
+                $stmtESTABLECIMIENTO->execute([$val01, $val02]); 
 
                 while ($rowESTABLECIMIENTO = $stmtESTABLECIMIENTO->fetch()) {
                     $detalle    = array(
