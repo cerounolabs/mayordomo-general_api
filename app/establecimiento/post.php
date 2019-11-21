@@ -491,7 +491,7 @@
 
                 $stmtESTABLECIMIENTO00  = $connESTABLECIMIENTO->prepare($sql00);
                 $stmtESTABLECIMIENTO00->execute([$val01, $val02, $val03, $val04, $val05, $val06, $val07, $val08, $aud01, $aud02, $aud03, $aud04]);
-                $codigo                 = $stmtESTABLECIMIENTO00->lastInsertId()['ANICOCCOD'];
+                $codigo                 = $connESTABLECIMIENTO->lastInsertId()['ANICOCCOD'];
                 
                 header("Content-Type: application/json; charset=utf-8");
                 $json       = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success INSERT', 'codigo' => $codigo), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
