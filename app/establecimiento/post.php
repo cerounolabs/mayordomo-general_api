@@ -474,9 +474,9 @@
         $val03      = $request->getParsedBody()['animal_compra_entregado'];
         $val04      = $request->getParsedBody()['animal_compra_recibo'];
         $val05      = $request->getParsedBody()['animal_compra_cota'];
-        $val06      = $request->getParsedBody()['animal_compra_peso'];
-        $val07      = $request->getParsedBody()['animal_compra_fecha'];
-        $val08      = $request->getParsedBody()['animal_compra_observacion'];
+        $val06      = $request->getParsedBody()['animal_compra_guia'];
+        $val07      = $request->getParsedBody()['animal_compra_factura'];
+        $val08      = $request->getParsedBody()['animal_compra_fecha'];
 
         $aud01      = $request->getParsedBody()['auditoria_empresa_codigo'];
         $aud02      = $request->getParsedBody()['auditoria_usuario'];
@@ -484,7 +484,7 @@
         $aud04      = $request->getParsedBody()['auditoria_ip'];
 
         if (isset($val01) && isset($val02) && isset($val03)) {
-            $sql00  = "INSERT INTO ANICOC (ANICOCCHO, ANICOCCHA, ANICOCENT, ANICOCREC, ANICOCCOT, ANICOCPES, ANICOCFEC, ANICOCOBS, ANICOCAEM, ANICOCAUS, ANICOCAFH, ANICOCAIP) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $sql00  = "INSERT INTO ANICOC (ANICOCCHO, ANICOCCHA, ANICOCENT, ANICOCREC, ANICOCCOT, ANICOCGUI, ANICOCFAC, ANICOCFEC, ANICOCAEM, ANICOCAUS, ANICOCAFH, ANICOCAIP) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             try {
                 $connESTABLECIMIENTO    = getConnectionESTABLECIMIENTO();
