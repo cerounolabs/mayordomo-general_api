@@ -522,10 +522,12 @@
         $val05      = $request->getParsedBody()['tipo_subcategoria_codigo'];
         $val06      = $request->getParsedBody()['establecimiento_codigo'];
         $val07      = $request->getParsedBody()['establecimiento_persona_codigo'];
-        $val08      = $request->getParsedBody()['animal_codigo_compra'];
+        $val08      = $request->getParsedBody()['animal_codigo_movimiento'];
         $val09      = $request->getParsedBody()['animal_compra_codigo'];
         $val10      = $request->getParsedBody()['animal_compra_cantidad'];
-        $val11      = $request->getParsedBody()['animal_observacion'];
+        $val11      = $request->getParsedBody()['animal_compra_peso'];
+        $val12      = $request->getParsedBody()['animal_compra_fecha'];
+        $val13      = $request->getParsedBody()['animal_observacion'];
 
         $aud01      = $request->getParsedBody()['auditoria_empresa_codigo'];
         $aud02      = $request->getParsedBody()['auditoria_usuario'];
@@ -535,19 +537,39 @@
         if (isset($val01) && isset($val02) && isset($val03)) {
             $sql00  = "INSERT INTO ANIFIC (ANIFICECC, ANIFICTOC, ANIFICTRC, ANIFICTCC, ANIFICTSC, ANIFICESC, ANIFICPEC, ANIFICCO3, ANIFICOBS, ANIFICAEM, ANIFICAUS, ANIFICAFH, ANIFICAIP) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $sql01  = "INSERT INTO ANICOD (ANICODANC, ANICODCOC, ANICODAEM, ANICODAUS, ANICODAFH, ANICODAIP) VALUES (?, ?, ?, ?, ?, ?)";
+            $sql02  = "INSERT INTO ANIPES (ANIPESTPC, ANIPESESC, ANIPESANC, ANIPESFEC, ANIPESPES, ANIPESOBS, ANIPESAEM, ANIPESAUS, ANIPESAFH, ANIPESAIP) VALUES (80, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $sql03  = "SELECT ESTPOBCOD FROM ESTPOB WHERE ESTPOBTOC = ? AND ESTPOBTRC = ? AND ESTPOBTCC = ? AND ESTPOBTSC = ? AND ESTPOBESC = ? AND ESTPOBPEC = ?";
+            $sql041 = "INSERT INTO ESTPOB (ESTPOBTOC, ESTPOBTRC, ESTPOBTCC, ESTPOBTSC, ESTPOBESC, ESTPOBPEC, ESTPOBCAN, ESTPOBPES, ESTPOBOBS, ESTPOBAEM, ESTPOBAUS, ESTPOBAFH, ESTPOBAIP) VALUES (?, ?, ?, ?, ?, ?, 1, ?, ?, ?, ?, ?, ?)";
+            $sql042 = "UPDATE ESTPOB SET ESTPOBCAN = ESTPOBCAN + 1, ESTPOBAEM = ?, ESTPOBAUS = ?, ESTPOBAFH = ?, ESTPOBAIP = ? WHERE ESTPOBTOC = ? AND ESTPOBTRC = ? AND ESTPOBTCC = ? AND ESTPOBTSC = ? AND ESTPOBESC = ? AND ESTPOBPEC = ?";
+            
 
             try {
                 $connESTABLECIMIENTO    = getConnectionESTABLECIMIENTO();
 
                 $stmtESTABLECIMIENTO00  = $connESTABLECIMIENTO->prepare($sql00);
                 $stmtESTABLECIMIENTO01  = $connESTABLECIMIENTO->prepare($sql01);
+                $stmtESTABLECIMIENTO02  = $connESTABLECIMIENTO->prepare($sql02);
+                $stmtESTABLECIMIENTO03  = $connESTABLECIMIENTO->prepare($sql03);
 
-                for ($i=0; $i < $val11; $i++) {
+                for ($i=0; $i < $val10; $i++) {
                     $val08      = $val08.''.$i;
-                    $stmtESTABLECIMIENTO00->execute([$val01, $val02, $val03, $val04, $val05, $val06, $val07, $val08, $val11, $aud01, $aud02, $aud03, $aud04]);
-                    $ANIFICCOD  = $stmtESTABLECIMIENTO00->lastInsertId()['ANIFICCOD'];
+                    $stmtESTABLECIMIENTO00->execute([$val01, $val02, $val03, $val04, $val05, $val06, $val07, $val08, $val13, $aud01, $aud02, $aud03, $aud04]);
+                    $ANIFICCOD  = $connESTABLECIMIENTO->lastInsertId()['ANIFICCOD'];
 
                     $stmtESTABLECIMIENTO01->execute([$ANIFICCOD, $val09, $aud01, $aud02, $aud03, $aud04]);
+                    $stmtESTABLECIMIENTO02->execute([$val06, $ANIFICCOD, $val12, $val11, $val13, $aud01, $aud02, $aud03, $aud04]);
+
+                    $stmtESTABLECIMIENTO03  = $connESTABLECIMIENTO->prepare($sql03);
+                    $stmtESTABLECIMIENTO03->execute([$val02, $val03, $val04, $val05, $val06, $val07]);
+                    $rowESTABLECIMIENTO03   = $stmtESTABLECIMIENTO03->fetch(PDO::FETCH_ASSOC);
+
+                    if (!$rowESTABLECIMIENTO03){
+                        $stmtESTABLECIMIENTO04 = $connESTABLECIMIENTO->prepare($sql041);
+                        $stmtESTABLECIMIENTO04->execute([$val02, $val03, $val04, $val05, $val06, $val07, $val11, $val13, $aud01, $aud02, $aud03, $aud04]);
+                    } else {
+                        $stmtESTABLECIMIENTO04  = $connESTABLECIMIENTO->prepare($sql042);
+                        $stmtESTABLECIMIENTO04->execute([$aud01, $aud02, $aud03, $aud04, $val02, $val03, $val04, $val05, $val06, $val07]); 
+                    }
                 }
 
                 header("Content-Type: application/json; charset=utf-8");
@@ -558,6 +580,15 @@
 
                 $stmtESTABLECIMIENTO01->closeCursor();
                 $stmtESTABLECIMIENTO01 = null;
+
+                $stmtESTABLECIMIENTO02->closeCursor();
+                $stmtESTABLECIMIENTO02 = null;
+
+                $stmtESTABLECIMIENTO03->closeCursor();
+                $stmtESTABLECIMIENTO03 = null;
+
+                $stmtESTABLECIMIENTO04->closeCursor();
+                $stmtESTABLECIMIENTO04 = null;
             } catch (PDOException $e) {
                 header("Content-Type: application/json; charset=utf-8");
                 $json = json_encode(array('code' => 204, 'status' => 'failure', 'message' => 'Error INSERT: '.$e), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
