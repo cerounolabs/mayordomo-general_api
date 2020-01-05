@@ -268,6 +268,135 @@
         return $json;
     });
 
+    $app->get('/v1/establecimiento/500/poblacion/{establecimiento}', function($request) {
+        require __DIR__.'/../../src/connect.php';
+
+        $val01      = $request->getAttribute('establecimiento');
+        
+        if (isset($val01)) {
+            $sql00  = "SELECT
+            a.ESTPOBCOD         AS          establecimiento_poblacion_codigo,
+            a.ESTPOBCAN         AS          establecimiento_poblacion_cantidad,
+            a.ESTPOBPES         AS          establecimiento_poblacion_peso_promedio,
+            a.ESTPOBOBS         AS          establecimiento_poblacion_observacion,
+
+            a.ESTPOBAEM         AS          auditoria_empresa_codigo,
+            a.ESTPOBAEM         AS          auditoria_empresa_nombre,
+            a.ESTPOBAUS         AS          auditoria_usuario,
+            a.ESTPOBAFH         AS          auditoria_fecha_hora,
+            a.ESTPOBAIP         AS          auditoria_ip,
+
+            b.DOMFICCOD         AS          tipo_origen_codigo,
+            b.DOMFICNOM         AS          tipo_origen_nombre,
+
+            c.DOMFICCOD         AS          tipo_raza_codigo,
+            c.DOMFICNOM         AS          tipo_raza_nombre,
+
+            d.DOMFICCOD         AS          tipo_subcategoria_codigo,
+            d.DOMFICNOM         AS          tipo_subcategoria_nombre,
+
+            e.ESTFICCOD         AS          establecimiento_codigo,
+            e.ESTFICNOM         AS          establecimiento_nombre,
+
+            f.ESTPERCOD         AS          persona_codigo,
+            f.ESTPERPER         AS          persona_completo,
+
+            g.DOMFICCOD         AS          tipo_categoria_codigo,
+            g.DOMFICNOM         AS          tipo_categoria_nombre
+            
+            FROM ESTPOB a
+            INNER JOIN mayordomo_default.DOMFIC b ON a.ESTPOBTOC = b.DOMFICCOD
+            INNER JOIN mayordomo_default.DOMFIC c ON a.ESTPOBTRC = c.DOMFICCOD
+            INNER JOIN mayordomo_default.DOMFIC d ON a.ESTPOBTSC = d.DOMFICCOD
+            INNER JOIN mayordomo_default.ESTFIC e ON a.ESTPOBESC = e.ESTFICCOD
+            INNER JOIN mayordomo_establecimiento.ESTPER f ON a.ESTPOBPEC = f.ESTPERCOD
+            INNER JOIN mayordomo_default.DOMFIC g ON a.ESTPOBTCC = g.DOMFICCOD
+
+            WHERE a.ESTPOBESC = ?
+
+            ORDER BY a.ESTPOBESC, g.DOMFICCOD, d.DOMFICCOD";
+
+            try {
+                $connESTABLECIMIENTO  = getConnectionESTABLECIMIENTO();
+                $stmtESTABLECIMIENTO  = $connESTABLECIMIENTO->prepare($sql00);
+                $stmtESTABLECIMIENTO->execute([$val01]); 
+
+                while ($rowESTABLECIMIENTO = $stmtESTABLECIMIENTO->fetch()) {
+                    $detalle    = array(
+                        'tipo_origen_codigo'                            => $rowESTABLECIMIENTO['tipo_origen_codigo'],
+                        'tipo_origen_nombre'                            => $rowESTABLECIMIENTO['tipo_origen_nombre'],
+                        'tipo_raza_codigo'                              => $rowESTABLECIMIENTO['tipo_raza_codigo'],
+                        'tipo_raza_nombre'                              => $rowESTABLECIMIENTO['tipo_raza_nombre'],
+                        'tipo_categoria_codigo'                         => $rowESTABLECIMIENTO['tipo_categoria_codigo'],
+                        'tipo_categoria_nombre'                         => $rowESTABLECIMIENTO['tipo_categoria_nombre'],
+                        'tipo_subcategoria_codigo'                      => $rowESTABLECIMIENTO['tipo_subcategoria_codigo'],
+                        'tipo_subcategoria_nombre'                      => $rowESTABLECIMIENTO['tipo_subcategoria_nombre'],
+                        'establecimiento_codigo'                        => $rowESTABLECIMIENTO['establecimiento_codigo'],
+                        'establecimiento_nombre'                        => $rowESTABLECIMIENTO['establecimiento_nombre'],
+                        'persona_codigo'                                => $rowESTABLECIMIENTO['persona_codigo'],
+                        'persona_completo'                              => $rowESTABLECIMIENTO['persona_completo'],
+                        'establecimiento_poblacion_codigo'              => $rowESTABLECIMIENTO['establecimiento_poblacion_codigo'],
+                        'establecimiento_poblacion_cantidad'            => $rowESTABLECIMIENTO['establecimiento_poblacion_cantidad'],
+                        'establecimiento_poblacion_peso_promedio'       => $rowESTABLECIMIENTO['establecimiento_poblacion_peso_promedio'],
+                        'establecimiento_poblacion_observacion'         => $rowESTABLECIMIENTO['establecimiento_poblacion_observacion'],
+                        'auditoria_empresa_codigo'                      => $rowESTABLECIMIENTO['auditoria_empresa_codigo'],
+                        'auditoria_empresa_nombre'                      => $rowESTABLECIMIENTO['auditoria_empresa_nombre'],
+                        'auditoria_usuario'                             => $rowESTABLECIMIENTO['auditoria_usuario'],
+                        'auditoria_fecha_hora'                          => date_format(date_create($rowESTABLECIMIENTO['auditoria_fecha_hora']), 'd/m/Y H:i:s'),
+                        'auditoria_ip'                                  => $rowESTABLECIMIENTO['auditoria_ip']
+                    );
+
+                    $result[]   = $detalle;
+                }
+
+                if (isset($result)){
+                    header("Content-Type: application/json; charset=utf-8");
+                    $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success SELECT', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+                } else {
+                    $detalle = array(
+                        'tipo_origen_codigo'                            => '',
+                        'tipo_origen_nombre'                            => '',
+                        'tipo_raza_codigo'                              => '',
+                        'tipo_raza_nombre'                              => '',
+                        'tipo_categoria_codigo'                         => '',
+                        'tipo_categoria_nombre'                         => '',
+                        'tipo_subcategoria_codigo'                      => '',
+                        'tipo_subcategoria_nombre'                      => '',
+                        'establecimiento_codigo'                        => '',
+                        'establecimiento_nombre'                        => '',
+                        'persona_codigo'                                => '',
+                        'persona_completo'                              => '',
+                        'establecimiento_poblacion_codigo'              => '',
+                        'establecimiento_poblacion_cantidad'            => '',
+                        'establecimiento_poblacion_peso_promedio'       => '',
+                        'establecimiento_poblacion_observacion'         => '',
+                        'auditoria_empresa_codigo'                      => '',
+                        'auditoria_empresa_nombre'                      => '',
+                        'auditoria_usuario'                             => '',
+                        'auditoria_fecha_hora'                          => '',
+                        'auditoria_ip'                                  => ''
+                    );
+
+                    header("Content-Type: application/json; charset=utf-8");
+                    $json = json_encode(array('code' => 204, 'status' => 'ok', 'message' => 'No hay registros', 'data' => $detalle), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+                }
+
+                $stmtESTABLECIMIENTO->closeCursor();
+                $stmtESTABLECIMIENTO = null;
+            } catch (PDOException $e) {
+                header("Content-Type: application/json; charset=utf-8");
+                $json = json_encode(array('code' => 204, 'status' => 'failure', 'message' => 'Error SELECT: '.$e), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+            }
+        } else {
+            header("Content-Type: application/json; charset=utf-8");
+            $json = json_encode(array('code' => 400, 'status' => 'error', 'message' => 'Verifique, algún campo esta vacio.'), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+        }
+
+        $connESTABLECIMIENTO  = null;
+        
+        return $json;
+    });
+
     $app->get('/v1/establecimiento/500/propietario/{establecimiento}', function($request) {
         require __DIR__.'/../../src/connect.php';
 
