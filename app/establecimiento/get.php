@@ -268,74 +268,7 @@
         return $json;
     });
 
-    $app->get('/v1/establecimiento/500/poblacion/categoria/{establecimiento}', function($request) {
-        require __DIR__.'/../../src/connect.php';
-
-        $val01      = $request->getAttribute('establecimiento');
-        
-        if (isset($val01)) {
-            $sql00  = "SELECT
-            g.DOMFICCOD         AS          tipo_categoria_codigo,
-            g.DOMFICNOM         AS          tipo_categoria_nombre,
-            SUM(a.ESTPOBCAN)    AS          establecimiento_poblacion_cantidad,
-            SUM(a.ESTPOBPES)    AS          establecimiento_poblacion_peso_promedio
-
-            FROM ESTPOB a
-            LEFT OUTER JOIN mayordomo_default.DOMFIC g ON a.ESTPOBTCC = g.DOMFICCOD
-
-            WHERE a.ESTPOBESC = ?
-
-            GROUP BY g.DOMFICCOD, g.DOMFICNOM
-            ORDER BY g.DOMFICCOD, g.DOMFICNOM";
-
-            try {
-                $connESTABLECIMIENTO  = getConnectionESTABLECIMIENTO();
-                $stmtESTABLECIMIENTO  = $connESTABLECIMIENTO->prepare($sql00);
-                $stmtESTABLECIMIENTO->execute([$val01]); 
-
-                while ($rowESTABLECIMIENTO = $stmtESTABLECIMIENTO->fetch()) {
-                    $detalle    = array(
-                        'tipo_categoria_codigo'                         => $rowESTABLECIMIENTO['tipo_categoria_codigo'],
-                        'tipo_categoria_nombre'                         => $rowESTABLECIMIENTO['tipo_categoria_nombre'],
-                        'establecimiento_poblacion_cantidad'            => $rowESTABLECIMIENTO['establecimiento_poblacion_cantidad'],
-                        'establecimiento_poblacion_peso_promedio'       => round(($rowESTABLECIMIENTO['establecimiento_poblacion_peso_promedio'] / $rowESTABLECIMIENTO['establecimiento_poblacion_cantidad']), 3),
-                    );
-
-                    $result[]   = $detalle;
-                }
-
-                if (isset($result)){
-                    header("Content-Type: application/json; charset=utf-8");
-                    $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success SELECT', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
-                } else {
-                    $detalle = array(
-                        'tipo_categoria_codigo'                         => '',
-                        'tipo_categoria_nombre'                         => '',
-                        'establecimiento_poblacion_cantidad'            => '',
-                        'establecimiento_poblacion_peso_promedio'       => '',
-                    );
-
-                    header("Content-Type: application/json; charset=utf-8");
-                    $json = json_encode(array('code' => 204, 'status' => 'ok', 'message' => 'No hay registros', 'data' => $detalle), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
-                }
-
-                $stmtESTABLECIMIENTO->closeCursor();
-                $stmtESTABLECIMIENTO = null;
-            } catch (PDOException $e) {
-                header("Content-Type: application/json; charset=utf-8");
-                $json = json_encode(array('code' => 204, 'status' => 'failure', 'message' => 'Error SELECT: '.$e), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
-            }
-        } else {
-            header("Content-Type: application/json; charset=utf-8");
-            $json = json_encode(array('code' => 400, 'status' => 'error', 'message' => 'Verifique, algún campo esta vacio.'), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
-        }
-
-        $connESTABLECIMIENTO  = null;
-        
-        return $json;
-    });
-
-    $app->get('/v1/establecimiento/500/poblacion/detallado/{establecimiento}', function($request) {
+    $app->get('/v1/establecimiento/500/poblacion/{establecimiento}', function($request) {
         require __DIR__.'/../../src/connect.php';
 
         $val01      = $request->getAttribute('establecimiento');
@@ -442,6 +375,73 @@
                         'auditoria_usuario'                             => '',
                         'auditoria_fecha_hora'                          => '',
                         'auditoria_ip'                                  => ''
+                    );
+
+                    header("Content-Type: application/json; charset=utf-8");
+                    $json = json_encode(array('code' => 204, 'status' => 'ok', 'message' => 'No hay registros', 'data' => $detalle), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+                }
+
+                $stmtESTABLECIMIENTO->closeCursor();
+                $stmtESTABLECIMIENTO = null;
+            } catch (PDOException $e) {
+                header("Content-Type: application/json; charset=utf-8");
+                $json = json_encode(array('code' => 204, 'status' => 'failure', 'message' => 'Error SELECT: '.$e), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+            }
+        } else {
+            header("Content-Type: application/json; charset=utf-8");
+            $json = json_encode(array('code' => 400, 'status' => 'error', 'message' => 'Verifique, algún campo esta vacio.'), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+        }
+
+        $connESTABLECIMIENTO  = null;
+        
+        return $json;
+    });
+
+    $app->get('/v1/establecimiento/500/poblacion/categoria/{establecimiento}', function($request) {
+        require __DIR__.'/../../src/connect.php';
+
+        $val01      = $request->getAttribute('establecimiento');
+        
+        if (isset($val01)) {
+            $sql00  = "SELECT
+            g.DOMFICCOD         AS          tipo_categoria_codigo,
+            g.DOMFICNOM         AS          tipo_categoria_nombre,
+            SUM(a.ESTPOBCAN)    AS          establecimiento_poblacion_cantidad,
+            SUM(a.ESTPOBPES)    AS          establecimiento_poblacion_peso_promedio
+
+            FROM ESTPOB a
+            LEFT OUTER JOIN mayordomo_default.DOMFIC g ON a.ESTPOBTCC = g.DOMFICCOD
+
+            WHERE a.ESTPOBESC = ?
+
+            GROUP BY g.DOMFICCOD, g.DOMFICNOM
+            ORDER BY g.DOMFICCOD, g.DOMFICNOM";
+
+            try {
+                $connESTABLECIMIENTO  = getConnectionESTABLECIMIENTO();
+                $stmtESTABLECIMIENTO  = $connESTABLECIMIENTO->prepare($sql00);
+                $stmtESTABLECIMIENTO->execute([$val01]); 
+
+                while ($rowESTABLECIMIENTO = $stmtESTABLECIMIENTO->fetch()) {
+                    $detalle    = array(
+                        'tipo_categoria_codigo'                         => $rowESTABLECIMIENTO['tipo_categoria_codigo'],
+                        'tipo_categoria_nombre'                         => $rowESTABLECIMIENTO['tipo_categoria_nombre'],
+                        'establecimiento_poblacion_cantidad'            => $rowESTABLECIMIENTO['establecimiento_poblacion_cantidad'],
+                        'establecimiento_poblacion_peso_promedio'       => round(($rowESTABLECIMIENTO['establecimiento_poblacion_peso_promedio'] / $rowESTABLECIMIENTO['establecimiento_poblacion_cantidad']), 3),
+                    );
+
+                    $result[]   = $detalle;
+                }
+
+                if (isset($result)){
+                    header("Content-Type: application/json; charset=utf-8");
+                    $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success SELECT', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+                } else {
+                    $detalle = array(
+                        'tipo_categoria_codigo'                         => '',
+                        'tipo_categoria_nombre'                         => '',
+                        'establecimiento_poblacion_cantidad'            => '',
+                        'establecimiento_poblacion_peso_promedio'       => '',
                     );
 
                     header("Content-Type: application/json; charset=utf-8");
