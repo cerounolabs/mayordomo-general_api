@@ -464,7 +464,7 @@
         return $json;
     });
 
-    $app->get('/v1/establecimiento/500/propietario/{establecimiento}', function($request) {
+    $app->get('/v1/establecimiento/500/persona/{establecimiento}', function($request) {
         require __DIR__.'/../../src/connect.php';
 
         $val01      = $request->getAttribute('establecimiento');
@@ -596,7 +596,7 @@
         return $json;
     });
 
-    $app->get('/v1/establecimiento/500/propietario/{establecimiento}/{persona}', function($request) {
+    $app->get('/v1/establecimiento/500/persona/{establecimiento}/{persona}', function($request) {
         require __DIR__.'/../../src/connect.php';
 
         $val01      = $request->getAttribute('codigo');
