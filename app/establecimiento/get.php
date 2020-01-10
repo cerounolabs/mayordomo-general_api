@@ -29,8 +29,8 @@
         e.PERFICCOD         AS          persona_codigo,
         e.PERFICDOC         AS          persona_completo,
         e.PERFICDOC         AS          persona_documento,
-        e.ESTPERCST         AS          persona_codigo_senacsa,
-        e.ESTPERCSG         AS          persona_codigo_sigor,
+        e.PERFICCST         AS          persona_codigo_senacsa,
+        e.PERFICCSG         AS          persona_codigo_sigor,
 
         f.LOCDISCOD         AS          distrito_codigo,
         f.LOCDISNOM         AS          distrito_nombre
@@ -168,8 +168,8 @@
             e.PERFICCOD         AS          persona_codigo,
             e.PERFICDOC         AS          persona_completo,
             e.PERFICDOC         AS          persona_documento,
-            e.ESTPERCST         AS          persona_codigo_senacsa,
-            e.ESTPERCSG         AS          persona_codigo_sigor,
+            e.PERFICCST         AS          persona_codigo_senacsa,
+            e.PERFICCSG         AS          persona_codigo_sigor,
 
             f.LOCDISCOD         AS          distrito_codigo,
             f.LOCDISNOM         AS          distrito_nombre
@@ -503,8 +503,8 @@
             e.PERFICCOD         AS          persona_codigo,
             e.PERFICNOM         AS          persona_completo,
             e.PERFICDOC         AS          persona_documento,
-            e.ESTPERCST         AS          persona_codigo_sitrap,
-            e.ESTPERCSG         AS          persona_codigo_sigor,
+            e.PERFICCST         AS          persona_codigo_sitrap,
+            e.PERFICCSG         AS          persona_codigo_sigor,
             e.PERFICTEL         AS          persona_telefono,
             e.PERFICMAI         AS          persona_email,
             e.PERFICOBS         AS          persona_observacion,
@@ -644,8 +644,8 @@
             e.PERFICCOD         AS          persona_codigo,
             e.PERFICNOM         AS          persona_completo,
             e.PERFICDOC         AS          persona_documento,
-            e.ESTPERCST         AS          persona_codigo_sitrap,
-            e.ESTPERCSG         AS          persona_codigo_sigor,
+            e.PERFICCST         AS          persona_codigo_sitrap,
+            e.PERFICCSG         AS          persona_codigo_sigor,
             e.PERFICTEL         AS          persona_telefono,
             e.PERFICMAI         AS          persona_email,
             e.PERFICOBS         AS          persona_observacion,
