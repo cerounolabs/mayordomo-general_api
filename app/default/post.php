@@ -260,7 +260,7 @@
         $aud04      = $request->getParsedBody()['persona_ip'];
 
         if (isset($val01) && isset($val02) && isset($val03) && isset($val04) && isset($val05) && isset($val06) && isset($val07) && isset($val08) && isset($val09)) {
-            $sql00  = "INSERT INTO PERFIC (PERFICECC, PERFICTPC, PERFICTDC, PERFICNOM, PERFICDOC, PERFICCST, ESTPERCSG, PERFICTEL, PERFICMAI, PERFICOBS, PERFICAEM, PERFICAUS, PERFICAFH, PERFICAIP) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $sql00  = "INSERT INTO PERFIC (PERFICECC, PERFICTPC, PERFICTDC, PERFICNOM, PERFICDOC, PERFICCST, PERFICCSG, PERFICTEL, PERFICMAI, PERFICOBS, PERFICAEM, PERFICAUS, PERFICAFH, PERFICAIP) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             try {
                 $connDEFAULT  = getConnectionDEFAULT();
