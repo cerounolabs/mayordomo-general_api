@@ -248,21 +248,24 @@
         $val03      = $request->getParsedBody()['tipo_documento_codigo'];
         $val04      = $request->getParsedBody()['persona_completo'];
         $val05      = $request->getParsedBody()['persona_documento'];
-        $val06      = $request->getParsedBody()['persona_telefono'];
-        $val07      = $request->getParsedBody()['persona_email'];
-        $val08      = $request->getParsedBody()['persona_observacion'];
-        $val09      = $request->getParsedBody()['persona_empresa_codigo'];
-        $val10      = $request->getParsedBody()['persona_usuario'];
-        $val11      = $request->getParsedBody()['persona_fecha_hora'];
-        $val12      = $request->getParsedBody()['persona_ip'];
+        $val06      = $request->getParsedBody()['persona_codigo_sitrap'];
+        $val07      = $request->getParsedBody()['persona_codigo_sigor'];
+        $val08      = $request->getParsedBody()['persona_telefono'];
+        $val09      = $request->getParsedBody()['persona_email'];
+        $val10      = $request->getParsedBody()['persona_observacion'];
 
-        if (isset($val01) && isset($val02) && isset($val03) && isset($val04) && isset($val05) && isset($val06) && isset($val07) && isset($val09) && isset($val10) && isset($val11) && isset($val12)) {
-            $sql00  = "INSERT INTO PERFIC (PERFICECC, PERFICTPC, PERFICTDC, PERFICNOM, PERFICDOC, PERFICTEL, PERFICMAI, PERFICOBS, PERFICAEM, PERFICAUS, PERFICAFH, PERFICAIP) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $aud01      = $request->getParsedBody()['persona_empresa_codigo'];
+        $aud02      = $request->getParsedBody()['persona_usuario'];
+        $aud03      = $request->getParsedBody()['persona_fecha_hora'];
+        $aud04      = $request->getParsedBody()['persona_ip'];
+
+        if (isset($val01) && isset($val02) && isset($val03) && isset($val04) && isset($val05) && isset($val06) && isset($val07) && isset($val08) && isset($val09)) {
+            $sql00  = "INSERT INTO PERFIC (PERFICECC, PERFICTPC, PERFICTDC, PERFICNOM, PERFICDOC, PERFICCST, ESTPERCSG, PERFICTEL, PERFICMAI, PERFICOBS, PERFICAEM, PERFICAUS, PERFICAFH, PERFICAIP) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             try {
                 $connDEFAULT  = getConnectionDEFAULT();
                 $stmtDEFAULT  = $connDEFAULT->prepare($sql00);
-                $stmtDEFAULT->execute([$val01, $val02, $val03, $val04, $val05, $val06, $val07, $val08, $val09, $val10, $val11, $val12]); 
+                $stmtDEFAULT->execute([$val01, $val02, $val03, $val04, $val05, $val06, $val07, $val08, $val09, $val10, $aud01, $aud02, $aud03, $aud04]); 
                 
                 header("Content-Type: application/json; charset=utf-8");
                 $json       = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success INSERT', 'codigo' => $connDEFAULT->lastInsertId()), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
