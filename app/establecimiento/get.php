@@ -29,6 +29,8 @@
         e.PERFICCOD         AS          persona_codigo,
         e.PERFICDOC         AS          persona_completo,
         e.PERFICDOC         AS          persona_documento,
+        e.ESTPERCST         AS          persona_codigo_senacsa,
+        e.ESTPERCSG         AS          persona_codigo_sigor,
 
         f.LOCDISCOD         AS          distrito_codigo,
         f.LOCDISNOM         AS          distrito_nombre
@@ -73,6 +75,8 @@
                     'persona_codigo'                            => $rowDEFAULT['persona_codigo'],
                     'persona_completo'                          => $rowDEFAULT['persona_completo'],
                     'persona_documento'                         => $rowDEFAULT['persona_documento'],
+                    'persona_codigo_sitrap'                     => $rowDEFAULT['persona_codigo_sitrap'],
+                    'persona_codigo_sigor'                      => $rowDEFAULT['persona_codigo_sigor'],
                     'distrito_codigo'                           => $rowDEFAULT['distrito_codigo'],
                     'distrito_nombre'                           => $rowDEFAULT['distrito_nombre']
                 );
@@ -109,6 +113,8 @@
                     'persona_codigo'                            => '',
                     'persona_completo'                          => '',
                     'persona_documento'                         => '',
+                    'persona_codigo_sitrap'                     => '',
+                    'persona_codigo_sigor'                      => '',
                     'distrito_codigo'                           => '',
                     'distrito_nombre'                           => ''
                 );
@@ -162,6 +168,8 @@
             e.PERFICCOD         AS          persona_codigo,
             e.PERFICDOC         AS          persona_completo,
             e.PERFICDOC         AS          persona_documento,
+            e.ESTPERCST         AS          persona_codigo_senacsa,
+            e.ESTPERCSG         AS          persona_codigo_sigor,
 
             f.LOCDISCOD         AS          distrito_codigo,
             f.LOCDISNOM         AS          distrito_nombre
@@ -208,6 +216,8 @@
                         'persona_codigo'                            => $rowDEFAULT['persona_codigo'],
                         'persona_completo'                          => $rowDEFAULT['persona_completo'],
                         'persona_documento'                         => $rowDEFAULT['persona_documento'],
+                        'persona_codigo_sitrap'                     => $rowDEFAULT['persona_codigo_sitrap'],
+                        'persona_codigo_sigor'                      => $rowDEFAULT['persona_codigo_sigor'],
                         'distrito_codigo'                           => $rowDEFAULT['distrito_codigo'],
                         'distrito_nombre'                           => $rowDEFAULT['distrito_nombre']
                     );
@@ -244,6 +254,8 @@
                         'persona_codigo'                            => '',
                         'persona_completo'                          => '',
                         'persona_documento'                         => '',
+                        'persona_codigo_sitrap'                     => '',
+                        'persona_codigo_sigor'                      => '',
                         'distrito_codigo'                           => '',
                         'distrito_nombre'                           => ''
                     );
@@ -472,12 +484,6 @@
         if (isset($val01)) {
             $sql00  = "SELECT
             a.ESTPERCOD         AS          establecimiento_persona_codigo,
-            a.ESTPERPER         AS          establecimiento_persona_completo,
-            a.ESTPERDOC         AS          establecimiento_persona_documento,
-            a.ESTPERCST         AS          establecimiento_persona_codigo_sitrap,
-            a.ESTPERCSG         AS          establecimiento_persona_codigo_sigor,
-            a.ESTPERTEL         AS          establecimiento_persona_telefono,
-            a.ESTPERMAI         AS          establecimiento_persona_email,
             a.ESTPEROBS         AS          establecimiento_persona_observacion,
             a.ESTPERAEM         AS          auditoria_empresa_codigo,
             a.ESTPERAEM         AS          auditoria_empresa_nombre,
@@ -488,59 +494,71 @@
             b.DOMFICCOD         AS          tipo_estado_codigo,
             b.DOMFICNOM         AS          tipo_estado_nombre,
 
-            c.DOMFICCOD         AS          tipo_usuario_codigo,
-            c.DOMFICNOM         AS          tipo_usuario_nombre,
+            c.ESTFICCOD         AS          establecimiento_codigo,
+            c.ESTFICNOM         AS          establecimiento_nombre,
 
-            d.DOMFICCOD         AS          tipo_persona_codigo,
-            d.DOMFICNOM         AS          tipo_persona_nombre,
+            d.DOMFICCOD         AS          tipo_usuario_codigo,
+            d.DOMFICNOM         AS          tipo_usuario_nombre,
 
-            e.DOMFICCOD         AS          tipo_documento_codigo,
-            e.DOMFICNOM         AS          tipo_documento_nombre,
+            e.PERFICCOD         AS          persona_codigo,
+            e.PERFICNOM         AS          persona_completo,
+            e.PERFICDOC         AS          persona_documento,
+            e.ESTPERCST         AS          persona_codigo_sitrap,
+            e.ESTPERCSG         AS          persona_codigo_sigor,
+            e.PERFICTEL         AS          persona_telefono,
+            e.PERFICMAI         AS          persona_email,
+            e.PERFICOBS         AS          persona_observacion,
 
-            f.ESTFICCOD         AS          establecimiento_codigo,
-            f.ESTFICNOM         AS          establecimiento_nombre
+            e1.DOMFICCOD        AS          tipo_persona_codigo,
+            e1.DOMFICNOM        AS          tipo_persona_nombre,
+
+            e2.DOMFICCOD        AS          tipo_documento_codigo,
+            e2.DOMFICNOM        AS          tipo_documento_nombre
             
             FROM ESTPER a
             INNER JOIN mayordomo_default.DOMFIC b ON a.ESTPERECC = b.DOMFICCOD
-            INNER JOIN mayordomo_default.DOMFIC c ON a.ESTPERTUC = c.DOMFICCOD
-            INNER JOIN mayordomo_default.DOMFIC d ON a.ESTPERTPC = d.DOMFICCOD
-            INNER JOIN mayordomo_default.DOMFIC e ON a.ESTPERPDC = e.DOMFICCOD
-            INNER JOIN mayordomo_default.ESTFIC f ON a.ESTPERESC = f.ESTFICCOD
+            INNER JOIN mayordomo_default.ESTFIC c ON a.ESTPERESC = c.ESTFICCOD
+            INNER JOIN mayordomo_default.DOMFIC d ON a.ESTPERTUC = d.DOMFICCOD
+            INNER JOIN mayordomo_default.PERFIC e ON a.ESTPERPEC = e.PERFICCOD
+            INNER JOIN mayordomo_default.DOMFIC e1 ON e.PERFICTPC = e1.DOMFICCOD
+            INNER JOIN mayordomo_default.DOMFIC e2 ON e.PERFICTDC = e2.DOMFICCOD
 
             WHERE a.ESTPERESC = ? 
 
-            ORDER BY a.ESTPERCOD";
+            ORDER BY a.ESTPERTUC";
 
             try {
-                $connESTABLECIMIENTO  = getConnectionESTABLECIMIENTO();
-                $stmtESTABLECIMIENTO  = $connESTABLECIMIENTO->prepare($sql00);
-                $stmtESTABLECIMIENTO->execute([$val01]); 
+                $connDEFAULT  = getConnectionDEFAULT();
+                $stmtDEFAULT  = $connDEFAULT->prepare($sql00);
+                $stmtDEFAULT->execute([$val01]); 
 
-                while ($rowESTABLECIMIENTO = $stmtESTABLECIMIENTO->fetch()) {
+                while ($rowDEFAULT = $stmtDEFAULT->fetch()) {
                     $detalle    = array(
-                        'tipo_estado_codigo'                            => $rowESTABLECIMIENTO['tipo_estado_codigo'],
-                        'tipo_estado_nombre'                            => $rowESTABLECIMIENTO['tipo_estado_nombre'],
-                        'tipo_usuario_codigo'                           => $rowESTABLECIMIENTO['tipo_usuario_codigo'],
-                        'tipo_usuario_nombre'                           => $rowESTABLECIMIENTO['tipo_usuario_nombre'],
-                        'tipo_persona_codigo'                           => $rowESTABLECIMIENTO['tipo_persona_codigo'],
-                        'tipo_persona_nombre'                           => $rowESTABLECIMIENTO['tipo_persona_nombre'],
-                        'tipo_documento_codigo'                         => $rowESTABLECIMIENTO['tipo_documento_codigo'],
-                        'tipo_documento_nombre'                         => $rowESTABLECIMIENTO['tipo_documento_nombre'],
-                        'establecimiento_codigo'                        => $rowESTABLECIMIENTO['establecimiento_codigo'],
-                        'establecimiento_nombre'                        => $rowESTABLECIMIENTO['establecimiento_nombre'],
-                        'establecimiento_persona_codigo'                => $rowESTABLECIMIENTO['establecimiento_persona_codigo'],
-                        'establecimiento_persona_completo'              => $rowESTABLECIMIENTO['establecimiento_persona_completo'],
-                        'establecimiento_persona_documento'             => $rowESTABLECIMIENTO['establecimiento_persona_documento'],
-                        'establecimiento_persona_codigo_sitrap'         => $rowESTABLECIMIENTO['establecimiento_persona_codigo_sitrap'],
-                        'establecimiento_persona_codigo_sigor'          => $rowESTABLECIMIENTO['establecimiento_persona_codigo_sigor'],
-                        'establecimiento_persona_telefono'              => $rowESTABLECIMIENTO['establecimiento_persona_telefono'],
-                        'establecimiento_persona_email'                 => $rowESTABLECIMIENTO['establecimiento_persona_email'],
-                        'establecimiento_persona_observacion'           => $rowESTABLECIMIENTO['establecimiento_persona_observacion'],
-                        'auditoria_empresa_codigo'                      => $rowESTABLECIMIENTO['auditoria_empresa_codigo'],
-                        'auditoria_empresa_nombre'                      => $rowESTABLECIMIENTO['auditoria_empresa_nombre'],
-                        'auditoria_usuario'                             => $rowESTABLECIMIENTO['auditoria_usuario'],
-                        'auditoria_fecha_hora'                          => date_format(date_create($rowESTABLECIMIENTO['auditoria_fecha_hora']), 'd/m/Y H:i:s'),
-                        'auditoria_ip'                                  => $rowESTABLECIMIENTO['auditoria_ip']
+                        'establecimiento_persona_codigo'                => $rowDEFAULT['establecimiento_persona_codigo'],
+                        'establecimiento_persona_observacion'           => $rowDEFAULT['establecimiento_persona_observacion'],
+                        'tipo_estado_codigo'                            => $rowDEFAULT['tipo_estado_codigo'],
+                        'tipo_estado_nombre'                            => $rowDEFAULT['tipo_estado_nombre'],
+                        'tipo_usuario_codigo'                           => $rowDEFAULT['tipo_usuario_codigo'],
+                        'tipo_usuario_nombre'                           => $rowDEFAULT['tipo_usuario_nombre'],
+                        'tipo_persona_codigo'                           => $rowDEFAULT['tipo_persona_codigo'],
+                        'tipo_persona_nombre'                           => $rowDEFAULT['tipo_persona_nombre'],
+                        'tipo_documento_codigo'                         => $rowDEFAULT['tipo_documento_codigo'],
+                        'tipo_documento_nombre'                         => $rowDEFAULT['tipo_documento_nombre'],
+                        'establecimiento_codigo'                        => $rowDEFAULT['establecimiento_codigo'],
+                        'establecimiento_nombre'                        => $rowDEFAULT['establecimiento_nombre'],
+                        'persona_codigo'                                => $rowDEFAULT['persona_codigo'],
+                        'persona_completo'                              => $rowDEFAULT['persona_completo'],
+                        'persona_documento'                             => $rowDEFAULT['persona_documento'],
+                        'persona_codigo_sitrap'                         => $rowDEFAULT['persona_codigo_sitrap'],
+                        'persona_codigo_sigor'                          => $rowDEFAULT['persona_codigo_sigor'],
+                        'persona_telefono'                              => $rowDEFAULT['persona_telefono'],
+                        'persona_email'                                 => $rowDEFAULT['persona_email'],
+                        'persona_observacion'                           => $rowDEFAULT['persona_observacion'],
+                        'auditoria_empresa_codigo'                      => $rowDEFAULT['auditoria_empresa_codigo'],
+                        'auditoria_empresa_nombre'                      => $rowDEFAULT['auditoria_empresa_nombre'],
+                        'auditoria_usuario'                             => $rowDEFAULT['auditoria_usuario'],
+                        'auditoria_fecha_hora'                          => date_format(date_create($rowDEFAULT['auditoria_fecha_hora']), 'd/m/Y H:i:s'),
+                        'auditoria_ip'                                  => $rowDEFAULT['auditoria_ip']
                     );
 
                     $result[]   = $detalle;
@@ -551,6 +569,8 @@
                     $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success SELECT', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
                 } else {
                     $detalle = array(
+                        'establecimiento_persona_codigo'                => '',
+                        'establecimiento_persona_observacion'           => '',
                         'tipo_estado_codigo'                            => '',
                         'tipo_estado_nombre'                            => '',
                         'tipo_usuario_codigo'                           => '',
@@ -561,14 +581,14 @@
                         'tipo_documento_nombre'                         => '',
                         'establecimiento_codigo'                        => '',
                         'establecimiento_nombre'                        => '',
-                        'establecimiento_persona_codigo'                => '',
-                        'establecimiento_persona_completo'              => '',
-                        'establecimiento_persona_documento'             => '',
-                        'establecimiento_persona_codigo_sitrap'         => '',
-                        'establecimiento_persona_codigo_sigor'          => '',
-                        'establecimiento_persona_telefono'              => '',
-                        'establecimiento_persona_email'                 => '',
-                        'establecimiento_persona_observacion'           => '',
+                        'persona_codigo'                                => '',
+                        'persona_completo'                              => '',
+                        'persona_documento'                             => '',
+                        'persona_codigo_sitrap'                         => '',
+                        'persona_codigo_sigor'                          => '',
+                        'persona_telefono'                              => '',
+                        'persona_email'                                 => '',
+                        'persona_observacion'                           => '',
                         'auditoria_empresa_codigo'                      => '',
                         'auditoria_empresa_nombre'                      => '',
                         'auditoria_usuario'                             => '',
@@ -580,8 +600,8 @@
                     $json = json_encode(array('code' => 204, 'status' => 'ok', 'message' => 'No hay registros', 'data' => $detalle), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
                 }
 
-                $stmtESTABLECIMIENTO->closeCursor();
-                $stmtESTABLECIMIENTO = null;
+                $stmtDEFAULT->closeCursor();
+                $stmtDEFAULT = null;
             } catch (PDOException $e) {
                 header("Content-Type: application/json; charset=utf-8");
                 $json = json_encode(array('code' => 204, 'status' => 'failure', 'message' => 'Error SELECT: '.$e), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
@@ -591,7 +611,7 @@
             $json = json_encode(array('code' => 400, 'status' => 'error', 'message' => 'Verifique, algún campo esta vacio.'), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
         }
 
-        $connESTABLECIMIENTO  = null;
+        $connDEFAULT  = null;
         
         return $json;
     });
@@ -599,18 +619,12 @@
     $app->get('/v1/establecimiento/500/persona/{establecimiento}/{persona}', function($request) {
         require __DIR__.'/../../src/connect.php';
 
-        $val01      = $request->getAttribute('codigo');
+        $val01      = $request->getAttribute('establecimiento');
         $val02      = $request->getAttribute('persona');
         
         if (isset($val01) && isset($val02)) {
             $sql00  = "SELECT
             a.ESTPERCOD         AS          establecimiento_persona_codigo,
-            a.ESTPERPER         AS          establecimiento_persona_completo,
-            a.ESTPERDOC         AS          establecimiento_persona_documento,
-            a.ESTPERCST         AS          establecimiento_persona_codigo_sitrap,
-            a.ESTPERCSG         AS          establecimiento_persona_codigo_sigor,
-            a.ESTPERTEL         AS          establecimiento_persona_telefono,
-            a.ESTPERMAI         AS          establecimiento_persona_email,
             a.ESTPEROBS         AS          establecimiento_persona_observacion,
             a.ESTPERAEM         AS          auditoria_empresa_codigo,
             a.ESTPERAEM         AS          auditoria_empresa_nombre,
@@ -621,59 +635,71 @@
             b.DOMFICCOD         AS          tipo_estado_codigo,
             b.DOMFICNOM         AS          tipo_estado_nombre,
 
-            c.DOMFICCOD         AS          tipo_usuario_codigo,
-            c.DOMFICNOM         AS          tipo_usuario_nombre,
+            c.ESTFICCOD         AS          establecimiento_codigo,
+            c.ESTFICNOM         AS          establecimiento_nombre,
 
-            d.DOMFICCOD         AS          tipo_persona_codigo,
-            d.DOMFICNOM         AS          tipo_persona_nombre,
+            d.DOMFICCOD         AS          tipo_usuario_codigo,
+            d.DOMFICNOM         AS          tipo_usuario_nombre,
 
-            e.DOMFICCOD         AS          tipo_documento_codigo,
-            e.DOMFICNOM         AS          tipo_documento_nombre,
+            e.PERFICCOD         AS          persona_codigo,
+            e.PERFICNOM         AS          persona_completo,
+            e.PERFICDOC         AS          persona_documento,
+            e.ESTPERCST         AS          persona_codigo_sitrap,
+            e.ESTPERCSG         AS          persona_codigo_sigor,
+            e.PERFICTEL         AS          persona_telefono,
+            e.PERFICMAI         AS          persona_email,
+            e.PERFICOBS         AS          persona_observacion,
 
-            f.ESTFICCOD         AS          establecimiento_codigo,
-            f.ESTFICNOM         AS          establecimiento_nombre
+            e1.DOMFICCOD        AS          tipo_persona_codigo,
+            e1.DOMFICNOM        AS          tipo_persona_nombre,
+
+            e2.DOMFICCOD        AS          tipo_documento_codigo,
+            e2.DOMFICNOM        AS          tipo_documento_nombre
             
             FROM ESTPER a
             INNER JOIN mayordomo_default.DOMFIC b ON a.ESTPERECC = b.DOMFICCOD
-            INNER JOIN mayordomo_default.DOMFIC c ON a.ESTPERTUC = c.DOMFICCOD
-            INNER JOIN mayordomo_default.DOMFIC d ON a.ESTPERTPC = d.DOMFICCOD
-            INNER JOIN mayordomo_default.DOMFIC e ON a.ESTPERPDC = e.DOMFICCOD
-            INNER JOIN mayordomo_default.ESTFIC f ON a.ESTPERESC = f.ESTFICCOD
+            INNER JOIN mayordomo_default.ESTFIC c ON a.ESTPERESC = c.ESTFICCOD
+            INNER JOIN mayordomo_default.DOMFIC d ON a.ESTPERTUC = d.DOMFICCOD
+            INNER JOIN mayordomo_default.PERFIC e ON a.ESTPERPEC = e.PERFICCOD
+            INNER JOIN mayordomo_default.DOMFIC e1 ON e.PERFICTPC = e1.DOMFICCOD
+            INNER JOIN mayordomo_default.DOMFIC e2 ON e.PERFICTDC = e2.DOMFICCOD
 
-            WHERE a.ESTPERESC = ? AND a.ESTPERCOD = ?
+            WHERE a.ESTPERESC = ? AND a.ESTPERPEC = ?
 
-            ORDER BY a.ESTPERCOD";
+            ORDER BY a.ESTPERTUC";
 
             try {
-                $connESTABLECIMIENTO  = getConnectionESTABLECIMIENTO();
-                $stmtESTABLECIMIENTO  = $connESTABLECIMIENTO->prepare($sql00);
-                $stmtESTABLECIMIENTO->execute([$val01, $val02]); 
+                $connDEFAULT  = getConnectionDEFAULT();
+                $stmtDEFAULT  = $connDEFAULT->prepare($sql00);
+                $stmtDEFAULT->execute([$val01, $val02]); 
 
-                while ($rowESTABLECIMIENTO = $stmtESTABLECIMIENTO->fetch()) {
+                while ($rowDEFAULT = $stmtDEFAULT->fetch()) {
                     $detalle    = array(
-                        'tipo_estado_codigo'                            => $rowESTABLECIMIENTO['tipo_estado_codigo'],
-                        'tipo_estado_nombre'                            => $rowESTABLECIMIENTO['tipo_estado_nombre'],
-                        'tipo_usuario_codigo'                           => $rowESTABLECIMIENTO['tipo_usuario_codigo'],
-                        'tipo_usuario_nombre'                           => $rowESTABLECIMIENTO['tipo_usuario_nombre'],
-                        'tipo_persona_codigo'                           => $rowESTABLECIMIENTO['tipo_persona_codigo'],
-                        'tipo_persona_nombre'                           => $rowESTABLECIMIENTO['tipo_persona_nombre'],
-                        'tipo_documento_codigo'                         => $rowESTABLECIMIENTO['tipo_documento_codigo'],
-                        'tipo_documento_nombre'                         => $rowESTABLECIMIENTO['tipo_documento_nombre'],
-                        'establecimiento_codigo'                        => $rowESTABLECIMIENTO['establecimiento_codigo'],
-                        'establecimiento_nombre'                        => $rowESTABLECIMIENTO['establecimiento_nombre'],
-                        'establecimiento_persona_codigo'                => $rowESTABLECIMIENTO['establecimiento_persona_codigo'],
-                        'establecimiento_persona_completo'              => $rowESTABLECIMIENTO['establecimiento_persona_completo'],
-                        'establecimiento_persona_documento'             => $rowESTABLECIMIENTO['establecimiento_persona_documento'],
-                        'establecimiento_persona_codigo_sitrap'         => $rowESTABLECIMIENTO['establecimiento_persona_codigo_sitrap'],
-                        'establecimiento_persona_codigo_sigor'          => $rowESTABLECIMIENTO['establecimiento_persona_codigo_sigor'],
-                        'establecimiento_persona_telefono'              => $rowESTABLECIMIENTO['establecimiento_persona_telefono'],
-                        'establecimiento_persona_email'                 => $rowESTABLECIMIENTO['establecimiento_persona_email'],
-                        'establecimiento_persona_observacion'           => $rowESTABLECIMIENTO['establecimiento_persona_observacion'],
-                        'auditoria_empresa_codigo'                      => $rowESTABLECIMIENTO['auditoria_empresa_codigo'],
-                        'auditoria_empresa_nombre'                      => $rowESTABLECIMIENTO['auditoria_empresa_nombre'],
-                        'auditoria_usuario'                             => $rowESTABLECIMIENTO['auditoria_usuario'],
-                        'auditoria_fecha_hora'                          => date_format(date_create($rowESTABLECIMIENTO['auditoria_fecha_hora']), 'd/m/Y H:i:s'),
-                        'auditoria_ip'                                  => $rowESTABLECIMIENTO['auditoria_ip']
+                        'establecimiento_persona_codigo'                => $rowDEFAULT['establecimiento_persona_codigo'],
+                        'establecimiento_persona_observacion'           => $rowDEFAULT['establecimiento_persona_observacion'],
+                        'tipo_estado_codigo'                            => $rowDEFAULT['tipo_estado_codigo'],
+                        'tipo_estado_nombre'                            => $rowDEFAULT['tipo_estado_nombre'],
+                        'tipo_usuario_codigo'                           => $rowDEFAULT['tipo_usuario_codigo'],
+                        'tipo_usuario_nombre'                           => $rowDEFAULT['tipo_usuario_nombre'],
+                        'tipo_persona_codigo'                           => $rowDEFAULT['tipo_persona_codigo'],
+                        'tipo_persona_nombre'                           => $rowDEFAULT['tipo_persona_nombre'],
+                        'tipo_documento_codigo'                         => $rowDEFAULT['tipo_documento_codigo'],
+                        'tipo_documento_nombre'                         => $rowDEFAULT['tipo_documento_nombre'],
+                        'establecimiento_codigo'                        => $rowDEFAULT['establecimiento_codigo'],
+                        'establecimiento_nombre'                        => $rowDEFAULT['establecimiento_nombre'],
+                        'persona_codigo'                                => $rowDEFAULT['persona_codigo'],
+                        'persona_completo'                              => $rowDEFAULT['persona_completo'],
+                        'persona_documento'                             => $rowDEFAULT['persona_documento'],
+                        'persona_codigo_sitrap'                         => $rowDEFAULT['persona_codigo_sitrap'],
+                        'persona_codigo_sigor'                          => $rowDEFAULT['persona_codigo_sigor'],
+                        'persona_telefono'                              => $rowDEFAULT['persona_telefono'],
+                        'persona_email'                                 => $rowDEFAULT['persona_email'],
+                        'persona_observacion'                           => $rowDEFAULT['persona_observacion'],
+                        'auditoria_empresa_codigo'                      => $rowDEFAULT['auditoria_empresa_codigo'],
+                        'auditoria_empresa_nombre'                      => $rowDEFAULT['auditoria_empresa_nombre'],
+                        'auditoria_usuario'                             => $rowDEFAULT['auditoria_usuario'],
+                        'auditoria_fecha_hora'                          => date_format(date_create($rowDEFAULT['auditoria_fecha_hora']), 'd/m/Y H:i:s'),
+                        'auditoria_ip'                                  => $rowDEFAULT['auditoria_ip']
                     );
 
                     $result[]   = $detalle;
@@ -684,6 +710,8 @@
                     $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success SELECT', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
                 } else {
                     $detalle = array(
+                        'establecimiento_persona_codigo'                => '',
+                        'establecimiento_persona_observacion'           => '',
                         'tipo_estado_codigo'                            => '',
                         'tipo_estado_nombre'                            => '',
                         'tipo_usuario_codigo'                           => '',
@@ -694,14 +722,14 @@
                         'tipo_documento_nombre'                         => '',
                         'establecimiento_codigo'                        => '',
                         'establecimiento_nombre'                        => '',
-                        'establecimiento_persona_codigo'                => '',
-                        'establecimiento_persona_completo'              => '',
-                        'establecimiento_persona_documento'             => '',
-                        'establecimiento_persona_codigo_sitrap'         => '',
-                        'establecimiento_persona_codigo_sigor'          => '',
-                        'establecimiento_persona_telefono'              => '',
-                        'establecimiento_persona_email'                 => '',
-                        'establecimiento_persona_observacion'           => '',
+                        'persona_codigo'                                => '',
+                        'persona_completo'                              => '',
+                        'persona_documento'                             => '',
+                        'persona_codigo_sitrap'                         => '',
+                        'persona_codigo_sigor'                          => '',
+                        'persona_telefono'                              => '',
+                        'persona_email'                                 => '',
+                        'persona_observacion'                           => '',
                         'auditoria_empresa_codigo'                      => '',
                         'auditoria_empresa_nombre'                      => '',
                         'auditoria_usuario'                             => '',
@@ -713,8 +741,8 @@
                     $json = json_encode(array('code' => 204, 'status' => 'ok', 'message' => 'No hay registros', 'data' => $detalle), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
                 }
 
-                $stmtESTABLECIMIENTO->closeCursor();
-                $stmtESTABLECIMIENTO = null;
+                $stmtDEFAULT->closeCursor();
+                $stmtDEFAULT = null;
             } catch (PDOException $e) {
                 header("Content-Type: application/json; charset=utf-8");
                 $json = json_encode(array('code' => 204, 'status' => 'failure', 'message' => 'Error SELECT: '.$e), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
@@ -724,7 +752,7 @@
             $json = json_encode(array('code' => 400, 'status' => 'error', 'message' => 'Verifique, algún campo esta vacio.'), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
         }
 
-        $connESTABLECIMIENTO  = null;
+        $connDEFAULT = null;
         
         return $json;
     });

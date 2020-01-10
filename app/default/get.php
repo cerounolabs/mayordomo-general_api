@@ -2010,6 +2010,8 @@
         a.PERFICCOD         AS          persona_codigo,
         a.PERFICNOM         AS          persona_completo,
         a.PERFICDOC         AS          persona_documento,
+        a.ESTPERCST         AS          persona_codigo_sitrap,
+        a.ESTPERCSG         AS          persona_codigo_sigor,
         a.PERFICTEL         AS          persona_telefono,
         a.PERFICMAI         AS          persona_email,
         a.PERFICOBS         AS          persona_observacion,
@@ -2045,6 +2047,8 @@
                     'persona_codigo'                    => $rowDEFAULT['persona_codigo'],
                     'persona_completo'                  => $rowDEFAULT['persona_completo'],
                     'persona_documento'                 => $rowDEFAULT['persona_documento'],
+                    'persona_codigo_sitrap'             => $rowDEFAULT['persona_codigo_sitrap'],
+                    'persona_codigo_sigor'              => $rowDEFAULT['persona_codigo_sigor'],
                     'persona_telefono'                  => $rowDEFAULT['persona_telefono'],
                     'persona_email'                     => $rowDEFAULT['persona_email'],
                     'persona_observacion'               => $rowDEFAULT['persona_observacion'],
@@ -2072,6 +2076,8 @@
                     'persona_codigo'                    => '',
                     'persona_completo'                  => '',
                     'persona_documento'                 => '',
+                    'persona_codigo_sitrap'             => '',
+                    'persona_codigo_sigor'              => '',
                     'persona_telefono'                  => '',
                     'persona_email'                     => '',
                     'persona_observacion'               => '',
@@ -2114,6 +2120,8 @@
             a.PERFICCOD         AS          persona_codigo,
             a.PERFICNOM         AS          persona_completo,
             a.PERFICDOC         AS          persona_documento,
+            a.ESTPERCST         AS          persona_codigo_sitrap,
+            a.ESTPERCSG         AS          persona_codigo_sigor,
             a.PERFICTEL         AS          persona_telefono,
             a.PERFICMAI         AS          persona_email,
             a.PERFICOBS         AS          persona_observacion,
@@ -2150,6 +2158,8 @@
                         'persona_codigo'                    => $rowDEFAULT['persona_codigo'],
                         'persona_completo'                  => $rowDEFAULT['persona_completo'],
                         'persona_documento'                 => $rowDEFAULT['persona_documento'],
+                        'persona_codigo_sitrap'             => $rowDEFAULT['persona_codigo_sitrap'],
+                        'persona_codigo_sigor'              => $rowDEFAULT['persona_codigo_sigor'],
                         'persona_telefono'                  => $rowDEFAULT['persona_telefono'],
                         'persona_email'                     => $rowDEFAULT['persona_email'],
                         'persona_observacion'               => $rowDEFAULT['persona_observacion'],
@@ -2177,6 +2187,8 @@
                         'persona_codigo'                    => '',
                         'persona_completo'                  => '',
                         'persona_documento'                 => '',
+                        'persona_codigo_sitrap'             => '',
+                        'persona_codigo_sigor'              => '',
                         'persona_telefono'                  => '',
                         'persona_email'                     => '',
                         'persona_observacion'               => '',
@@ -2191,275 +2203,6 @@
                         'tipo_persona_nombre'               => '',
                         'tipo_documento_codigo'             => '',
                         'tipo_documento_nombre'             => ''
-                    );
-
-                    header("Content-Type: application/json; charset=utf-8");
-                    $json = json_encode(array('code' => 204, 'status' => 'ok', 'message' => 'No hay registros', 'data' => $detalle), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
-                }
-
-                $stmtDEFAULT->closeCursor();
-                $stmtDEFAULT = null;
-            } catch (PDOException $e) {
-                header("Content-Type: application/json; charset=utf-8");
-                $json = json_encode(array('code' => 204, 'status' => 'failure', 'message' => 'Error SELECT: '.$e), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
-            }
-        } else {
-            header("Content-Type: application/json; charset=utf-8");
-            $json = json_encode(array('code' => 400, 'status' => 'error', 'message' => 'Verifique, algún campo esta vacio.'), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
-        }
-
-        $connDEFAULT  = null;
-        
-        return $json;
-    });
-
-    $app->get('/v1/default/500', function($request) {
-        require __DIR__.'/../../src/connect.php';
-
-        $sql00  = "SELECT
-        a.ESTFICCOD         AS          establecimiento_codigo,
-        a.ESTFICNOM         AS          establecimiento_nombre,
-        a.ESTFICTHE         AS          establecimiento_total_hectarea,
-        a.ESTFICTPO         AS          establecimiento_total_potrero,
-        a.ESTFICCO1         AS          establecimiento_codigo_senacsa,
-        a.ESTFICCO2         AS          establecimiento_codigo_sigor,
-        a.ESTFICCO3         AS          establecimiento_codigo_sitrap,
-        a.ESTFICOBS         AS          establecimiento_observacion,
-        a.ESTFICAEM         AS          establecimiento_empresa_codigo,
-        a.ESTFICAEM         AS          establecimiento_empresa_nombre,
-        a.ESTFICAUS         AS          establecimiento_usuario,
-        a.ESTFICAFH         AS          establecimiento_fecha_hora,
-        a.ESTFICAIP         AS          establecimiento_ip,
-
-        b.DOMFICCOD         AS          tipo_estado_codigo,
-        b.DOMFICNOM         AS          tipo_estado_nombre,
-
-        c.DOMFICCOD         AS          tipo_establecimiento_codigo,
-        c.DOMFICNOM         AS          tipo_establecimiento_nombre,
-
-        d.DOMFICCOD         AS          tipo_finalidad_codigo,
-        d.DOMFICNOM         AS          tipo_finalidad_nombre,
-
-        e.PERFICCOD         AS          persona_codigo,
-        e.PERFICDOC         AS          persona_completo,
-        e.PERFICDOC         AS          persona_documento,
-
-        f.LOCDISCOD         AS          distrito_codigo,
-        f.LOCDISNOM         AS          distrito_nombre
-        
-        FROM ESTFIC a
-        INNER JOIN DOMFIC b ON a.ESTFICECC = b.DOMFICCOD
-        INNER JOIN DOMFIC c ON a.ESTFICTEC = c.DOMFICCOD
-        INNER JOIN DOMFIC d ON a.ESTFICTFC = d.DOMFICCOD
-        INNER JOIN PERFIC e ON a.ESTFICPEC = e.PERFICCOD
-        INNER JOIN LOCDIS f ON a.ESTFICDIC = f.LOCDISCOD
-
-        ORDER BY a.ESTFICNOM";
-
-        try {
-            $connDEFAULT  = getConnectionDEFAULT();
-            $stmtDEFAULT  = $connDEFAULT->prepare($sql00);
-            $stmtDEFAULT->execute(); 
-
-            while ($rowDEFAULT = $stmtDEFAULT->fetch()) {
-                $detalle    = array(
-                    'establecimiento_codigo'                    => $rowDEFAULT['establecimiento_codigo'],
-                    'establecimiento_nombre'                    => $rowDEFAULT['establecimiento_nombre'],
-                    'establecimiento_total_hectarea'            => $rowDEFAULT['establecimiento_total_hectarea'],
-                    'establecimiento_total_potrero'             => $rowDEFAULT['establecimiento_total_potrero'],
-                    'establecimiento_codigo_senacsa'            => $rowDEFAULT['establecimiento_codigo_senacsa'],
-                    'establecimiento_codigo_sigor'              => $rowDEFAULT['establecimiento_codigo_sigor'],
-                    'establecimiento_codigo_sitrap'             => $rowDEFAULT['establecimiento_codigo_sitrap'],
-                    'establecimiento_observacion'               => $rowDEFAULT['establecimiento_observacion'],
-                    'establecimiento_empresa_codigo'            => $rowDEFAULT['establecimiento_empresa_codigo'],
-                    'establecimiento_empresa_nombre'            => $rowDEFAULT['establecimiento_empresa_nombre'],
-                    'establecimiento_usuario'                   => $rowDEFAULT['establecimiento_usuario'],
-                    'establecimiento_fecha_hora'                => date_format(date_create($rowDEFAULT['establecimiento_fecha_hora']), 'd/m/Y H:i:s'),
-                    'establecimiento_ip'                        => $rowDEFAULT['establecimiento_ip'],
-                    'tipo_estado_codigo'                        => $rowDEFAULT['tipo_estado_codigo'],
-                    'tipo_estado_nombre'                        => $rowDEFAULT['tipo_estado_nombre'],
-                    'tipo_establecimiento_codigo'               => $rowDEFAULT['tipo_establecimiento_codigo'],
-                    'tipo_establecimiento_nombre'               => $rowDEFAULT['tipo_establecimiento_nombre'],
-                    'tipo_documento_codigo'                     => $rowDEFAULT['tipo_documento_codigo'],
-                    'tipo_documento_nombre'                     => $rowDEFAULT['tipo_documento_nombre'],
-                    'tipo_finalidad_codigo'                     => $rowDEFAULT['tipo_finalidad_codigo'],
-                    'tipo_finalidad_nombre'                     => $rowDEFAULT['tipo_finalidad_nombre'],
-                    'persona_codigo'                            => $rowDEFAULT['persona_codigo'],
-                    'persona_completo'                          => $rowDEFAULT['persona_completo'],
-                    'persona_documento'                         => $rowDEFAULT['persona_documento'],
-                    'distrito_codigo'                           => $rowDEFAULT['distrito_codigo'],
-                    'distrito_nombre'                           => $rowDEFAULT['distrito_nombre']
-                );
-
-                $result[]   = $detalle;
-            }
-
-            if (isset($result)){
-                header("Content-Type: application/json; charset=utf-8");
-                $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success SELECT', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
-            } else {
-                $detalle = array(
-                    'establecimiento_codigo'                    => '',
-                    'establecimiento_nombre'                    => '',
-                    'establecimiento_total_hectarea'            => '',
-                    'establecimiento_total_potrero'             => '',
-                    'establecimiento_codigo_senacsa'            => '',
-                    'establecimiento_codigo_sigor'              => '',
-                    'establecimiento_codigo_sitrap'             => '',
-                    'establecimiento_observacion'               => '',
-                    'establecimiento_empresa_codigo'            => '',
-                    'establecimiento_empresa_nombre'            => '',
-                    'establecimiento_usuario'                   => '',
-                    'establecimiento_fecha_hora'                => '',
-                    'establecimiento_ip'                        => '',
-                    'tipo_estado_codigo'                        => '',
-                    'tipo_estado_nombre'                        => '',
-                    'tipo_establecimiento_codigo'               => '',
-                    'tipo_establecimiento_nombre'               => '',
-                    'tipo_documento_codigo'                     => '',
-                    'tipo_documento_nombre'                     => '',
-                    'tipo_finalidad_codigo'                     => '',
-                    'tipo_finalidad_nombre'                     => '',
-                    'persona_codigo'                            => '',
-                    'persona_completo'                          => '',
-                    'persona_documento'                         => '',
-                    'distrito_codigo'                           => '',
-                    'distrito_nombre'                           => ''
-                );
-
-                header("Content-Type: application/json; charset=utf-8");
-                $json = json_encode(array('code' => 204, 'status' => 'ok', 'message' => 'No hay registros', 'data' => $detalle), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
-            }
-
-            $stmtDEFAULT->closeCursor();
-            $stmtDEFAULT = null;
-        } catch (PDOException $e) {
-            header("Content-Type: application/json; charset=utf-8");
-            $json = json_encode(array('code' => 204, 'status' => 'failure', 'message' => 'Error SELECT: '.$e), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
-        }
-
-        $connDEFAULT  = null;
-        
-        return $json;
-    });
-
-    $app->get('/v1/default/500/{codigo}', function($request) {
-        require __DIR__.'/../../src/connect.php';
-
-        $val01      = $request->getAttribute('codigo');
-        
-        if (isset($val01)) {
-            $sql00  = "SELECT
-            a.ESTFICCOD         AS          establecimiento_codigo,
-            a.ESTFICNOM         AS          establecimiento_nombre,
-            a.ESTFICTHE         AS          establecimiento_total_hectarea,
-            a.ESTFICTPO         AS          establecimiento_total_potrero,
-            a.ESTFICCO1         AS          establecimiento_codigo_senacsa,
-            a.ESTFICCO2         AS          establecimiento_codigo_sigor,
-            a.ESTFICCO3         AS          establecimiento_codigo_sitrap,
-            a.ESTFICOBS         AS          establecimiento_observacion,
-            a.ESTFICAEM         AS          establecimiento_empresa_codigo,
-            a.ESTFICAEM         AS          establecimiento_empresa_nombre,
-            a.ESTFICAUS         AS          establecimiento_usuario,
-            a.ESTFICAFH         AS          establecimiento_fecha_hora,
-            a.ESTFICAIP         AS          establecimiento_ip,
-
-            b.DOMFICCOD         AS          tipo_estado_codigo,
-            b.DOMFICNOM         AS          tipo_estado_nombre,
-
-            c.DOMFICCOD         AS          tipo_establecimiento_codigo,
-            c.DOMFICNOM         AS          tipo_establecimiento_nombre,
-
-            d.DOMFICCOD         AS          tipo_finalidad_codigo,
-            d.DOMFICNOM         AS          tipo_finalidad_nombre,
-
-            e.PERFICCOD         AS          persona_codigo,
-            e.PERFICDOC         AS          persona_completo,
-            e.PERFICDOC         AS          persona_documento,
-
-            f.LOCDISCOD         AS          distrito_codigo,
-            f.LOCDISNOM         AS          distrito_nombre
-            
-            FROM ESTFIC a
-            INNER JOIN DOMFIC b ON a.ESTFICECC = b.DOMFICCOD
-            INNER JOIN DOMFIC c ON a.ESTFICTEC = c.DOMFICCOD
-            INNER JOIN DOMFIC d ON a.ESTFICTFC = d.DOMFICCOD
-            INNER JOIN PERFIC e ON a.ESTFICPEC = e.PERFICCOD
-            INNER JOIN LOCDIS f ON a.ESTFICDIC = f.LOCDISCOD
-
-            WHERE a.ESTFICCOD = ?
-
-            ORDER BY a.ESTFICNOM";
-
-            try {
-                $connDEFAULT  = getConnectionDEFAULT();
-                $stmtDEFAULT  = $connDEFAULT->prepare($sql00);
-                $stmtDEFAULT->execute([$val01]); 
-
-                while ($rowDEFAULT = $stmtDEFAULT->fetch()) {
-                    $detalle    = array(
-                        'establecimiento_codigo'                    => $rowDEFAULT['establecimiento_codigo'],
-                        'establecimiento_nombre'                    => $rowDEFAULT['establecimiento_nombre'],
-                        'establecimiento_total_hectarea'            => $rowDEFAULT['establecimiento_total_hectarea'],
-                        'establecimiento_total_potrero'             => $rowDEFAULT['establecimiento_total_potrero'],
-                        'establecimiento_codigo_senacsa'            => $rowDEFAULT['establecimiento_codigo_senacsa'],
-                        'establecimiento_codigo_sigor'              => $rowDEFAULT['establecimiento_codigo_sigor'],
-                        'establecimiento_codigo_sitrap'             => $rowDEFAULT['establecimiento_codigo_sitrap'],
-                        'establecimiento_observacion'               => $rowDEFAULT['establecimiento_observacion'],
-                        'establecimiento_empresa_codigo'            => $rowDEFAULT['establecimiento_empresa_codigo'],
-                        'establecimiento_empresa_nombre'            => $rowDEFAULT['establecimiento_empresa_nombre'],
-                        'establecimiento_usuario'                   => $rowDEFAULT['establecimiento_usuario'],
-                        'establecimiento_fecha_hora'                => date_format(date_create($rowDEFAULT['establecimiento_fecha_hora']), 'd/m/Y H:i:s'),
-                        'establecimiento_ip'                        => $rowDEFAULT['establecimiento_ip'],
-                        'tipo_estado_codigo'                        => $rowDEFAULT['tipo_estado_codigo'],
-                        'tipo_estado_nombre'                        => $rowDEFAULT['tipo_estado_nombre'],
-                        'tipo_establecimiento_codigo'               => $rowDEFAULT['tipo_establecimiento_codigo'],
-                        'tipo_establecimiento_nombre'               => $rowDEFAULT['tipo_establecimiento_nombre'],
-                        'tipo_documento_codigo'                     => $rowDEFAULT['tipo_documento_codigo'],
-                        'tipo_documento_nombre'                     => $rowDEFAULT['tipo_documento_nombre'],
-                        'tipo_finalidad_codigo'                     => $rowDEFAULT['tipo_finalidad_codigo'],
-                        'tipo_finalidad_nombre'                     => $rowDEFAULT['tipo_finalidad_nombre'],
-                        'persona_codigo'                            => $rowDEFAULT['persona_codigo'],
-                        'persona_completo'                          => $rowDEFAULT['persona_completo'],
-                        'persona_documento'                         => $rowDEFAULT['persona_documento'],
-                        'distrito_codigo'                           => $rowDEFAULT['distrito_codigo'],
-                        'distrito_nombre'                           => $rowDEFAULT['distrito_nombre']
-                    );
-
-                    $result[]   = $detalle;
-                }
-
-                if (isset($result)){
-                    header("Content-Type: application/json; charset=utf-8");
-                    $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success SELECT', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
-                } else {
-                    $detalle = array(
-                        'establecimiento_codigo'                    => '',
-                        'establecimiento_nombre'                    => '',
-                        'establecimiento_total_hectarea'            => '',
-                        'establecimiento_total_potrero'             => '',
-                        'establecimiento_codigo_senacsa'            => '',
-                        'establecimiento_codigo_sigor'              => '',
-                        'establecimiento_codigo_sitrap'             => '',
-                        'establecimiento_observacion'               => '',
-                        'establecimiento_empresa_codigo'            => '',
-                        'establecimiento_empresa_nombre'            => '',
-                        'establecimiento_usuario'                   => '',
-                        'establecimiento_fecha_hora'                => '',
-                        'establecimiento_ip'                        => '',
-                        'tipo_estado_codigo'                        => '',
-                        'tipo_estado_nombre'                        => '',
-                        'tipo_establecimiento_codigo'               => '',
-                        'tipo_establecimiento_nombre'               => '',
-                        'tipo_documento_codigo'                     => '',
-                        'tipo_documento_nombre'                     => '',
-                        'tipo_finalidad_codigo'                     => '',
-                        'tipo_finalidad_nombre'                     => '',
-                        'persona_codigo'                            => '',
-                        'persona_completo'                          => '',
-                        'persona_documento'                         => '',
-                        'distrito_codigo'                           => '',
-                        'distrito_nombre'                           => ''
                     );
 
                     header("Content-Type: application/json; charset=utf-8");
