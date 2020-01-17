@@ -6,6 +6,7 @@
 
 	require __DIR__.'/../app/establecimiento/get.php';			//METODO GET
 	require __DIR__.'/../app/establecimiento/post.php';			//METODO POST
+	require __DIR__.'/../app/establecimiento/put.php';			//METODO POST
 	require __DIR__.'/../app/establecimiento/delete.php';		//METODO DELETE
 
 	require __DIR__.'/../app/senacsa/get.php';					//METODO GET
