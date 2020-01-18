@@ -31,7 +31,7 @@
                 $stmtDEFAULT01  = null;
             } catch (PDOException $e) {
                 header("Content-Type: application/json; charset=utf-8");
-                $json                   = json_encode(array('code' => 204, 'status' => 'failure', 'message' => 'Error INSERT: '.$e), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+                $json                   = json_encode(array('code' => 204, 'status' => 'failure', 'message' => 'Error DELETE: No se puede eliminar, existe informaciones relacionadas. Verifique!'), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
             }
         } else {
             header("Content-Type: application/json; charset=utf-8");
