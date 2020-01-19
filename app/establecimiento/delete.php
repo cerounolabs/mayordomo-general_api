@@ -3,6 +3,7 @@
         require __DIR__.'/../../src/connect.php';
 
         $val01      = $request->getAttribute('codigo');
+
         $aud01      = $request->getParsedBody()['auditoria_empresa_codigo'];
         $aud02      = $request->getParsedBody()['auditoria_usuario'];
         $aud03      = $request->getParsedBody()['auditoria_fecha_hora'];
@@ -47,6 +48,7 @@
         require __DIR__.'/../../src/connect.php';
 
         $val01      = $request->getAttribute('codigo');
+
         $aud01      = $request->getParsedBody()['auditoria_empresa_codigo'];
         $aud02      = $request->getParsedBody()['auditoria_usuario'];
         $aud03      = $request->getParsedBody()['auditoria_fecha_hora'];
@@ -91,6 +93,7 @@
         require __DIR__.'/../../src/connect.php';
 
         $val01      = $request->getAttribute('codigo');
+
         $aud01      = $request->getParsedBody()['auditoria_empresa_codigo'];
         $aud02      = $request->getParsedBody()['auditoria_usuario'];
         $aud03      = $request->getParsedBody()['auditoria_fecha_hora'];
@@ -135,6 +138,7 @@
         require __DIR__.'/../../src/connect.php';
 
         $val01      = $request->getAttribute('codigo');
+
         $aud01      = $request->getParsedBody()['auditoria_empresa_codigo'];
         $aud02      = $request->getParsedBody()['auditoria_usuario'];
         $aud03      = $request->getParsedBody()['auditoria_fecha_hora'];
@@ -179,6 +183,7 @@
         require __DIR__.'/../../src/connect.php';
 
         $val01      = $request->getAttribute('codigo');
+
         $aud01      = $request->getParsedBody()['auditoria_empresa_codigo'];
         $aud02      = $request->getParsedBody()['auditoria_usuario'];
         $aud03      = $request->getParsedBody()['auditoria_fecha_hora'];
@@ -223,6 +228,7 @@
         require __DIR__.'/../../src/connect.php';
 
         $val01      = $request->getAttribute('codigo');
+        
         $aud01      = $request->getParsedBody()['auditoria_empresa_codigo'];
         $aud02      = $request->getParsedBody()['auditoria_usuario'];
         $aud03      = $request->getParsedBody()['auditoria_fecha_hora'];

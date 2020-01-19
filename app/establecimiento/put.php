@@ -15,18 +15,19 @@
         $val10      = $request->getParsedBody()['establecimiento_codigo_sigor'];
         $val11      = $request->getParsedBody()['establecimiento_codigo_sitrap'];
         $val12      = $request->getParsedBody()['establecimiento_observacion'];
-        $val13      = $request->getParsedBody()['establecimiento_empresa_codigo'];
-        $val14      = $request->getParsedBody()['establecimiento_usuario'];
-        $val15      = $request->getParsedBody()['establecimiento_fecha_hora'];
-        $val16      = $request->getParsedBody()['establecimiento_ip'];
 
-        if (isset($val01) && isset($val02) && isset($val03) && isset($val04) && isset($val05) && isset($val06) && isset($val13) && isset($val14) && isset($val15) && isset($val16)) {
+        $aud01      = $request->getParsedBody()['auditoria_empresa_codigo'];
+        $aud02      = $request->getParsedBody()['auditoria_usuario'];
+        $aud03      = $request->getParsedBody()['auditoria_fecha_hora'];
+        $aud04      = $request->getParsedBody()['auditoria_ip'];
+
+        if (isset($val01) && isset($val02) && isset($val03) && isset($val04) && isset($val05) && isset($val06) && isset($aud01) && isset($aud02) && isset($aud03) && isset($aud04)) {
             $sql00  = "UPDATE ESTFIC SET ESTFICECC = ?, ESTFICTEC = ?, ESTFICTFC = ?, ESTFICPEC = ?, ESTFICDIC = ?, ESTFICNOM = ?, ESTFICTHE = ?, ESTFICTPO = ?, ESTFICCO1 = ?, ESTFICCO2 = ?, ESTFICCO3 = ?, ESTFICOBS = ?, ESTFICAEM = ?, ESTFICAUS = ?, ESTFICAFH = ?, ESTFICAIP = ? WHERE ESTFICCOD = ?";
 
             try {
                 $connDEFAULT  = getConnectionDEFAULT();
                 $stmtDEFAULT  = $connDEFAULT->prepare($sql00);
-                $stmtDEFAULT->execute([$val01, $val02, $val03, $val04, $val05, $val06, $val07, $val08, $val09, $val10, $val11, $val12, $val13, $val14, $val15, $val16, $val00]);
+                $stmtDEFAULT->execute([$val01, $val02, $val03, $val04, $val05, $val06, $val07, $val08, $val09, $val10, $val11, $val12, $aud01, $aud02, $aud03, $aud04, $val00]);
                 
                 header("Content-Type: application/json; charset=utf-8");
                 $json       = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success UPDATE', 'codigo' => $val00), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
@@ -97,6 +98,7 @@
         $val02      = $request->getParsedBody()['establecimiento_codigo'];
         $val03      = $request->getParsedBody()['establecimiento_seccion_nombre'];
         $val04      = $request->getParsedBody()['establecimiento_seccion_observacion'];
+
         $aud01      = $request->getParsedBody()['auditoria_empresa_codigo'];
         $aud02      = $request->getParsedBody()['auditoria_usuario'];
         $aud03      = $request->getParsedBody()['auditoria_fecha_hora'];
@@ -142,6 +144,7 @@
         $val07      = $request->getParsedBody()['establecimiento_potrero_hectarea'];
         $val08      = $request->getParsedBody()['establecimiento_potrero_capacidad'];
         $val09      = $request->getParsedBody()['establecimiento_potrero_observacion'];
+
         $aud01      = $request->getParsedBody()['auditoria_empresa_codigo'];
         $aud02      = $request->getParsedBody()['auditoria_usuario'];
         $aud03      = $request->getParsedBody()['auditoria_fecha_hora'];
@@ -182,6 +185,7 @@
         $val02      = $request->getParsedBody()['establecimiento_codigo'];
         $val03      = $request->getParsedBody()['establecimiento_lote_nombre'];
         $val04      = $request->getParsedBody()['establecimiento_lote_observacion'];
+        
         $aud01      = $request->getParsedBody()['auditoria_empresa_codigo'];
         $aud02      = $request->getParsedBody()['auditoria_usuario'];
         $aud03      = $request->getParsedBody()['auditoria_fecha_hora'];
