@@ -14,7 +14,9 @@
         $val09      = $request->getParsedBody()['establecimiento_codigo_senacsa'];
         $val10      = $request->getParsedBody()['establecimiento_codigo_sigor'];
         $val11      = $request->getParsedBody()['establecimiento_codigo_sitrap'];
-        $val12      = $request->getParsedBody()['establecimiento_observacion'];
+        $val12      = $request->getParsedBody()['establecimiento_latitud'];
+        $val13      = $request->getParsedBody()['establecimiento_longitud'];
+        $val14      = $request->getParsedBody()['establecimiento_observacion'];
 
         $aud01      = $request->getParsedBody()['auditoria_empresa_codigo'];
         $aud02      = $request->getParsedBody()['auditoria_usuario'];
@@ -22,12 +24,12 @@
         $aud04      = $request->getParsedBody()['auditoria_ip'];
 
         if (isset($val01) && isset($val02) && isset($val03) && isset($val04) && isset($val05) && isset($val06) && isset($aud01) && isset($aud02) && isset($aud03) && isset($aud04)) {
-            $sql00  = "UPDATE ESTFIC SET ESTFICECC = ?, ESTFICTEC = ?, ESTFICTFC = ?, ESTFICPEC = ?, ESTFICDIC = ?, ESTFICNOM = ?, ESTFICTHE = ?, ESTFICTPO = ?, ESTFICCO1 = ?, ESTFICCO2 = ?, ESTFICCO3 = ?, ESTFICOBS = ?, ESTFICAEM = ?, ESTFICAUS = ?, ESTFICAFH = ?, ESTFICAIP = ? WHERE ESTFICCOD = ?";
+            $sql00  = "UPDATE ESTFIC SET ESTFICECC = ?, ESTFICTEC = ?, ESTFICTFC = ?, ESTFICPEC = ?, ESTFICDIC = ?, ESTFICNOM = ?, ESTFICTHE = ?, ESTFICTPO = ?, ESTFICCO1 = ?, ESTFICCO2 = ?, ESTFICCO3 = ?, ESTFICLAT = ?, ESTFICLON = ?, ESTFICOBS = ?, ESTFICAEM = ?, ESTFICAUS = ?, ESTFICAFH = ?, ESTFICAIP = ? WHERE ESTFICCOD = ?";
 
             try {
                 $connDEFAULT  = getConnectionDEFAULT();
                 $stmtDEFAULT  = $connDEFAULT->prepare($sql00);
-                $stmtDEFAULT->execute([$val01, $val02, $val03, $val04, $val05, $val06, $val07, $val08, $val09, $val10, $val11, $val12, $aud01, $aud02, $aud03, $aud04, $val00]);
+                $stmtDEFAULT->execute([$val01, $val02, $val03, $val04, $val05, $val06, $val07, $val08, $val09, $val10, $val11, $val12, $val13, $val14, $aud01, $aud02, $aud03, $aud04, $val00]);
                 
                 header("Content-Type: application/json; charset=utf-8");
                 $json       = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success UPDATE', 'codigo' => $val00), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
