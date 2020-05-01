@@ -1,9 +1,10 @@
 <?php
-    $app->get('/v1/default/000', function($request) {
+    $app->get('/v1/000/dominio', function($request) {
         require __DIR__.'/../../src/connect.php';
 
         $sql00  = "SELECT
         a.DOMFICCOD         AS          tipo_codigo,
+        a.DOMFICORD         AS          tipo_orden,
         a.DOMFICNOM         AS          tipo_nombre,
         a.DOMFICVAL         AS          tipo_dominio,
         a.DOMFICOBS         AS          tipo_observacion,
@@ -19,7 +20,7 @@
         FROM DOMFIC a
         INNER JOIN DOMFIC b ON a.DOMFICEDC = b.DOMFICCOD
 
-        ORDER BY a.DOMFICNOM";
+        ORDER BY a.DOMFICORD, a.DOMFICNOM";
 
         try {
             $connDEFAULT  = getConnectionDEFAULT();
@@ -29,16 +30,17 @@
             while ($rowDEFAULT = $stmtDEFAULT->fetch()) {
                 $detalle    = array(
                     'tipo_codigo'           => $rowDEFAULT['tipo_codigo'],
+                    'tipo_orden'            => $rowDEFAULT['tipo_orden'],
                     'tipo_estado_codigo'    => $rowDEFAULT['tipo_estado_codigo'],
-                    'tipo_estado_nombre'    => $rowDEFAULT['tipo_estado_nombre'],
-                    'tipo_nombre'           => $rowDEFAULT['tipo_nombre'],
-                    'tipo_dominio'          => $rowDEFAULT['tipo_dominio'],
-                    'tipo_observacion'      => $rowDEFAULT['tipo_observacion'],
+                    'tipo_estado_nombre'    => strtoupper(strtolower(trim($rowDEFAULT['tipo_estado_nombre']))),
+                    'tipo_nombre'           => strtoupper(strtolower(trim($rowDEFAULT['tipo_nombre']))),
+                    'tipo_dominio'          => strtoupper(strtolower(trim($rowDEFAULT['tipo_dominio']))),
+                    'tipo_observacion'      => trim($rowDEFAULT['tipo_observacion']),
                     'tipo_empresa_codigo'   => $rowDEFAULT['tipo_empresa_codigo'],
-                    'tipo_empresa_nombre'   => $rowDEFAULT['tipo_empresa_nombre'],
-                    'tipo_usuario'          => $rowDEFAULT['tipo_usuario'],
-                    'tipo_fecha_hora'       => date_format(date_create($rowDEFAULT['tipo_fecha_hora']), 'd/m/Y H:i:s'),
-                    'tipo_ip'               => $rowDEFAULT['tipo_ip']
+                    'tipo_empresa_nombre'   => strtoupper(strtolower(trim($rowDEFAULT['tipo_empresa_nombre']))),
+                    'tipo_usuario'          => strtoupper(strtolower(trim($rowDEFAULT['tipo_usuario']))),
+                    'tipo_fecha_hora'       => date('d/m/Y H:i:s', strtotime($rowDEFAULT['tipo_fecha_hora'])),
+                    'tipo_ip'               => trim($rowDEFAULT['tipo_ip'])
                 );
 
                 $result[]   = $detalle;
@@ -46,10 +48,11 @@
 
             if (isset($result)){
                 header("Content-Type: application/json; charset=utf-8");
-                $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success SELECT', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+                $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success DOMINIO', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
             } else {
                 $detalle = array(
                     'tipo_codigo'           => '',
+                    'tipo_orden'            => '',
                     'tipo_estado_codigo'    => '',
                     'tipo_estado_nombre'    => '',
                     'tipo_nombre'           => '',
@@ -78,7 +81,7 @@
         return $json;
     });
 
-    $app->get('/v1/default/000/{codigo}', function($request) {
+    $app->get('/v1/000/dominio/{codigo}', function($request) {
         require __DIR__.'/../../src/connect.php';
 
         $val01      = $request->getAttribute('codigo');
@@ -86,6 +89,7 @@
         if (isset($val01)) {
             $sql00  = "SELECT
             a.DOMFICCOD         AS          tipo_codigo,
+            a.DOMFICORD         AS          tipo_orden,
             a.DOMFICNOM         AS          tipo_nombre,
             a.DOMFICVAL         AS          tipo_dominio,
             a.DOMFICOBS         AS          tipo_observacion,
@@ -103,7 +107,7 @@
 
             WHERE a.DOMFICCOD = ? 
 
-            ORDER BY a.DOMFICNOM";
+            ORDER BY a.DOMFICORD, a.DOMFICNOM";
 
             try {
                 $connDEFAULT  = getConnectionDEFAULT();
@@ -113,16 +117,17 @@
                 while ($rowDEFAULT = $stmtDEFAULT->fetch()) {
                     $detalle    = array(
                         'tipo_codigo'           => $rowDEFAULT['tipo_codigo'],
+                        'tipo_orden'            => $rowDEFAULT['tipo_orden'],
                         'tipo_estado_codigo'    => $rowDEFAULT['tipo_estado_codigo'],
-                        'tipo_estado_nombre'    => $rowDEFAULT['tipo_estado_nombre'],
-                        'tipo_nombre'           => $rowDEFAULT['tipo_nombre'],
-                        'tipo_dominio'          => $rowDEFAULT['tipo_dominio'],
-                        'tipo_observacion'      => $rowDEFAULT['tipo_observacion'],
+                        'tipo_estado_nombre'    => strtoupper(strtolower(trim($rowDEFAULT['tipo_estado_nombre']))),
+                        'tipo_nombre'           => strtoupper(strtolower(trim($rowDEFAULT['tipo_nombre']))),
+                        'tipo_dominio'          => strtoupper(strtolower(trim($rowDEFAULT['tipo_dominio']))),
+                        'tipo_observacion'      => trim($rowDEFAULT['tipo_observacion']),
                         'tipo_empresa_codigo'   => $rowDEFAULT['tipo_empresa_codigo'],
-                        'tipo_empresa_nombre'   => $rowDEFAULT['tipo_empresa_nombre'],
-                        'tipo_usuario'          => $rowDEFAULT['tipo_usuario'],
-                        'tipo_fecha_hora'       => date_format(date_create($rowDEFAULT['tipo_fecha_hora']), 'd/m/Y H:i:s'),
-                        'tipo_ip'               => $rowDEFAULT['tipo_ip']
+                        'tipo_empresa_nombre'   => strtoupper(strtolower(trim($rowDEFAULT['tipo_empresa_nombre']))),
+                        'tipo_usuario'          => strtoupper(strtolower(trim($rowDEFAULT['tipo_usuario']))),
+                        'tipo_fecha_hora'       => date('d/m/Y H:i:s', strtotime($rowDEFAULT['tipo_fecha_hora'])),
+                        'tipo_ip'               => trim($rowDEFAULT['tipo_ip'])
                     );
 
                     $result[]   = $detalle;
@@ -130,10 +135,11 @@
 
                 if (isset($result)){
                     header("Content-Type: application/json; charset=utf-8");
-                    $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success SELECT', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+                    $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success DOMINIO', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
                 } else {
                     $detalle = array(
                         'tipo_codigo'           => '',
+                        'tipo_orden'            => '',
                         'tipo_estado_codigo'    => '',
                         'tipo_estado_nombre'    => '',
                         'tipo_nombre'           => '',
@@ -166,212 +172,11 @@
         return $json;
     });
 
-    $app->get('/v1/default/000/dominio/{codigo}', function($request) {
-        require __DIR__.'/../../src/connect.php';
-
-        $val01      = $request->getAttribute('codigo');
-        
-        if (isset($val01)) {
-            $sql00  = "SELECT
-            a.DOMFICCOD         AS          tipo_codigo,
-            a.DOMFICNOM         AS          tipo_nombre,
-            a.DOMFICVAL         AS          tipo_dominio,
-            a.DOMFICOBS         AS          tipo_observacion,
-            a.DOMFICAEM         AS          tipo_empresa_codigo,
-            a.DOMFICAEM         AS          tipo_empresa_nombre,
-            a.DOMFICAUS         AS          tipo_usuario,
-            a.DOMFICAFH         AS          tipo_fecha_hora,
-            a.DOMFICAIP         AS          tipo_ip,
-
-            b.DOMFICCOD         AS          tipo_estado_codigo,
-            b.DOMFICNOM         AS          tipo_estado_nombre
-            
-            FROM DOMFIC a
-            INNER JOIN DOMFIC b ON a.DOMFICEDC = b.DOMFICCOD
-
-            WHERE a.DOMFICVAL = ? 
-
-            ORDER BY a.DOMFICNOM";
-
-            try {
-                $connDEFAULT  = getConnectionDEFAULT();
-                $stmtDEFAULT  = $connDEFAULT->prepare($sql00);
-                $stmtDEFAULT->execute([$val01]); 
-
-                while ($rowDEFAULT = $stmtDEFAULT->fetch()) {
-                    $detalle    = array(
-                        'tipo_codigo'           => $rowDEFAULT['tipo_codigo'],
-                        'tipo_estado_codigo'    => $rowDEFAULT['tipo_estado_codigo'],
-                        'tipo_estado_nombre'    => $rowDEFAULT['tipo_estado_nombre'],
-                        'tipo_nombre'           => $rowDEFAULT['tipo_nombre'],
-                        'tipo_dominio'          => $rowDEFAULT['tipo_dominio'],
-                        'tipo_observacion'      => $rowDEFAULT['tipo_observacion'],
-                        'tipo_empresa_codigo'   => $rowDEFAULT['tipo_empresa_codigo'],
-                        'tipo_empresa_nombre'   => $rowDEFAULT['tipo_empresa_nombre'],
-                        'tipo_usuario'          => $rowDEFAULT['tipo_usuario'],
-                        'tipo_fecha_hora'       => date_format(date_create($rowDEFAULT['tipo_fecha_hora']), 'd/m/Y H:i:s'),
-                        'tipo_ip'               => $rowDEFAULT['tipo_ip']
-                    );
-
-                    $result[]   = $detalle;
-                }
-
-                if (isset($result)){
-                    header("Content-Type: application/json; charset=utf-8");
-                    $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success SELECT', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
-                } else {
-                    $detalle = array(
-                        'tipo_codigo'           => '',
-                        'tipo_estado_codigo'    => '',
-                        'tipo_estado_nombre'    => '',
-                        'tipo_nombre'           => '',
-                        'tipo_dominio'          => '',
-                        'tipo_observacion'      => '',
-                        'tipo_empresa_codigo'   => '',
-                        'tipo_empresa_nombre'   => '',
-                        'tipo_usuario'          => '',
-                        'tipo_fecha_hora'       => '',
-                        'tipo_ip'               => ''
-                    );
-
-                    header("Content-Type: application/json; charset=utf-8");
-                    $json = json_encode(array('code' => 204, 'status' => 'ok', 'message' => 'No hay registros', 'data' => $detalle), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
-                }
-
-                $stmtDEFAULT->closeCursor();
-                $stmtDEFAULT = null;
-            } catch (PDOException $e) {
-                header("Content-Type: application/json; charset=utf-8");
-                $json = json_encode(array('code' => 204, 'status' => 'failure', 'message' => 'Error SELECT: '.$e), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
-            }
-        } else {
-            header("Content-Type: application/json; charset=utf-8");
-            $json = json_encode(array('code' => 400, 'status' => 'error', 'message' => 'Verifique, algún campo esta vacio.'), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
-        }
-
-        $connDEFAULT  = null;
-        
-        return $json;
-    });
-
-    $app->get('/v1/default/000/auditoria/{codigo}', function($request) {
-        require __DIR__.'/../../src/connect.php';
-
-		$val01      = $request->getAttribute('codigo');
-        
-        if (isset($val01)) {
-            $sql00  = "SELECT
-            a.DOMFICACOD            AS          auditoria_codigo,
-            a.DOMFICAMET            AS          auditoria_metodo,
-            a.DOMFICAEMP            AS          auditoria_empresa_codigo,
-            a.DOMFICAEMP            AS          auditoria_empresa_nombre,
-            a.DOMFICAUSU            AS          auditoria_usuario,
-            a.DOMFICAFEC            AS          auditoria_fecha_hora,
-            a.DOMFICADIP            AS          auditoria_ip,
-
-            a.DOMFICACODOLD         AS          auditoria_antes_tipo_codigo,
-            b.DOMFICCOD             AS          auditoria_antes_tipo_estado_codigo,
-            b.DOMFICNOM             AS          auditoria_antes_tipo_estado_nombre,
-            a.DOMFICANOMOLD         AS          auditoria_antes_tipo_nombre,
-            a.DOMFICAVALOLD         AS          auditoria_antes_tipo_dominio,
-            a.DOMFICAOBSOLD         AS          auditoria_antes_tipo_observacion,
-
-            a.DOMFICACODNEW         AS          auditoria_despues_tipo_codigo,
-            c.DOMFICCOD             AS          auditoria_despues_tipo_estado_codigo,
-            c.DOMFICNOM             AS          auditoria_despues_tipo_estado_nombre,
-            a.DOMFICANOMNEW         AS          auditoria_despues_tipo_nombre,
-            a.DOMFICAVALNEW         AS          auditoria_despues_tipo_dominio,
-            a.DOMFICAOBSNEW         AS          auditoria_despues_tipo_observacion
-            
-            FROM DOMFICA a
-            
-            WHERE a.DOMFICAVALOLD = ? OR a.DOMFICAVALNEW = ?
-            LEFT JOIN DOMFIC b ON a.DOMFICAEDCOLD = b.DOMFICCOD
-            LEFT JOIN DOMFIC c ON a.DOMFICAEDCNEW = c.DOMFICCOD
-            
-            ORDER BY a.DOMFICACOD DESC";
-
-            try {
-                $connDEFAULT  = getConnectionDEFAULT();
-                $stmtDEFAULT  = $connDEFAULT->prepare($sql00);
-                $stmtDEFAULT->execute([$val01, $val01]);
-
-                while ($rowDEFAULT = $stmtDEFAULT->fetch()) {
-                    $detalle    = array(
-                        'auditoria_codigo'                      => $rowDEFAULT['auditoria_codigo'],
-                        'auditoria_metodo'                      => $rowDEFAULT['auditoria_metodo'],
-                        'auditoria_empresa_codigo'              => $rowDEFAULT['auditoria_empresa_codigo'],
-                        'auditoria_empresa_nombre'              => $rowDEFAULT['auditoria_empresa_nombre'],
-                        'auditoria_usuario'                     => $rowDEFAULT['auditoria_usuario'],
-                        'auditoria_fecha_hora'                  => date_format(date_create($rowDEFAULT['auditoria_fecha_hora']), 'd/m/Y H:i:s'),
-                        'auditoria_ip'                          => $rowDEFAULT['auditoria_ip'],
-                        'auditoria_antes_tipo_codigo'           => $rowDEFAULT['auditoria_antes_tipo_codigo'],
-                        'auditoria_antes_tipo_estado_codigo'    => $rowDEFAULT['auditoria_antes_tipo_estado_codigo'],
-                        'auditoria_antes_tipo_estado_nombre'    => $rowDEFAULT['auditoria_antes_tipo_estado_nombre'],
-                        'auditoria_antes_tipo_nombre'           => $rowDEFAULT['auditoria_antes_tipo_nombre'],
-                        'auditoria_antes_tipo_dominio'          => $rowDEFAULT['auditoria_antes_tipo_dominio'],
-                        'auditoria_antes_tipo_observacion'      => $rowDEFAULT['auditoria_antes_tipo_observacion'],
-                        'auditoria_despues_tipo_codigo'         => $rowDEFAULT['auditoria_despues_tipo_codigo'],
-                        'auditoria_despues_tipo_estado_codigo'  => $rowDEFAULT['auditoria_despues_tipo_estado_codigo'],
-                        'auditoria_despues_tipo_estado_nombre'  => $rowDEFAULT['auditoria_despues_tipo_estado_nombre'],
-                        'auditoria_despues_tipo_nombre'         => $rowDEFAULT['auditoria_despues_tipo_nombre'],
-                        'auditoria_despues_tipo_dominio'        => $rowDEFAULT['auditoria_despues_tipo_dominio'],
-                        'auditoria_despues_tipo_observacion'    => $rowDEFAULT['auditoria_despues_tipo_observacion']
-                    );
-
-                    $result[]   = $detalle;
-                }
-
-                if (isset($result)){
-                    header("Content-Type: application/json; charset=utf-8");
-                    $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success SELECT', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
-                } else {
-                    $detalle = array(
-                        'auditoria_codigo'                      => '',
-                        'auditoria_metodo'                      => '',
-                        'auditoria_empresa_codigo'              => '',
-                        'auditoria_empresa_nombre'              => '',
-                        'auditoria_usuario'                     => '',
-                        'auditoria_fecha_hora'                  => '',
-                        'auditoria_ip'                          => '',
-                        'auditoria_antes_tipo_codigo'           => '',
-                        'auditoria_antes_tipo_estado_codigo'    => '',
-                        'auditoria_antes_tipo_estado_nombre'    => '',
-                        'auditoria_antes_tipo_nombre'           => '',
-                        'auditoria_antes_tipo_dominio'          => '',
-                        'auditoria_antes_tipo_observacion'      => '',
-                        'auditoria_despues_tipo_codigo'         => '',
-                        'auditoria_despues_tipo_estado_codigo'  => '',
-                        'auditoria_despues_tipo_estado_nombre'  => '',
-                        'auditoria_despues_tipo_nombre'         => '',
-                        'auditoria_despues_tipo_dominio'        => '',
-                        'auditoria_despues_tipo_observacion'    => ''
-                    );
-
-                    header("Content-Type: application/json; charset=utf-8");
-                    $json = json_encode(array('code' => 204, 'status' => 'ok', 'message' => 'No hay registros', 'data' => $detalle), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
-                }
-
-                $stmtDEFAULT->closeCursor();
-                $stmtDEFAULT = null;
-            } catch (PDOException $e) {
-                header("Content-Type: application/json; charset=utf-8");
-                $json = json_encode(array('code' => 204, 'status' => 'failure', 'message' => 'Error SELECT: '.$e), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
-            }
-        } else {
-            header("Content-Type: application/json; charset=utf-8");
-            $json = json_encode(array('code' => 400, 'status' => 'error', 'message' => 'Verifique, algún campo esta vacio.'), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
-        }
-
-        $connDEFAULT  = null;
-        
-        return $json;
-    });
-
-    $app->get('/v1/default/020', function($request) {
+    $app->get('/v1/000/dominiosub', function($request) {
         require __DIR__.'/../../src/connect.php';
 
         $sql00  = "SELECT
+        a.DOMSUBORD         AS          tipo_orden,
         a.DOMSUBVAL         AS          tipo_dominio,
         a.DOMSUBOBS         AS          tipo_observacion,
         a.DOMSUBAEM         AS          tipo_empresa_codigo,
@@ -385,16 +190,18 @@
 
         c.DOMFICCOD         AS          tipo_dominio1_codigo,
         c.DOMFICNOM         AS          tipo_dominio1_nombre,
+        c.DOMFICVAL         AS          tipo_dominio1_dominio,
 
         d.DOMFICCOD         AS          tipo_dominio2_codigo,
         d.DOMFICNOM         AS          tipo_dominio2_nombre
+        d.DOMFICVAL         AS          tipo_dominio2_dominio
         
         FROM DOMSUB a
         INNER JOIN DOMFIC b ON a.DOMSUBEDC = b.DOMFICCOD
         INNER JOIN DOMFIC c ON a.DOMSUBCO1 = c.DOMFICCOD
         INNER JOIN DOMFIC d ON a.DOMSUBCO2 = d.DOMFICCOD
 
-        ORDER BY a.DOMSUBVAL, c.DOMFICNOM, d.DOMFICNOM";
+        ORDER BY a.DOMSUBVAL, a.DOMSUBORD";
 
         try {
             $connDEFAULT  = getConnectionDEFAULT();
@@ -404,18 +211,24 @@
             while ($rowDEFAULT = $stmtDEFAULT->fetch()) {
                 $detalle    = array(
                     'tipo_dominio1_codigo'          => $rowDEFAULT['tipo_dominio1_codigo'],
-                    'tipo_dominio1_nombre'          => $rowDEFAULT['tipo_dominio1_nombre'],
+                    'tipo_dominio1_nombre'          => strtoupper(strtolower(trim($rowDEFAULT['tipo_dominio1_nombre']))),
+                    'tipo_dominio1_dominio'         => strtoupper(strtolower(trim($rowDEFAULT['tipo_dominio1_dominio']))),
+                    
                     'tipo_dominio2_codigo'          => $rowDEFAULT['tipo_dominio2_codigo'],
-                    'tipo_dominio2_nombre'          => $rowDEFAULT['tipo_dominio2_nombre'],
+                    'tipo_dominio2_nombre'          => strtoupper(strtolower(trim($rowDEFAULT['tipo_dominio2_nombre']))),
+                    'tipo_dominio2_dominio'         => strtoupper(strtolower(trim($rowDEFAULT['tipo_dominio2_dominio']))),
+
                     'tipo_estado_codigo'            => $rowDEFAULT['tipo_estado_codigo'],
-                    'tipo_estado_nombre'            => $rowDEFAULT['tipo_estado_nombre'],
-                    'tipo_dominio'                  => $rowDEFAULT['tipo_dominio'],
+                    'tipo_estado_nombre'            => strtoupper(strtolower(trim($rowDEFAULT['tipo_estado_nombre']))),
+
+                    'tipo_orden'                    => $rowDEFAULT['tipo_orden'],
+                    'tipo_dominio'                  => strtoupper(strtolower(trim($rowDEFAULT['tipo_dominio']))),
                     'tipo_observacion'              => $rowDEFAULT['tipo_observacion'],
                     'tipo_empresa_codigo'           => $rowDEFAULT['tipo_empresa_codigo'],
-                    'tipo_empresa_nombre'           => $rowDEFAULT['tipo_empresa_nombre'],
-                    'tipo_usuario'                  => $rowDEFAULT['tipo_usuario'],
-                    'tipo_fecha_hora'               => date_format(date_create($rowDEFAULT['tipo_fecha_hora']), 'd/m/Y H:i:s'),
-                    'tipo_ip'                       => $rowDEFAULT['tipo_ip']
+                    'tipo_empresa_nombre'           => strtoupper(strtolower(trim($rowDEFAULT['tipo_empresa_nombre']))),
+                    'tipo_usuario'                  => strtoupper(strtolower(trim($rowDEFAULT['tipo_usuario']))),
+                    'tipo_fecha_hora'               => date('d/m/Y H:i:s', strtotime($rowDEFAULT['tipo_fecha_hora'])),
+                    'tipo_ip'                       => trim($rowDEFAULT['tipo_ip'])
                 );
 
                 $result[]   = $detalle;
@@ -423,15 +236,18 @@
 
             if (isset($result)){
                 header("Content-Type: application/json; charset=utf-8");
-                $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success SELECT', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+                $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success SUBDOMINIO', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
             } else {
                 $detalle = array(
                     'tipo_dominio1_codigo'          => '',
                     'tipo_dominio1_nombre'          => '',
+                    'tipo_dominio1_dominio'         => '',
                     'tipo_dominio2_codigo'          => '',
                     'tipo_dominio2_nombre'          => '',
+                    'tipo_dominio2_dominio'         => '',
                     'tipo_estado_codigo'            => '',
                     'tipo_estado_nombre'            => '',
+                    'tipo_orden'                    => '',
                     'tipo_dominio'                  => '',
                     'tipo_observacion'              => '',
                     'tipo_empresa_codigo'           => '',
@@ -457,7 +273,7 @@
         return $json;
     });
 
-    $app->get('/v1/default/020/{dominio}/{codigo1}/{codigo2}', function($request) {
+    $app->get('/v1/000/dominiosub/{dominio}/{codigo1}/{codigo2}', function($request) {
         require __DIR__.'/../../src/connect.php';
 
         $val01      = $request->getAttribute('dominio');
@@ -466,6 +282,7 @@
         
         if (isset($val01) && isset($val02) && isset($val03)) {
             $sql00  = "SELECT
+            a.DOMSUBORD         AS          tipo_orden,
             a.DOMSUBVAL         AS          tipo_dominio,
             a.DOMSUBOBS         AS          tipo_observacion,
             a.DOMSUBAEM         AS          tipo_empresa_codigo,
@@ -479,9 +296,11 @@
 
             c.DOMFICCOD         AS          tipo_dominio1_codigo,
             c.DOMFICNOM         AS          tipo_dominio1_nombre,
+            c.DOMFICVAL         AS          tipo_dominio1_dominio,
 
             d.DOMFICCOD         AS          tipo_dominio2_codigo,
             d.DOMFICNOM         AS          tipo_dominio2_nombre
+            d.DOMFICVAL         AS          tipo_dominio2_dominio
             
             FROM DOMSUB a
             INNER JOIN DOMFIC b ON a.DOMSUBEDC = b.DOMFICCOD
@@ -490,7 +309,7 @@
 
             WHERE a.DOMSUBVAL = ? AND a.DOMSUBCO1 = ? AND a.DOMSUBCO2 = ?
 
-            ORDER BY a.DOMSUBVAL, c.DOMFICNOM, d.DOMFICNOM";
+            ORDER BY a.DOMSUBVAL, a.DOMSUBORD";
 
             try {
                 $connDEFAULT  = getConnectionDEFAULT();
@@ -500,18 +319,24 @@
                 while ($rowDEFAULT = $stmtDEFAULT->fetch()) {
                     $detalle    = array(
                         'tipo_dominio1_codigo'          => $rowDEFAULT['tipo_dominio1_codigo'],
-                        'tipo_dominio1_nombre'          => $rowDEFAULT['tipo_dominio1_nombre'],
+                        'tipo_dominio1_nombre'          => strtoupper(strtolower(trim($rowDEFAULT['tipo_dominio1_nombre']))),
+                        'tipo_dominio1_dominio'         => strtoupper(strtolower(trim($rowDEFAULT['tipo_dominio1_dominio']))),
+                        
                         'tipo_dominio2_codigo'          => $rowDEFAULT['tipo_dominio2_codigo'],
-                        'tipo_dominio2_nombre'          => $rowDEFAULT['tipo_dominio2_nombre'],
+                        'tipo_dominio2_nombre'          => strtoupper(strtolower(trim($rowDEFAULT['tipo_dominio2_nombre']))),
+                        'tipo_dominio2_dominio'         => strtoupper(strtolower(trim($rowDEFAULT['tipo_dominio2_dominio']))),
+    
                         'tipo_estado_codigo'            => $rowDEFAULT['tipo_estado_codigo'],
-                        'tipo_estado_nombre'            => $rowDEFAULT['tipo_estado_nombre'],
-                        'tipo_dominio'                  => $rowDEFAULT['tipo_dominio'],
+                        'tipo_estado_nombre'            => strtoupper(strtolower(trim($rowDEFAULT['tipo_estado_nombre']))),
+    
+                        'tipo_orden'                    => $rowDEFAULT['tipo_orden'],
+                        'tipo_dominio'                  => strtoupper(strtolower(trim($rowDEFAULT['tipo_dominio']))),
                         'tipo_observacion'              => $rowDEFAULT['tipo_observacion'],
                         'tipo_empresa_codigo'           => $rowDEFAULT['tipo_empresa_codigo'],
-                        'tipo_empresa_nombre'           => $rowDEFAULT['tipo_empresa_nombre'],
-                        'tipo_usuario'                  => $rowDEFAULT['tipo_usuario'],
-                        'tipo_fecha_hora'               => date_format(date_create($rowDEFAULT['tipo_fecha_hora']), 'd/m/Y H:i:s'),
-                        'tipo_ip'                       => $rowDEFAULT['tipo_ip']
+                        'tipo_empresa_nombre'           => strtoupper(strtolower(trim($rowDEFAULT['tipo_empresa_nombre']))),
+                        'tipo_usuario'                  => strtoupper(strtolower(trim($rowDEFAULT['tipo_usuario']))),
+                        'tipo_fecha_hora'               => date('d/m/Y H:i:s', strtotime($rowDEFAULT['tipo_fecha_hora'])),
+                        'tipo_ip'                       => trim($rowDEFAULT['tipo_ip'])
                     );
 
                     $result[]   = $detalle;
@@ -519,113 +344,18 @@
 
                 if (isset($result)){
                     header("Content-Type: application/json; charset=utf-8");
-                    $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success SELECT', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+                    $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success SUBDOMINIO', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
                 } else {
                     $detalle = array(
                         'tipo_dominio1_codigo'          => '',
                         'tipo_dominio1_nombre'          => '',
+                        'tipo_dominio1_dominio'         => '',
                         'tipo_dominio2_codigo'          => '',
                         'tipo_dominio2_nombre'          => '',
+                        'tipo_dominio2_dominio'         => '',
                         'tipo_estado_codigo'            => '',
                         'tipo_estado_nombre'            => '',
-                        'tipo_dominio'                  => '',
-                        'tipo_observacion'              => '',
-                        'tipo_empresa_codigo'           => '',
-                        'tipo_empresa_nombre'           => '',
-                        'tipo_usuario'                  => '',
-                        'tipo_fecha_hora'               => '',
-                        'tipo_ip'                       => ''
-                    );
-
-                    header("Content-Type: application/json; charset=utf-8");
-                    $json = json_encode(array('code' => 204, 'status' => 'ok', 'message' => 'No hay registros', 'data' => $detalle), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
-                }
-
-                $stmtDEFAULT->closeCursor();
-                $stmtDEFAULT = null;
-            } catch (PDOException $e) {
-                header("Content-Type: application/json; charset=utf-8");
-                $json = json_encode(array('code' => 204, 'status' => 'failure', 'message' => 'Error SELECT: '.$e), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
-            }
-        } else {
-            header("Content-Type: application/json; charset=utf-8");
-            $json = json_encode(array('code' => 400, 'status' => 'error', 'message' => 'Verifique, algún campo esta vacio.'), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
-        }
-
-        $connDEFAULT  = null;
-        
-        return $json;
-    });
-
-    $app->get('/v1/default/020/dominio/{codigo}', function($request) {
-        require __DIR__.'/../../src/connect.php';
-
-        $val01      = $request->getAttribute('codigo');
-        
-        if (isset($val01)) {
-            $sql00  = "SELECT
-            a.DOMSUBVAL         AS          tipo_dominio,
-            a.DOMSUBOBS         AS          tipo_observacion,
-            a.DOMSUBAEM         AS          tipo_empresa_codigo,
-            a.DOMSUBAEM         AS          tipo_empresa_nombre,
-            a.DOMSUBAUS         AS          tipo_usuario,
-            a.DOMSUBAFH         AS          tipo_fecha_hora,
-            a.DOMSUBAIP         AS          tipo_ip,
-
-            b.DOMFICCOD         AS          tipo_estado_codigo,
-            b.DOMFICNOM         AS          tipo_estado_nombre,
-
-            c.DOMFICCOD         AS          tipo_dominio1_codigo,
-            c.DOMFICNOM         AS          tipo_dominio1_nombre,
-
-            d.DOMFICCOD         AS          tipo_dominio2_codigo,
-            d.DOMFICNOM         AS          tipo_dominio2_nombre
-            
-            FROM DOMSUB a
-            INNER JOIN DOMFIC b ON a.DOMSUBEDC = b.DOMFICCOD
-            INNER JOIN DOMFIC c ON a.DOMSUBCO1 = c.DOMFICCOD
-            INNER JOIN DOMFIC d ON a.DOMSUBCO2 = d.DOMFICCOD
-
-            WHERE a.DOMSUBVAL = ?
-
-            ORDER BY a.DOMSUBVAL, c.DOMFICNOM, d.DOMFICNOM";
-
-            try {
-                $connDEFAULT  = getConnectionDEFAULT();
-                $stmtDEFAULT  = $connDEFAULT->prepare($sql00);
-                $stmtDEFAULT->execute([$val01]); 
-
-                while ($rowDEFAULT = $stmtDEFAULT->fetch()) {
-                    $detalle    = array(
-                        'tipo_dominio1_codigo'          => $rowDEFAULT['tipo_dominio1_codigo'],
-                        'tipo_dominio1_nombre'          => $rowDEFAULT['tipo_dominio1_nombre'],
-                        'tipo_dominio2_codigo'          => $rowDEFAULT['tipo_dominio2_codigo'],
-                        'tipo_dominio2_nombre'          => $rowDEFAULT['tipo_dominio2_nombre'],
-                        'tipo_estado_codigo'            => $rowDEFAULT['tipo_estado_codigo'],
-                        'tipo_estado_nombre'            => $rowDEFAULT['tipo_estado_nombre'],
-                        'tipo_dominio'                  => $rowDEFAULT['tipo_dominio'],
-                        'tipo_observacion'              => $rowDEFAULT['tipo_observacion'],
-                        'tipo_empresa_codigo'           => $rowDEFAULT['tipo_empresa_codigo'],
-                        'tipo_empresa_nombre'           => $rowDEFAULT['tipo_empresa_nombre'],
-                        'tipo_usuario'                  => $rowDEFAULT['tipo_usuario'],
-                        'tipo_fecha_hora'               => date_format(date_create($rowDEFAULT['tipo_fecha_hora']), 'd/m/Y H:i:s'),
-                        'tipo_ip'                       => $rowDEFAULT['tipo_ip']
-                    );
-
-                    $result[]   = $detalle;
-                }
-
-                if (isset($result)){
-                    header("Content-Type: application/json; charset=utf-8");
-                    $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success SELECT', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
-                } else {
-                    $detalle = array(
-                        'tipo_dominio1_codigo'          => '',
-                        'tipo_dominio1_nombre'          => '',
-                        'tipo_dominio2_codigo'          => '',
-                        'tipo_dominio2_nombre'          => '',
-                        'tipo_estado_codigo'            => '',
-                        'tipo_estado_nombre'            => '',
+                        'tipo_orden'                    => '',
                         'tipo_dominio'                  => '',
                         'tipo_observacion'              => '',
                         'tipo_empresa_codigo'           => '',
@@ -655,10 +385,11 @@
         return $json;
     });
     
-    $app->get('/v1/default/040', function($request) {
+    $app->get('/v1/000/dominiotri', function($request) {
         require __DIR__.'/../../src/connect.php';
 
         $sql00  = "SELECT
+        a.DOMTRIORD         AS          tipo_orden,
         a.DOMTRIVAL         AS          tipo_dominio,
         a.DOMTRIOBS         AS          tipo_observacion,
         a.DOMTRIAEM         AS          tipo_empresa_codigo,
@@ -672,12 +403,15 @@
 
         c.DOMFICCOD         AS          tipo_dominio1_codigo,
         c.DOMFICNOM         AS          tipo_dominio1_nombre,
+        c.DOMFICVAL         AS          tipo_dominio1_dominio,
 
         d.DOMFICCOD         AS          tipo_dominio2_codigo,
-        d.DOMFICNOM         AS          tipo_dominio2_nombre,
+        d.DOMFICNOM         AS          tipo_dominio2_nombre
+        d.DOMFICVAL         AS          tipo_dominio2_dominio,
 
         e.DOMFICCOD         AS          tipo_dominio3_codigo,
-        e.DOMFICNOM         AS          tipo_dominio3_nombre
+        e.DOMFICNOM         AS          tipo_dominio3_nombre,
+        e.DOMFICVAL         AS          tipo_dominio3_dominio
         
         FROM DOMTRI a
         INNER JOIN DOMFIC b ON a.DOMTRIEDC = b.DOMFICCOD
@@ -685,7 +419,7 @@
         INNER JOIN DOMFIC d ON a.DOMTRICO2 = d.DOMFICCOD
         INNER JOIN DOMFIC e ON a.DOMTRICO3 = e.DOMFICCOD
 
-        ORDER BY a.DOMTRIVAL, c.DOMFICNOM, d.DOMFICNOM";
+        ORDER BY a.DOMTRIVAL, a.DOMTRIORD";
 
         try {
             $connDEFAULT  = getConnectionDEFAULT();
@@ -695,20 +429,28 @@
             while ($rowDEFAULT = $stmtDEFAULT->fetch()) {
                 $detalle    = array(
                     'tipo_dominio1_codigo'          => $rowDEFAULT['tipo_dominio1_codigo'],
-                    'tipo_dominio1_nombre'          => $rowDEFAULT['tipo_dominio1_nombre'],
+                    'tipo_dominio1_nombre'          => strtoupper(strtolower(trim($rowDEFAULT['tipo_dominio1_nombre']))),
+                    'tipo_dominio1_dominio'         => strtoupper(strtolower(trim($rowDEFAULT['tipo_dominio1_dominio']))),
+
                     'tipo_dominio2_codigo'          => $rowDEFAULT['tipo_dominio2_codigo'],
-                    'tipo_dominio2_nombre'          => $rowDEFAULT['tipo_dominio2_nombre'],
+                    'tipo_dominio2_nombre'          => strtoupper(strtolower(trim($rowDEFAULT['tipo_dominio2_nombre']))),
+                    'tipo_dominio2_dominio'         => strtoupper(strtolower(trim($rowDEFAULT['tipo_dominio2_dominio']))),
+
                     'tipo_dominio3_codigo'          => $rowDEFAULT['tipo_dominio3_codigo'],
-                    'tipo_dominio3_nombre'          => $rowDEFAULT['tipo_dominio3_nombre'],
+                    'tipo_dominio3_nombre'          => strtoupper(strtolower(trim($rowDEFAULT['tipo_dominio3_nombre']))),
+                    'tipo_dominio3_dominio'         => strtoupper(strtolower(trim($rowDEFAULT['tipo_dominio3_dominio']))),
+
                     'tipo_estado_codigo'            => $rowDEFAULT['tipo_estado_codigo'],
-                    'tipo_estado_nombre'            => $rowDEFAULT['tipo_estado_nombre'],
-                    'tipo_dominio'                  => $rowDEFAULT['tipo_dominio'],
+                    'tipo_estado_nombre'            => strtoupper(strtolower(trim($rowDEFAULT['tipo_estado_nombre']))),
+
+                    'tipo_orden'                    => $rowDEFAULT['tipo_orden'],
+                    'tipo_dominio'                  => strtoupper(strtolower(trim($rowDEFAULT['tipo_dominio']))),
                     'tipo_observacion'              => $rowDEFAULT['tipo_observacion'],
                     'tipo_empresa_codigo'           => $rowDEFAULT['tipo_empresa_codigo'],
-                    'tipo_empresa_nombre'           => $rowDEFAULT['tipo_empresa_nombre'],
-                    'tipo_usuario'                  => $rowDEFAULT['tipo_usuario'],
-                    'tipo_fecha_hora'               => date_format(date_create($rowDEFAULT['tipo_fecha_hora']), 'd/m/Y H:i:s'),
-                    'tipo_ip'                       => $rowDEFAULT['tipo_ip']
+                    'tipo_empresa_nombre'           => strtoupper(strtolower(trim($rowDEFAULT['tipo_empresa_nombre']))),
+                    'tipo_usuario'                  => strtoupper(strtolower(trim($rowDEFAULT['tipo_usuario']))),
+                    'tipo_fecha_hora'               => date('d/m/Y H:i:s', strtotime($rowDEFAULT['tipo_fecha_hora'])),
+                    'tipo_ip'                       => trim($rowDEFAULT['tipo_ip'])
                 );
 
                 $result[]   = $detalle;
@@ -716,17 +458,21 @@
 
             if (isset($result)){
                 header("Content-Type: application/json; charset=utf-8");
-                $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success SELECT', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+                $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success TRIDOMONIO', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
             } else {
                 $detalle = array(
                     'tipo_dominio1_codigo'          => '',
                     'tipo_dominio1_nombre'          => '',
+                    'tipo_dominio1_dominio'         => '',
                     'tipo_dominio2_codigo'          => '',
                     'tipo_dominio2_nombre'          => '',
+                    'tipo_dominio2_dominio'         => '',
                     'tipo_dominio3_codigo'          => '',
                     'tipo_dominio3_nombre'          => '',
+                    'tipo_dominio3_dominio'         => '',
                     'tipo_estado_codigo'            => '',
                     'tipo_estado_nombre'            => '',
+                    'tipo_orden'                    => '',
                     'tipo_dominio'                  => '',
                     'tipo_observacion'              => '',
                     'tipo_empresa_codigo'           => '',
@@ -752,328 +498,7 @@
         return $json;
     });
 
-    $app->get('/v1/default/040/{dominio}', function($request) {
-        require __DIR__.'/../../src/connect.php';
-
-        $val01      = $request->getAttribute('dominio');
-        
-        if (isset($val01)) {
-            $sql00  = "SELECT
-            a.DOMTRIVAL         AS          tipo_dominio,
-            a.DOMTRIOBS         AS          tipo_observacion,
-            a.DOMTRIAEM         AS          tipo_empresa_codigo,
-            a.DOMTRIAEM         AS          tipo_empresa_nombre,
-            a.DOMTRIAUS         AS          tipo_usuario,
-            a.DOMTRIAFH         AS          tipo_fecha_hora,
-            a.DOMTRIAIP         AS          tipo_ip,
-
-            b.DOMFICCOD         AS          tipo_estado_codigo,
-            b.DOMFICNOM         AS          tipo_estado_nombre,
-
-            c.DOMFICCOD         AS          tipo_dominio1_codigo,
-            c.DOMFICNOM         AS          tipo_dominio1_nombre,
-
-            d.DOMFICCOD         AS          tipo_dominio2_codigo,
-            d.DOMFICNOM         AS          tipo_dominio2_nombre,
-
-            e.DOMFICCOD         AS          tipo_dominio3_codigo,
-            e.DOMFICNOM         AS          tipo_dominio3_nombre
-            
-            FROM DOMTRI a
-            INNER JOIN DOMFIC b ON a.DOMTRIEDC = b.DOMFICCOD
-            INNER JOIN DOMFIC c ON a.DOMTRICO1 = c.DOMFICCOD
-            INNER JOIN DOMFIC d ON a.DOMTRICO2 = d.DOMFICCOD
-            INNER JOIN DOMFIC e ON a.DOMTRICO3 = e.DOMFICCOD
-
-            WHERE a.DOMTRIVAL = ?
-
-            ORDER BY a.DOMTRIVAL, c.DOMFICNOM, d.DOMFICNOM";
-
-            try {
-                $connDEFAULT  = getConnectionDEFAULT();
-                $stmtDEFAULT  = $connDEFAULT->prepare($sql00);
-                $stmtDEFAULT->execute([$val01]); 
-
-                while ($rowDEFAULT = $stmtDEFAULT->fetch()) {
-                    $detalle    = array(
-                        'tipo_dominio1_codigo'          => $rowDEFAULT['tipo_dominio1_codigo'],
-                        'tipo_dominio1_nombre'          => $rowDEFAULT['tipo_dominio1_nombre'],
-                        'tipo_dominio2_codigo'          => $rowDEFAULT['tipo_dominio2_codigo'],
-                        'tipo_dominio2_nombre'          => $rowDEFAULT['tipo_dominio2_nombre'],
-                        'tipo_dominio3_codigo'          => $rowDEFAULT['tipo_dominio3_codigo'],
-                        'tipo_dominio3_nombre'          => $rowDEFAULT['tipo_dominio3_nombre'],
-                        'tipo_estado_codigo'            => $rowDEFAULT['tipo_estado_codigo'],
-                        'tipo_estado_nombre'            => $rowDEFAULT['tipo_estado_nombre'],
-                        'tipo_dominio'                  => $rowDEFAULT['tipo_dominio'],
-                        'tipo_observacion'              => $rowDEFAULT['tipo_observacion'],
-                        'tipo_empresa_codigo'           => $rowDEFAULT['tipo_empresa_codigo'],
-                        'tipo_empresa_nombre'           => $rowDEFAULT['tipo_empresa_nombre'],
-                        'tipo_usuario'                  => $rowDEFAULT['tipo_usuario'],
-                        'tipo_fecha_hora'               => date_format(date_create($rowDEFAULT['tipo_fecha_hora']), 'd/m/Y H:i:s'),
-                        'tipo_ip'                       => $rowDEFAULT['tipo_ip']
-                    );
-
-                    $result[]   = $detalle;
-                }
-
-                if (isset($result)){
-                    header("Content-Type: application/json; charset=utf-8");
-                    $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success SELECT', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
-                } else {
-                    $detalle = array(
-                        'tipo_dominio1_codigo'          => '',
-                        'tipo_dominio1_nombre'          => '',
-                        'tipo_dominio2_codigo'          => '',
-                        'tipo_dominio2_nombre'          => '',
-                        'tipo_dominio3_codigo'          => '',
-                        'tipo_dominio3_nombre'          => '',
-                        'tipo_estado_codigo'            => '',
-                        'tipo_estado_nombre'            => '',
-                        'tipo_dominio'                  => '',
-                        'tipo_observacion'              => '',
-                        'tipo_empresa_codigo'           => '',
-                        'tipo_empresa_nombre'           => '',
-                        'tipo_usuario'                  => '',
-                        'tipo_fecha_hora'               => '',
-                        'tipo_ip'                       => ''
-                    );
-
-                    header("Content-Type: application/json; charset=utf-8");
-                    $json = json_encode(array('code' => 204, 'status' => 'ok', 'message' => 'No hay registros', 'data' => $detalle), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
-                }
-
-                $stmtDEFAULT->closeCursor();
-                $stmtDEFAULT = null;
-            } catch (PDOException $e) {
-                header("Content-Type: application/json; charset=utf-8");
-                $json = json_encode(array('code' => 204, 'status' => 'failure', 'message' => 'Error SELECT: '.$e), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
-            }
-        } else {
-            header("Content-Type: application/json; charset=utf-8");
-            $json = json_encode(array('code' => 400, 'status' => 'error', 'message' => 'Verifique, algún campo esta vacio.'), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
-        }
-
-        $connDEFAULT  = null;
-        
-        return $json;
-    });
-
-    $app->get('/v1/default/040/{dominio}/{codigo1}', function($request) {
-        require __DIR__.'/../../src/connect.php';
-
-        $val01      = $request->getAttribute('dominio');
-        $val02      = $request->getAttribute('codigo1');
-        
-        if (isset($val01) && isset($val02)) {
-            $sql00  = "SELECT
-            a.DOMTRIVAL         AS          tipo_dominio,
-            a.DOMTRIOBS         AS          tipo_observacion,
-            a.DOMTRIAEM         AS          tipo_empresa_codigo,
-            a.DOMTRIAEM         AS          tipo_empresa_nombre,
-            a.DOMTRIAUS         AS          tipo_usuario,
-            a.DOMTRIAFH         AS          tipo_fecha_hora,
-            a.DOMTRIAIP         AS          tipo_ip,
-
-            b.DOMFICCOD         AS          tipo_estado_codigo,
-            b.DOMFICNOM         AS          tipo_estado_nombre,
-
-            c.DOMFICCOD         AS          tipo_dominio1_codigo,
-            c.DOMFICNOM         AS          tipo_dominio1_nombre,
-
-            d.DOMFICCOD         AS          tipo_dominio2_codigo,
-            d.DOMFICNOM         AS          tipo_dominio2_nombre,
-
-            e.DOMFICCOD         AS          tipo_dominio3_codigo,
-            e.DOMFICNOM         AS          tipo_dominio3_nombre
-            
-            FROM DOMTRI a
-            INNER JOIN DOMFIC b ON a.DOMTRIEDC = b.DOMFICCOD
-            INNER JOIN DOMFIC c ON a.DOMTRICO1 = c.DOMFICCOD
-            INNER JOIN DOMFIC d ON a.DOMTRICO2 = d.DOMFICCOD
-            INNER JOIN DOMFIC e ON a.DOMTRICO3 = e.DOMFICCOD
-
-            WHERE a.DOMTRIVAL = ? AND a.DOMTRICO1 = ?
-
-            ORDER BY a.DOMTRIVAL, c.DOMFICNOM, d.DOMFICNOM";
-
-            try {
-                $connDEFAULT  = getConnectionDEFAULT();
-                $stmtDEFAULT  = $connDEFAULT->prepare($sql00);
-                $stmtDEFAULT->execute([$val01, $val02]); 
-
-                while ($rowDEFAULT = $stmtDEFAULT->fetch()) {
-                    $detalle    = array(
-                        'tipo_dominio1_codigo'          => $rowDEFAULT['tipo_dominio1_codigo'],
-                        'tipo_dominio1_nombre'          => $rowDEFAULT['tipo_dominio1_nombre'],
-                        'tipo_dominio2_codigo'          => $rowDEFAULT['tipo_dominio2_codigo'],
-                        'tipo_dominio2_nombre'          => $rowDEFAULT['tipo_dominio2_nombre'],
-                        'tipo_dominio3_codigo'          => $rowDEFAULT['tipo_dominio3_codigo'],
-                        'tipo_dominio3_nombre'          => $rowDEFAULT['tipo_dominio3_nombre'],
-                        'tipo_estado_codigo'            => $rowDEFAULT['tipo_estado_codigo'],
-                        'tipo_estado_nombre'            => $rowDEFAULT['tipo_estado_nombre'],
-                        'tipo_dominio'                  => $rowDEFAULT['tipo_dominio'],
-                        'tipo_observacion'              => $rowDEFAULT['tipo_observacion'],
-                        'tipo_empresa_codigo'           => $rowDEFAULT['tipo_empresa_codigo'],
-                        'tipo_empresa_nombre'           => $rowDEFAULT['tipo_empresa_nombre'],
-                        'tipo_usuario'                  => $rowDEFAULT['tipo_usuario'],
-                        'tipo_fecha_hora'               => date_format(date_create($rowDEFAULT['tipo_fecha_hora']), 'd/m/Y H:i:s'),
-                        'tipo_ip'                       => $rowDEFAULT['tipo_ip']
-                    );
-
-                    $result[]   = $detalle;
-                }
-
-                if (isset($result)){
-                    header("Content-Type: application/json; charset=utf-8");
-                    $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success SELECT', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
-                } else {
-                    $detalle = array(
-                        'tipo_dominio1_codigo'          => '',
-                        'tipo_dominio1_nombre'          => '',
-                        'tipo_dominio2_codigo'          => '',
-                        'tipo_dominio2_nombre'          => '',
-                        'tipo_dominio3_codigo'          => '',
-                        'tipo_dominio3_nombre'          => '',
-                        'tipo_estado_codigo'            => '',
-                        'tipo_estado_nombre'            => '',
-                        'tipo_dominio'                  => '',
-                        'tipo_observacion'              => '',
-                        'tipo_empresa_codigo'           => '',
-                        'tipo_empresa_nombre'           => '',
-                        'tipo_usuario'                  => '',
-                        'tipo_fecha_hora'               => '',
-                        'tipo_ip'                       => ''
-                    );
-
-                    header("Content-Type: application/json; charset=utf-8");
-                    $json = json_encode(array('code' => 204, 'status' => 'ok', 'message' => 'No hay registros', 'data' => $detalle), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
-                }
-
-                $stmtDEFAULT->closeCursor();
-                $stmtDEFAULT = null;
-            } catch (PDOException $e) {
-                header("Content-Type: application/json; charset=utf-8");
-                $json = json_encode(array('code' => 204, 'status' => 'failure', 'message' => 'Error SELECT: '.$e), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
-            }
-        } else {
-            header("Content-Type: application/json; charset=utf-8");
-            $json = json_encode(array('code' => 400, 'status' => 'error', 'message' => 'Verifique, algún campo esta vacio.'), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
-        }
-
-        $connDEFAULT  = null;
-        
-        return $json;
-    });
-
-    $app->get('/v1/default/040/{dominio}/{codigo1}/{codigo2}', function($request) {
-        require __DIR__.'/../../src/connect.php';
-
-        $val01      = $request->getAttribute('dominio');
-        $val02      = $request->getAttribute('codigo1');
-        $val03      = $request->getAttribute('codigo2');
-        
-        if (isset($val01) && isset($val02) && isset($val03)) {
-            $sql00  = "SELECT
-            a.DOMTRIVAL         AS          tipo_dominio,
-            a.DOMTRIOBS         AS          tipo_observacion,
-            a.DOMTRIAEM         AS          tipo_empresa_codigo,
-            a.DOMTRIAEM         AS          tipo_empresa_nombre,
-            a.DOMTRIAUS         AS          tipo_usuario,
-            a.DOMTRIAFH         AS          tipo_fecha_hora,
-            a.DOMTRIAIP         AS          tipo_ip,
-
-            b.DOMFICCOD         AS          tipo_estado_codigo,
-            b.DOMFICNOM         AS          tipo_estado_nombre,
-
-            c.DOMFICCOD         AS          tipo_dominio1_codigo,
-            c.DOMFICNOM         AS          tipo_dominio1_nombre,
-
-            d.DOMFICCOD         AS          tipo_dominio2_codigo,
-            d.DOMFICNOM         AS          tipo_dominio2_nombre,
-
-            e.DOMFICCOD         AS          tipo_dominio3_codigo,
-            e.DOMFICNOM         AS          tipo_dominio3_nombre
-            
-            FROM DOMTRI a
-            INNER JOIN DOMFIC b ON a.DOMTRIEDC = b.DOMFICCOD
-            INNER JOIN DOMFIC c ON a.DOMTRICO1 = c.DOMFICCOD
-            INNER JOIN DOMFIC d ON a.DOMTRICO2 = d.DOMFICCOD
-            INNER JOIN DOMFIC e ON a.DOMTRICO3 = e.DOMFICCOD
-
-            WHERE a.DOMTRIVAL = ? AND a.DOMTRICO1 = ? AND a.DOMTRICO2 = ?
-
-            ORDER BY a.DOMTRIVAL, c.DOMFICNOM, d.DOMFICNOM";
-
-            try {
-                $connDEFAULT  = getConnectionDEFAULT();
-                $stmtDEFAULT  = $connDEFAULT->prepare($sql00);
-                $stmtDEFAULT->execute([$val01, $val02, $val03]); 
-
-                while ($rowDEFAULT = $stmtDEFAULT->fetch()) {
-                    $detalle    = array(
-                        'tipo_dominio1_codigo'          => $rowDEFAULT['tipo_dominio1_codigo'],
-                        'tipo_dominio1_nombre'          => $rowDEFAULT['tipo_dominio1_nombre'],
-                        'tipo_dominio2_codigo'          => $rowDEFAULT['tipo_dominio2_codigo'],
-                        'tipo_dominio2_nombre'          => $rowDEFAULT['tipo_dominio2_nombre'],
-                        'tipo_dominio3_codigo'          => $rowDEFAULT['tipo_dominio3_codigo'],
-                        'tipo_dominio3_nombre'          => $rowDEFAULT['tipo_dominio3_nombre'],
-                        'tipo_estado_codigo'            => $rowDEFAULT['tipo_estado_codigo'],
-                        'tipo_estado_nombre'            => $rowDEFAULT['tipo_estado_nombre'],
-                        'tipo_dominio'                  => $rowDEFAULT['tipo_dominio'],
-                        'tipo_observacion'              => $rowDEFAULT['tipo_observacion'],
-                        'tipo_empresa_codigo'           => $rowDEFAULT['tipo_empresa_codigo'],
-                        'tipo_empresa_nombre'           => $rowDEFAULT['tipo_empresa_nombre'],
-                        'tipo_usuario'                  => $rowDEFAULT['tipo_usuario'],
-                        'tipo_fecha_hora'               => date_format(date_create($rowDEFAULT['tipo_fecha_hora']), 'd/m/Y H:i:s'),
-                        'tipo_ip'                       => $rowDEFAULT['tipo_ip']
-                    );
-
-                    $result[]   = $detalle;
-                }
-
-                if (isset($result)){
-                    header("Content-Type: application/json; charset=utf-8");
-                    $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success SELECT', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
-                } else {
-                    $detalle = array(
-                        'tipo_dominio1_codigo'          => '',
-                        'tipo_dominio1_nombre'          => '',
-                        'tipo_dominio2_codigo'          => '',
-                        'tipo_dominio2_nombre'          => '',
-                        'tipo_dominio3_codigo'          => '',
-                        'tipo_dominio3_nombre'          => '',
-                        'tipo_estado_codigo'            => '',
-                        'tipo_estado_nombre'            => '',
-                        'tipo_dominio'                  => '',
-                        'tipo_observacion'              => '',
-                        'tipo_empresa_codigo'           => '',
-                        'tipo_empresa_nombre'           => '',
-                        'tipo_usuario'                  => '',
-                        'tipo_fecha_hora'               => '',
-                        'tipo_ip'                       => ''
-                    );
-
-                    header("Content-Type: application/json; charset=utf-8");
-                    $json = json_encode(array('code' => 204, 'status' => 'ok', 'message' => 'No hay registros', 'data' => $detalle), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
-                }
-
-                $stmtDEFAULT->closeCursor();
-                $stmtDEFAULT = null;
-            } catch (PDOException $e) {
-                header("Content-Type: application/json; charset=utf-8");
-                $json = json_encode(array('code' => 204, 'status' => 'failure', 'message' => 'Error SELECT: '.$e), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
-            }
-        } else {
-            header("Content-Type: application/json; charset=utf-8");
-            $json = json_encode(array('code' => 400, 'status' => 'error', 'message' => 'Verifique, algún campo esta vacio.'), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
-        }
-
-        $connDEFAULT  = null;
-        
-        return $json;
-    });
-
-    $app->get('/v1/default/040/{dominio}/{codigo1}/{codigo2}/{codigo3}', function($request) {
+    $app->get('/v1/000/dominiotri/{dominio}/{codigo1}/{codigo2}/{codigo3}', function($request) {
         require __DIR__.'/../../src/connect.php';
 
         $val01      = $request->getAttribute('dominio');
@@ -1083,6 +508,7 @@
         
         if (isset($val01) && isset($val02) && isset($val03) && isset($val04)) {
             $sql00  = "SELECT
+            a.DOMTRIORD         AS          tipo_orden,
             a.DOMTRIVAL         AS          tipo_dominio,
             a.DOMTRIOBS         AS          tipo_observacion,
             a.DOMTRIAEM         AS          tipo_empresa_codigo,
@@ -1096,12 +522,15 @@
 
             c.DOMFICCOD         AS          tipo_dominio1_codigo,
             c.DOMFICNOM         AS          tipo_dominio1_nombre,
+            c.DOMFICVAL         AS          tipo_dominio1_dominio,
 
             d.DOMFICCOD         AS          tipo_dominio2_codigo,
-            d.DOMFICNOM         AS          tipo_dominio2_nombre,
+            d.DOMFICNOM         AS          tipo_dominio2_nombre
+            d.DOMFICVAL         AS          tipo_dominio2_dominio,
 
             e.DOMFICCOD         AS          tipo_dominio3_codigo,
-            e.DOMFICNOM         AS          tipo_dominio3_nombre
+            e.DOMFICNOM         AS          tipo_dominio3_nombre,
+            e.DOMFICVAL         AS          tipo_dominio3_dominio
             
             FROM DOMTRI a
             INNER JOIN DOMFIC b ON a.DOMTRIEDC = b.DOMFICCOD
@@ -1111,7 +540,7 @@
 
             WHERE a.DOMTRIVAL = ? AND a.DOMTRICO1 = ? AND a.DOMTRICO2 = ? AND  a.DOMTRICO3 = ?
 
-            ORDER BY a.DOMTRIVAL, c.DOMFICNOM, d.DOMFICNOM";
+            ORDER BY a.DOMTRIVAL, a.DOMTRIORD";
 
             try {
                 $connDEFAULT  = getConnectionDEFAULT();
@@ -1121,20 +550,28 @@
                 while ($rowDEFAULT = $stmtDEFAULT->fetch()) {
                     $detalle    = array(
                         'tipo_dominio1_codigo'          => $rowDEFAULT['tipo_dominio1_codigo'],
-                        'tipo_dominio1_nombre'          => $rowDEFAULT['tipo_dominio1_nombre'],
+                        'tipo_dominio1_nombre'          => strtoupper(strtolower(trim($rowDEFAULT['tipo_dominio1_nombre']))),
+                        'tipo_dominio1_dominio'         => strtoupper(strtolower(trim($rowDEFAULT['tipo_dominio1_dominio']))),
+
                         'tipo_dominio2_codigo'          => $rowDEFAULT['tipo_dominio2_codigo'],
-                        'tipo_dominio2_nombre'          => $rowDEFAULT['tipo_dominio2_nombre'],
+                        'tipo_dominio2_nombre'          => strtoupper(strtolower(trim($rowDEFAULT['tipo_dominio2_nombre']))),
+                        'tipo_dominio2_dominio'         => strtoupper(strtolower(trim($rowDEFAULT['tipo_dominio2_dominio']))),
+
                         'tipo_dominio3_codigo'          => $rowDEFAULT['tipo_dominio3_codigo'],
-                        'tipo_dominio3_nombre'          => $rowDEFAULT['tipo_dominio3_nombre'],
+                        'tipo_dominio3_nombre'          => strtoupper(strtolower(trim($rowDEFAULT['tipo_dominio3_nombre']))),
+                        'tipo_dominio3_dominio'         => strtoupper(strtolower(trim($rowDEFAULT['tipo_dominio3_dominio']))),
+
                         'tipo_estado_codigo'            => $rowDEFAULT['tipo_estado_codigo'],
-                        'tipo_estado_nombre'            => $rowDEFAULT['tipo_estado_nombre'],
-                        'tipo_dominio'                  => $rowDEFAULT['tipo_dominio'],
+                        'tipo_estado_nombre'            => strtoupper(strtolower(trim($rowDEFAULT['tipo_estado_nombre']))),
+
+                        'tipo_orden'                    => $rowDEFAULT['tipo_orden'],
+                        'tipo_dominio'                  => strtoupper(strtolower(trim($rowDEFAULT['tipo_dominio']))),
                         'tipo_observacion'              => $rowDEFAULT['tipo_observacion'],
                         'tipo_empresa_codigo'           => $rowDEFAULT['tipo_empresa_codigo'],
-                        'tipo_empresa_nombre'           => $rowDEFAULT['tipo_empresa_nombre'],
-                        'tipo_usuario'                  => $rowDEFAULT['tipo_usuario'],
-                        'tipo_fecha_hora'               => date_format(date_create($rowDEFAULT['tipo_fecha_hora']), 'd/m/Y H:i:s'),
-                        'tipo_ip'                       => $rowDEFAULT['tipo_ip']
+                        'tipo_empresa_nombre'           => strtoupper(strtolower(trim($rowDEFAULT['tipo_empresa_nombre']))),
+                        'tipo_usuario'                  => strtoupper(strtolower(trim($rowDEFAULT['tipo_usuario']))),
+                        'tipo_fecha_hora'               => date('d/m/Y H:i:s', strtotime($rowDEFAULT['tipo_fecha_hora'])),
+                        'tipo_ip'                       => trim($rowDEFAULT['tipo_ip'])
                     );
 
                     $result[]   = $detalle;
@@ -1142,17 +579,21 @@
 
                 if (isset($result)){
                     header("Content-Type: application/json; charset=utf-8");
-                    $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success SELECT', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
+                    $json = json_encode(array('code' => 200, 'status' => 'ok', 'message' => 'Success TRIDOMONIO', 'data' => $result), JSON_UNESCAPED_UNICODE | JSON_NUMERIC_CHECK | JSON_PRESERVE_ZERO_FRACTION);
                 } else {
                     $detalle = array(
                         'tipo_dominio1_codigo'          => '',
                         'tipo_dominio1_nombre'          => '',
+                        'tipo_dominio1_dominio'         => '',
                         'tipo_dominio2_codigo'          => '',
                         'tipo_dominio2_nombre'          => '',
+                        'tipo_dominio2_dominio'         => '',
                         'tipo_dominio3_codigo'          => '',
                         'tipo_dominio3_nombre'          => '',
+                        'tipo_dominio3_dominio'         => '',
                         'tipo_estado_codigo'            => '',
                         'tipo_estado_nombre'            => '',
+                        'tipo_orden'                    => '',
                         'tipo_dominio'                  => '',
                         'tipo_observacion'              => '',
                         'tipo_empresa_codigo'           => '',

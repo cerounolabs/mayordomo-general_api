@@ -2,7 +2,7 @@
     function getConnectionDEFAULT(){
         $serverName = "localhost";
         $serverPort = "3306";
-        $serverDb   = "mayordomo_default";
+        $serverDb   = "mayorcontrol_default";
         $serverUser = "root";
         $serverPass = "tre3As5ePru_";
         
@@ -25,7 +25,7 @@
     function getConnectionESTABLECIMIENTO(){
         $serverName = "localhost";
         $serverPort = "3306";
-        $serverDb   = "mayordomo_establecimiento";
+        $serverDb   = "mayorcontrol_establecimiento";
         $serverUser = "root";
         $serverPass = "tre3As5ePru_";
         
